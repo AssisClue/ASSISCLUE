@@ -13,13 +13,16 @@ powershell -ExecutionPolicy Bypass -File .\scripts\stop_main_stack.py
 --------------------------
 WEB UI : 
 --------------------------
+THE STARTER RUNs THIS WEB INTERFACE 
+##
 uvicorn app.ui_local.app:app --host 127.0.0.1 --port 8000 --reload  
 http://127.0.0.1:8000
 
 --------------------------
 WEB UI LIBRARY : 
 --------------------------
-
+YOU NEED TO RUN THIS WEB INTERFACE
+##
 uvicorn app.ui_local.library_ui.appdocs:app --host 127.0.0.1 --port 8001 --reload  
 http://127.0.0.1:8001
 
