@@ -73,3 +73,60 @@ Con el venv activado:
 pip install --upgrade pip
 ##
 pip install -r requirements.txt
+------
+
+-----
+##
+##
+##
+--
+##
+
+## Install simple en Linux
+
+### 1. Crear la carpeta principal
+
+Abrí la terminal y creá el root del proyecto:
+
+bash
+--
+mkdir -p ~/AI/ASSISCLUE
+--
+cd ~/AI/ASSISCLUE
+2. Crear el entorno virtual
+
+Dentro de ASSISCLUE, creá el venv:
+
+python3 -m venv .venv
+--
+3. Activar el entorno virtual
+source .venv/bin/activate
+--
+4. Instalar dependencias
+
+Con el venv activado:
+
+python -m pip install --upgrade pip
+##
+python -m pip install -r requirements.txt
+--
+5. Ejecutar la app
+
+
+Abrí en el navegador:
+
+http://127.0.0.1:8000
+Estructura esperada
+##
+~/AI/ASSISCLUE
+│
+├── app/
+├── runtime/
+├── scripts/
+├── requirements.txt
+└── .venv/
+##
+ASSISCLUE es el root principal.
+.venv es el entorno virtual local del proyecto.
+app/ contiene el código principal.
+runtime/ guarda archivos temporales, estados, logs y outputs generados por la app.
