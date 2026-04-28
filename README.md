@@ -158,67 +158,13 @@ pip install -r requirements.txt
 
 ## 5. Run the app
 
-From the project root:
-
-```powershell
-uvicorn app.ui_local.app:app --reload
-```
-
 Open in your browser:
 
 ```text
 http://127.0.0.1:8000
 ```
 
----
-
-# 🐧 Simple Install — Linux
-
-## 1. Create the main project folder
-
-```bash
-mkdir -p ~/AI/ASSISCLUE
-cd ~/AI/ASSISCLUE
-```
-
----
-
-## 2. Create the virtual environment
-
-```bash
-python3 -m venv .venv
-```
-
----
-
-## 3. Activate the virtual environment
-
-```bash
-source .venv/bin/activate
-```
-
----
-
-## 4. Install dependencies
-
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
----
-
-## 5. Run the app
-
-```bash
-uvicorn app.ui_local.app:app --reload
-```
-
-Open in your browser:
-
-```text
-http://127.0.0.1:8000
-```
+--
 
 ---
 
@@ -228,6 +174,7 @@ http://127.0.0.1:8000
 ASSISCLUE/
 │
 ├── app/
+├── info/
 ├── runtime/
 ├── scripts/
 ├── requirements.txt
@@ -235,8 +182,8 @@ ASSISCLUE/
 ```
 
 ### Folder meaning
-
 - `app/` — main application code
+- `info/` — all information files from the app
 - `runtime/` — temporary states, logs, generated files, outputs
 - `scripts/` — helper scripts, tests, startup tools
 - `requirements.txt` — Python dependencies
