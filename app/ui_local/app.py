@@ -72,6 +72,12 @@ def _pid_alive(pid: Any) -> bool:
         pid_int = int(pid)
     except Exception:
         return False
+    if os.name != "nt":
+        try:
+            os.kill(pid_int, 0)
+            return True
+        except Exception:
+            return False
     try:
         raw = subprocess.check_output(
             ["tasklist", "/FI", f"PID eq {pid_int}", "/FO", "CSV", "/NH"],
@@ -84,6 +90,21 @@ def _pid_alive(pid: Any) -> bool:
 
 
 def _list_process_rows() -> list[tuple[int, str, str]]:
+    if os.name != "nt":
+        rows: list[tuple[int, str, str]] = []
+        proc_root = Path("/proc")
+        for item in proc_root.iterdir() if proc_root.exists() else []:
+            if not item.name.isdigit():
+                continue
+            try:
+                pid = int(item.name)
+                name = (item / "comm").read_text(encoding="utf-8", errors="ignore").strip()
+                raw_cmd = (item / "cmdline").read_bytes().replace(b"\x00", b" ").decode("utf-8", errors="ignore").strip()
+            except Exception:
+                continue
+            rows.append((pid, name, raw_cmd))
+        return rows
+
     ps_cmd = (
         "Get-CimInstance Win32_Process | "
         "Select-Object ProcessId,Name,CommandLine | ConvertTo-Json -Compress"
@@ -263,6 +284,66 @@ def _project_root() -> Path:
 
 def _runtime_dir() -> Path:
     return PROJECT_ROOT / "runtime"
+
+
+def _clear_file(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("", encoding="utf-8")
+
+
+def _reset_json(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("{}", encoding="utf-8")
+
+
+def _remove_files(directory: Path, suffixes: tuple[str, ...]) -> None:
+    if not directory.exists():
+        return
+    for path in directory.iterdir():
+        if path.is_file() and path.suffix.lower() in suffixes:
+            try:
+                path.unlink()
+            except Exception:
+                pass
+
+
+def _clean_all_lightrun_python(runtime_root: Path) -> None:
+    for rel in (
+        "sacred/live_transcript_raw.jsonl",
+        "sacred/live_transcript_history.jsonl",
+        "queues/router_dispatch/router_input_queue.jsonl",
+        "queues/router_dispatch/action_queue.jsonl",
+        "queues/router_dispatch/response_queue.jsonl",
+        "display_actions/results/display_action_results.jsonl",
+        "queues/spoken_queries/spoken_query_results.jsonl",
+        "queues/speech_out/speech_queue.jsonl",
+        "queues/speech_out/spoken_history.jsonl",
+    ):
+        _clear_file(runtime_root / rel)
+    for rel in (
+        "sacred/live_transcript_raw_latest.json",
+        "sacred/live_transcript_latest.json",
+        "status/assembled_transcript_builder_status.json",
+        "status/inputfeed_to_text_status.json",
+        "status/primary_listener_status.json",
+        "status/raw_interrupt_listener_status.json",
+        "state/live_listeners/primary_listener_cursor.json",
+        "state/live_listeners/raw_interrupt_listener_cursor.json",
+        "state/live_listeners/administrative_listener_cursor.json",
+        "state/live_listeners/context_runner_cursor.json",
+        "status/router_dispatch/router_status.json",
+        "display_actions/status/display_action_runner_status.json",
+        "status/spoken_queries/spoken_query_status.json",
+        "queues/speech_out/latest_tts.json",
+        "state/speech_out/playback_state.json",
+        "status/speech_out/speech_queue_writer_status.json",
+        "status/speech_out/speaker_status.json",
+        "output/latest_response.json",
+        "state/session_snapshot.json",
+    ):
+        _reset_json(runtime_root / rel)
+    _remove_files(runtime_root / "queues/speech_out/audio", (".wav", ".mp3", ".ogg"))
+    _remove_files(runtime_root / "input/audio_chunks", (".wav", ".json", ".txt"))
 
 
 def _live_transcript_history_path(runtime_dir: Path) -> Path:
@@ -982,7 +1063,7 @@ async def clear_chat():
         pass
 
     script_path = project_root / "scripts" / "clean_all_lightrun.ps1"
-    if script_path.exists():
+    if os.name == "nt" and script_path.exists():
         try:
             subprocess.run(
                 [
@@ -1000,6 +1081,8 @@ async def clear_chat():
             )
         except Exception:
             pass
+    else:
+        _clean_all_lightrun_python(project_root / "runtime")
 
     return RedirectResponse(url="/", status_code=303)
 

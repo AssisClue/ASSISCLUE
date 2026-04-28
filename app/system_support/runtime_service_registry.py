@@ -63,7 +63,7 @@ BACKEND_SERVICE_SPECS: tuple[RuntimeServiceSpec, ...] = (
         pid_key="browser_service_pid",
         running_key="browser_service_running",
         process_needles=("app.web_tools.browser.browser_service",),
-        status_relpath=("browser", "status.json"),
+        status_relpath=("status", "browser", "status.json"),
     ),
     RuntimeServiceSpec(
         service_id="raw_interrupt_listener",

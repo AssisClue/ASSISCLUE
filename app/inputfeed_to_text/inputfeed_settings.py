@@ -46,7 +46,8 @@ INPUTFEED_FRAMES_PER_BUFFER = int(os.getenv("INPUTFEED_FRAMES_PER_BUFFER", "1024
 INPUTFEED_INPUT_GAIN = float(os.getenv("INPUTFEED_INPUT_GAIN", "1.2"))
 
 WINDOWS_MIC_DEVICE_NAME = os.getenv("WINDOWS_MIC_DEVICE_NAME", "AudioPro X5").strip()
-INPUTFEED_SOURCE_BACKEND = os.getenv("INPUTFEED_SOURCE_BACKEND", "windows_wasapi_mic").strip() or "windows_wasapi_mic"
+_DEFAULT_SOURCE_BACKEND = "windows_wasapi_mic" if os.name == "nt" else "sounddevice_mic"
+INPUTFEED_SOURCE_BACKEND = os.getenv("INPUTFEED_SOURCE_BACKEND", _DEFAULT_SOURCE_BACKEND).strip() or _DEFAULT_SOURCE_BACKEND
 
 INPUTFEED_ENABLE_RNNOISE = os.getenv("INPUTFEED_ENABLE_RNNOISE", "1").strip().lower() in {
     "1",

@@ -10,7 +10,7 @@ from typing import Protocol
 from faster_whisper import WhisperModel
 
 from .inputfeed_settings import INPUTFEED_STT_BACKEND
-from .mic_audio_source import WasapiMicAudioSource
+from .mic_audio_source import create_mic_audio_source
 from .providers.moonshine.moonshine_stt_provider import MoonshineSTTProvider
 from .source_config import (
     CHUNK_SECONDS,
@@ -461,5 +461,5 @@ class InputFeedToTextService:
 
 
 if __name__ == "__main__":
-    service = InputFeedToTextService(audio_source=WasapiMicAudioSource())
+    service = InputFeedToTextService(audio_source=create_mic_audio_source())
     service.run_forever()

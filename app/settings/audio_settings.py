@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 
 
@@ -27,7 +28,7 @@ class AudioSettings:
 
     ## TV AUDIO SPEAKER
     tts_playback_enabled: bool = True
-    tts_output_device_name: str = "1 - HISENSE (AMD High Definition Audio Device)"
+    tts_output_device_name: str = "1 - HISENSE (AMD High Definition Audio Device)" if os.name == "nt" else ""
     tts_playback_blocking: bool = True
     tts_output_gain: float = 1.0
 
@@ -65,7 +66,7 @@ class AudioSettings:
     windows_input_device_name: str = "" ## "1 - HISENSE (AMD High Definition Audio Device) [Loopback]"
     # Use a substring that exists in the Windows device list (stable match).
     # This prevents Windows "default mic" surprises.
-    windows_mic_device_name: str = "AudioPro X5"
+    windows_mic_device_name: str = "AudioPro X5" if os.name == "nt" else ""
     windows_loopback_enabled: bool = True
     windows_exclusive_mode: bool = False
 

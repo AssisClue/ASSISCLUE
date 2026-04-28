@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import argparse
 import json
+import signal
 import subprocess
 import sys
 import time
@@ -40,6 +41,21 @@ STARTUP_GRACE_SECONDS = 1.25
 
 
 def _wmic_list_processes() -> list[tuple[int, str, str]]:
+    if os.name != "nt":
+        rows: list[tuple[int, str, str]] = []
+        proc_root = Path("/proc")
+        for item in proc_root.iterdir() if proc_root.exists() else []:
+            if not item.name.isdigit():
+                continue
+            try:
+                pid = int(item.name)
+                name = (item / "comm").read_text(encoding="utf-8", errors="ignore").strip()
+                raw_cmd = (item / "cmdline").read_bytes().replace(b"\x00", b" ").decode("utf-8", errors="ignore").strip()
+            except Exception:
+                continue
+            rows.append((pid, name, raw_cmd))
+        return rows
+
     try:
         raw = subprocess.check_output(
             [
@@ -151,6 +167,12 @@ def _stack_pid_details() -> list[tuple[int, str, str]]:
 
 def _kill_pid(pid: int | None) -> None:
     if not pid:
+        return
+    if os.name != "nt":
+        try:
+            os.kill(int(pid), signal.SIGTERM)
+        except Exception:
+            pass
         return
     try:
         subprocess.run(

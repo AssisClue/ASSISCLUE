@@ -66,9 +66,8 @@ class WorkspaceUiService:
         clean_path = str(path or "").strip()
         if not clean_path:
             return ""
-        clean_path = clean_path.replace("/", "\\")
         try:
-            # Windows-friendly: absolute + normalized separators + normalized case.
+            # Cross-platform: absolute + normalized separators + normalized case.
             # Avoid strict resolve so missing files don't crash matching.
             normalized = os.path.normcase(os.path.normpath(os.path.abspath(clean_path)))
         except Exception:
