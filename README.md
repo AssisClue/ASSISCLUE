@@ -111,6 +111,7 @@ Open **PowerShell** and create the project root:
 ```powershell
 mkdir C:\AI\ASSISCLUE
 cd C:\AI\ASSISCLUE
+git clone https://github.com/AssisClue/ASSISCLUE.git
 ```
 
 ---
@@ -136,13 +137,11 @@ If PowerShell shows a permission error, run this once:
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
-
 Then activate again:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
-
 ---
 
 ## 4. Install dependencies
