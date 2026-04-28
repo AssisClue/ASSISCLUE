@@ -1,0 +1,13 @@
+{
+  "event_id": "evt_19a7a0100bed4cabb3eaa45ff92db075",
+  "ts": 1777382080.196265,
+  "session_id": "session_20260428_083124",
+  "source": "audio_input",
+  "text": "I think that's what we're going to do. I think that's what we're going to do.",
+  "language": "en",
+  "metadata": {
+    "model_name": "moonshine",
+    "source_type": "audio_stream",
+    "stt_backend": "moonshine"
+  }
+}

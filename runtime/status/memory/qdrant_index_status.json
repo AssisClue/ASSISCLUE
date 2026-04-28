@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "updated_at": 1776611855.2847488,
+  "collection_name": "context_memory",
+  "item_count": 75,
+  "vector_size": 256,
+  "distance": "cosine",
+  "schema_version": "1",
+  "index_backend": "qdrant",
+  "source_of_truth": "json"
+}

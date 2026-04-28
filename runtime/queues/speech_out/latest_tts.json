@@ -1,0 +1,23 @@
+{
+  "ts": 1777382078.1978135,
+  "status": "ok",
+  "text": "Edit mode required before mutation commands.",
+  "spoken_text": "Edit mode required before mutation commands.",
+  "output_path": "C:\\AI\\ASSISCLUE\\runtime\\queues\\speech_out\\audio\\spq_b92252af7904458aa716db118ae4339f.wav",
+  "elapsed_seconds": 3.83,
+  "duration_seconds": 3.425,
+  "backend": "kokoro",
+  "voice": "af_heart",
+  "lang_code": "a",
+  "sample_rate": 24000,
+  "blocking": true,
+  "playback_result": {
+    "ok": true,
+    "wav_path": "C:\\AI\\ASSISCLUE\\runtime\\queues\\speech_out\\audio\\spq_b92252af7904458aa716db118ae4339f.wav",
+    "device_name_substring": "1 - HISENSE (AMD High Definition Audio Device)",
+    "device_index": 12,
+    "blocking": false,
+    "gain": 1.0,
+    "samplerate": 24000
+  }
+}

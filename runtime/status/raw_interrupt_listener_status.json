@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "state": "running",
+  "listener": "raw_interrupt_listener",
+  "updated_at": 1777379673.8250337,
+  "last_event": "interrupt_emitted",
+  "last_event_id": "pevt_75e454d37e5c4b2c92b71b2c38687906",
+  "last_source_event_id": "evt_87e146b9319f450a87b5d4077372ca9e",
+  "last_text": "shut up"
+}

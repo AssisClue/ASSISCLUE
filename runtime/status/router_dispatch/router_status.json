@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "state": "off",
+  "service": "router_dispatch",
+  "updated_at": 1777382085.8389006,
+  "last_processed_line_number": 11,
+  "last_route": "stopped",
+  "last_routing_reason": "stopped"
+}

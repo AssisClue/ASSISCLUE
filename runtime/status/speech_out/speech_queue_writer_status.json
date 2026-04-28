@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "state": "off",
+  "service": "speech_queue_writer",
+  "updated_at": 1777382085.8488388,
+  "last_processed_line_number": 0,
+  "display_last_processed_line_number": 1,
+  "spoken_last_processed_line_number": 9,
+  "last_result_id": "",
+  "last_enqueued_speech_id": ""
+}

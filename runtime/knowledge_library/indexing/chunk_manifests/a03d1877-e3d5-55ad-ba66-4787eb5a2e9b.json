@@ -1,0 +1,14 @@
+{
+  "item_id": "a03d1877-e3d5-55ad-ba66-4787eb5a2e9b",
+  "source_path": "C:\\AI\\INSTAINT\\data\\knowledge_library\\libraries\\books\\sample_book.txt",
+  "file_name": "sample_book.txt",
+  "chunk_count": 1,
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "start_index": 0,
+      "end_index": 86,
+      "text": "Chapter 1\nEinstein was thinking about light.\n\nChapter 2\nRelativity changes the frame."
+    }
+  ]
+}

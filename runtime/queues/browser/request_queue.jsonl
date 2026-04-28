@@ -1,0 +1,5 @@
+{"request_id": "bsr_6cbdcb94262b47e9b239e03fa352d11c", "ts": 1777379555.5015829, "action": "open_browser", "payload": {}}
+{"request_id": "bsr_3a92d95626794082955dec50b6d652fd", "ts": 1777379574.326266, "action": "look_for", "payload": {"query": "jumanji", "raw_query": "jumanji"}}
+{"request_id": "bsr_c9d72047a62c4a1a91454769442bea93", "ts": 1777379589.1219635, "action": "browser_scroll_down", "payload": {}}
+{"request_id": "bsr_09b35a17ee1d492f88549966be2e8303", "ts": 1777379648.9188719, "action": "open_browser", "payload": {}}
+{"request_id": "bsr_b6e7ff661b8644bda7cb97b7a0d71a90", "ts": 1777379655.9612682, "action": "look_for", "payload": {"query": "fast and furious", "raw_query": "fast and furious"}}

@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "runtime_help_001",
+    "space_id": "help",
+    "title": "Explain Runtime",
+    "keyword": "runtime",
+    "short_answer": "Runtime is where the app writes live working files.",
+    "text": "Runtime is the app's active working area. It stores queues, status files, latest responses, speech output, logs, state files, and temporary working records.",
+    "examples": ["EXPLAIN RUNTIME"],
+    "tags": ["runtime"],
+    "aliases": ["runtime"],
+    "related": ["state", "output"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "runtime"
+    }
+  },
+  {
+    "item_id": "runtime_help_002",
+    "space_id": "help",
+    "title": "Explain State",
+    "keyword": "state",
+    "short_answer": "State files store the current condition of the app.",
+    "text": "State files tell the app what is currently active, enabled, running, or recently updated. They are useful for debugging what the system thinks is happening.",
+    "examples": ["EXPLAIN STATE"],
+    "tags": ["state"],
+    "aliases": ["state"],
+    "related": ["system_runtime", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "state"
+    }
+  },
+  {
+    "item_id": "runtime_help_003",
+    "space_id": "help",
+    "title": "Explain System Runtime",
+    "keyword": "system_runtime",
+    "short_answer": "system_runtime.json stores the main runtime state of the app.",
+    "text": "system_runtime.json holds active_mode, active_persona, service flags, edit mode, and the help explain capture flag. It is the main place to check current system-level runtime state.",
+    "examples": ["EXPLAIN SYSTEM_RUNTIME"],
+    "tags": ["system_runtime", "file"],
+    "aliases": ["system_runtime"],
+    "related": ["state", "mode"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "system_runtime"
+    }
+  },
+  {
+    "item_id": "runtime_help_004",
+    "space_id": "help",
+    "title": "Explain Mode",
+    "keyword": "mode",
+    "short_answer": "Mode describes the current behavior level of the assistant.",
+    "text": "Mode is a runtime setting such as passive, listening_light, smart_background, or fully_active. Today it is partly informational, but it is intended to control how active the system should be.",
+    "examples": ["EXPLAIN MODE"],
+    "tags": ["mode"],
+    "aliases": ["mode"],
+    "related": ["system_runtime", "settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "mode"
+    }
+  },
+  {
+    "item_id": "runtime_help_005",
+    "space_id": "help",
+    "title": "Explain Response Queue",
+    "keyword": "response_queue",
+    "short_answer": "response_queue.jsonl sends spoken questions to spoken_queries.",
+    "text": "response_queue.jsonl is where router_dispatch places events meant for response runners. spoken_queries reads this queue when target_runner is spoken_queries.",
+    "examples": ["EXPLAIN RESPONSE_QUEUE"],
+    "tags": ["response_queue", "file"],
+    "aliases": ["response_queue"],
+    "related": ["spoken_queries", "jsonl"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "response_queue"
+    }
+  },
+  {
+    "item_id": "runtime_help_006",
+    "space_id": "help",
+    "title": "Explain Spoken Query Results",
+    "keyword": "spoken_query_results",
+    "short_answer": "spoken_query_results.jsonl stores spoken query answers.",
+    "text": "This JSONL file records the result produced by spoken_queries, including answer_text, speech_text, runner name, status, and metadata.",
+    "examples": ["EXPLAIN SPOKEN_QUERY_RESULTS"],
+    "tags": ["spoken_query_results", "file"],
+    "aliases": ["spoken_query_results"],
+    "related": ["spoken_queries", "speech_text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "spoken_query_results"
+    }
+  },
+  {
+    "item_id": "runtime_help_007",
+    "space_id": "help",
+    "title": "Explain Chat History",
+    "keyword": "chat_history",
+    "short_answer": "chat_history.jsonl stores user and assistant conversation records.",
+    "text": "chat_history.jsonl is useful for history, UI, memory, and debugging. It should store clean records of what the user asked and what the assistant answered.",
+    "examples": ["EXPLAIN CHAT_HISTORY"],
+    "tags": ["chat_history", "file"],
+    "aliases": ["chat_history"],
+    "related": ["output", "jsonl"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "chat_history"
+    }
+  },
+  {
+    "item_id": "runtime_help_008",
+    "space_id": "help",
+    "title": "Explain Latest Response",
+    "keyword": "latest_response",
+    "short_answer": "latest_response.json stores the most recent assistant response.",
+    "text": "latest_response.json is a quick file to check when debugging whether the assistant produced a final answer. If it is empty, speech output may have nothing to say.",
+    "examples": ["EXPLAIN LATEST_RESPONSE"],
+    "tags": ["latest_response", "file"],
+    "aliases": ["latest_response"],
+    "related": ["output", "speech_out"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "latest_response"
+    }
+  },
+  {
+    "item_id": "runtime_help_009",
+    "space_id": "help",
+    "title": "Explain Speech Out",
+    "keyword": "speech_out",
+    "short_answer": "speech_out contains files used to speak assistant responses.",
+    "text": "speech_out is the runtime area for TTS queues, generated audio, and spoken history. Its status lives under runtime/status/speech_out and playback state under runtime/state/speech_out.",
+    "examples": ["EXPLAIN SPEECH_OUT"],
+    "tags": ["speech_out", "folder"],
+    "aliases": ["speech_out"],
+    "related": ["tts", "speech_text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "speech_out"
+    }
+  },
+  {
+    "item_id": "runtime_help_010",
+    "space_id": "help",
+    "title": "Explain Jsonl",
+    "keyword": "jsonl",
+    "short_answer": "JSONL stores one JSON record per line.",
+    "text": "JSONL is useful for queues, logs, histories, and append-only runtime records. The app uses it when new events or results must be added over time.",
+    "examples": ["EXPLAIN JSONL"],
+    "tags": ["jsonl"],
+    "aliases": ["json", "jotason", "jota_son"],
+    "related": ["json", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "runtime",
+      "topic_key": "jsonl"
+    }
+  }
+]

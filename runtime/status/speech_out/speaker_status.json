@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "state": "off",
+  "service": "speaker_service",
+  "updated_at": 1777382085.8488388,
+  "last_processed_line_number": 9,
+  "last_status": "stopped",
+  "last_speech_id": ""
+}

@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "state": "off",
+  "service": "display_action_runner",
+  "updated_at": 1777382085.8389006,
+  "last_processed_line_number": 1,
+  "last_action_name": "stopped",
+  "last_result_ok": false
+}
