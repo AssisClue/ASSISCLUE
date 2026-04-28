@@ -2,7 +2,7 @@
   "ok": true,
   "state": "off",
   "service": "speech_queue_writer",
-  "updated_at": 1777382085.8488388,
+  "updated_at": 1777383675.190774,
   "last_processed_line_number": 0,
   "display_last_processed_line_number": 1,
   "spoken_last_processed_line_number": 9,

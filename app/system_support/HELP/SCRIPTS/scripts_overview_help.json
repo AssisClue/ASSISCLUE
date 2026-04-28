@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "scripts_help_001",
+    "space_id": "help",
+    "title": "Explain Scripts",
+    "keyword": "scripts",
+    "short_answer": "Scripts are helper files used to start, test, clean, or diagnose the app.",
+    "text": "In this app, scripts should make repeated actions easy and predictable. Use scripts instead of manually guessing long commands.",
+    "examples": ["EXPLAIN SCRIPTS"],
+    "tags": ["scripts"],
+    "aliases": ["scripts"],
+    "related": ["start script", "test script"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "scripts"
+    }
+  },
+  {
+    "item_id": "scripts_help_002",
+    "space_id": "help",
+    "title": "Explain Start Script",
+    "keyword": "start script",
+    "short_answer": "Start Script launches part of the app.",
+    "text": "A start script can launch UI, assistant loop, STT loop, or a full play mode. It should make startup repeatable.",
+    "examples": ["EXPLAIN START SCRIPT"],
+    "tags": ["start script"],
+    "aliases": ["start script"],
+    "related": ["scripts", "play_settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "start_script"
+    }
+  },
+  {
+    "item_id": "scripts_help_003",
+    "space_id": "help",
+    "title": "Explain Test Script",
+    "keyword": "test script",
+    "short_answer": "Test Script checks whether a block works.",
+    "text": "A test script should verify one block or flow without needing the entire app. Use test scripts after changing HELP, memory, LLM, STT, or speech output.",
+    "examples": ["EXPLAIN TEST SCRIPT"],
+    "tags": ["test script"],
+    "aliases": ["test script"],
+    "related": ["smoke test", "scripts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "test_script"
+    }
+  },
+  {
+    "item_id": "scripts_help_004",
+    "space_id": "help",
+    "title": "Explain Smoke Test",
+    "keyword": "smoke test",
+    "short_answer": "Smoke Test is a quick proof that a block is alive.",
+    "text": "Smoke tests do not prove every detail. They prove that imports, basic flow, and one expected result are working.",
+    "examples": ["EXPLAIN SMOKE TEST"],
+    "tags": ["smoke test"],
+    "aliases": ["smoke test"],
+    "related": ["test script", "memory"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "smoke_test"
+    }
+  },
+  {
+    "item_id": "scripts_help_005",
+    "space_id": "help",
+    "title": "Explain Clean Script",
+    "keyword": "clean script",
+    "short_answer": "Clean Script removes temporary or generated files safely.",
+    "text": "Clean scripts are useful when runtime or build files become noisy. They should never delete important source files or user data.",
+    "examples": ["EXPLAIN CLEAN SCRIPT"],
+    "tags": ["clean script"],
+    "aliases": ["clean script"],
+    "related": ["scripts", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "clean_script"
+    }
+  },
+  {
+    "item_id": "scripts_help_006",
+    "space_id": "help",
+    "title": "Explain Maintenance Script",
+    "keyword": "maintenance script",
+    "short_answer": "Maintenance Script keeps the project organized or healthy.",
+    "text": "Maintenance scripts can clean runtime, check files, validate JSON, archive logs, or prepare folders. They are not main app features, but they protect the workflow.",
+    "examples": ["EXPLAIN MAINTENANCE SCRIPT"],
+    "tags": ["maintenance script"],
+    "aliases": ["maintenance script"],
+    "related": ["clean script", "scripts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "maintenance_script"
+    }
+  },
+  {
+    "item_id": "scripts_help_007",
+    "space_id": "help",
+    "title": "Explain PowerShell",
+    "keyword": "powershell",
+    "short_answer": "PowerShell is the Windows terminal used to run project commands.",
+    "text": "This app is Windows-first for many commands. Use PowerShell to activate the venv, start the app, run scripts, and inspect files.",
+    "examples": ["EXPLAIN POWERSHELL"],
+    "tags": ["powershell"],
+    "aliases": ["powershell"],
+    "related": ["scripts", "start script"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "powershell"
+    }
+  },
+  {
+    "item_id": "scripts_help_008",
+    "space_id": "help",
+    "title": "Explain Venv",
+    "keyword": "venv",
+    "short_answer": "Venv is the Python virtual environment for the app.",
+    "text": "The venv keeps Python packages isolated for this project. Before running Python scripts, activate the correct venv from the project root.",
+    "examples": ["EXPLAIN VENV"],
+    "tags": ["venv"],
+    "aliases": ["venv"],
+    "related": ["powershell", "scripts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "venv"
+    }
+  },
+  {
+    "item_id": "scripts_help_009",
+    "space_id": "help",
+    "title": "Explain Start",
+    "keyword": "start",
+    "short_answer": "Start means launching the app or one of its loops.",
+    "text": "Start commands should be simple and repeatable. The goal is to launch the UI, assistant loop, STT loop, or full play setup without manual confusion.",
+    "examples": ["EXPLAIN START"],
+    "tags": ["start"],
+    "aliases": ["start"],
+    "related": ["start script", "play_settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "start"
+    }
+  },
+  {
+    "item_id": "scripts_help_010",
+    "space_id": "help",
+    "title": "Explain Diagnostics",
+    "keyword": "diagnostics",
+    "short_answer": "Diagnostics means checking whether the app is healthy.",
+    "text": "Diagnostics can inspect runtime state, logs, service status, LLM availability, memory readiness, audio devices, or queue movement.",
+    "examples": ["EXPLAIN DIAGNOSTICS"],
+    "tags": ["diagnostics"],
+    "aliases": ["diagnostics"],
+    "related": ["smoke test", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "scripts",
+      "topic_key": "diagnostics"
+    }
+  }
+]

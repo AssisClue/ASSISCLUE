@@ -1,8 +1,8 @@
 {
   "ui_pid": null,
   "ui_running": false,
-  "updated_at": 1777382085.8213308,
-  "started_at": 1777382085.8213308,
+  "updated_at": 1777383675.153826,
+  "started_at": 1777383675.1528268,
   "status": "stopped",
   "active_mode": "listening_light",
   "active_persona": "rick",
@@ -45,5 +45,5 @@
   "browser_service_pid": null,
   "browser_service_running": false,
   "help_explain_capture_enabled": true,
-  "help_explain_capture_updated_at": 1777382084.60689
+  "help_explain_capture_updated_at": 1777383674.6082282
 }

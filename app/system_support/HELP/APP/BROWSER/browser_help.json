@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "browser_help_001",
+    "space_id": "help",
+    "title": "Explain Browser",
+    "keyword": "browser",
+    "short_answer": "Browser is the app block that controls browser actions.",
+    "text": "In this app, the browser block can open pages, search, click visible text, save page text, and provide browser context for later questions.",
+    "examples": ["EXPLAIN BROWSER"],
+    "tags": ["browser"],
+    "aliases": ["browser"],
+    "related": ["open browser", "click text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "browser"
+    }
+  },
+  {
+    "item_id": "browser_help_002",
+    "space_id": "help",
+    "title": "Explain Open Browser",
+    "keyword": "open browser",
+    "short_answer": "Open Browser starts or focuses a browser session.",
+    "text": "Use browser open behavior when the assistant needs a browser window available for search, page navigation, clicks, or saved page text.",
+    "examples": ["EXPLAIN OPEN BROWSER"],
+    "tags": ["open browser"],
+    "aliases": ["open browser"],
+    "related": ["browser", "search"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "open_browser"
+    }
+  },
+  {
+    "item_id": "browser_help_003",
+    "space_id": "help",
+    "title": "Explain Search",
+    "keyword": "search",
+    "short_answer": "Search tells the browser to look up a query.",
+    "text": "In this app, search should safely handle normal search text instead of assuming every phrase is a URL.",
+    "examples": ["EXPLAIN SEARCH"],
+    "tags": ["search"],
+    "aliases": ["search"],
+    "related": ["browser", "navigation"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "search"
+    }
+  },
+  {
+    "item_id": "browser_help_004",
+    "space_id": "help",
+    "title": "Explain Navigation",
+    "keyword": "navigation",
+    "short_answer": "Navigation decides what browser page or search URL to open.",
+    "text": "Navigation should open real URLs directly and convert non-URLs into search URLs. This prevents bad browser input from crashing the browser flow.",
+    "examples": ["EXPLAIN NAVIGATION"],
+    "tags": ["navigation"],
+    "aliases": ["navigation"],
+    "related": ["browser", "search"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "navigation"
+    }
+  },
+  {
+    "item_id": "browser_help_005",
+    "space_id": "help",
+    "title": "Explain Click Text",
+    "keyword": "click text",
+    "short_answer": "Click Text clicks visible page text by name.",
+    "text": "Click Text is useful when the user says the text they see on the page. The browser should search visible text and click the best matching element.",
+    "examples": ["EXPLAIN CLICK TEXT"],
+    "tags": ["click text"],
+    "aliases": ["click text"],
+    "related": ["browser", "visible text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "click_text"
+    }
+  },
+  {
+    "item_id": "browser_help_006",
+    "space_id": "help",
+    "title": "Explain Visible Text",
+    "keyword": "visible text",
+    "short_answer": "Visible Text is the text currently shown on the browser page.",
+    "text": "Visible text helps the assistant understand what can be clicked or read on the page without relying on coordinates.",
+    "examples": ["EXPLAIN VISIBLE TEXT"],
+    "tags": ["visible text"],
+    "aliases": ["visible text"],
+    "related": ["click text", "browser"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "visible_text"
+    }
+  },
+  {
+    "item_id": "browser_help_007",
+    "space_id": "help",
+    "title": "Explain Save Text",
+    "keyword": "save text",
+    "short_answer": "Save Text saves browser page text for later context.",
+    "text": "When the assistant saves page text, it should write the text to a runtime knowledge/temp file and update the active saved text pointer.",
+    "examples": ["EXPLAIN SAVE TEXT"],
+    "tags": ["save text"],
+    "aliases": ["save text"],
+    "related": ["browser context", "latest saved text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "save_text"
+    }
+  },
+  {
+    "item_id": "browser_help_008",
+    "space_id": "help",
+    "title": "Explain Browser Context",
+    "keyword": "browser context",
+    "short_answer": "Browser Context is saved page text used by later questions.",
+    "text": "Browser context lets the LLM answer questions about a page after the page text has been saved. This avoids relying only on the live browser view.",
+    "examples": ["EXPLAIN BROWSER CONTEXT"],
+    "tags": ["browser context"],
+    "aliases": ["browser context"],
+    "related": ["save text", "latest saved text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "browser_context"
+    }
+  },
+  {
+    "item_id": "browser_help_009",
+    "space_id": "help",
+    "title": "Explain Latest Saved Text",
+    "keyword": "latest saved text",
+    "short_answer": "Latest Saved Text points to the current browser text context file.",
+    "text": "The latest saved text pointer tells the app which saved browser text should be used as active context for LLM direct questions.",
+    "examples": ["EXPLAIN LATEST SAVED TEXT"],
+    "tags": ["latest saved text"],
+    "aliases": ["latest saved text"],
+    "related": ["browser context", "save text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "latest_saved_text"
+    }
+  },
+  {
+    "item_id": "browser_help_010",
+    "space_id": "help",
+    "title": "Explain Browser Service",
+    "keyword": "browser service",
+    "short_answer": "Browser Service owns browser actions for the app.",
+    "text": "Browser Service should be the clean layer that executes browser open, search, click, scroll, and save text actions instead of scattering Playwright logic everywhere.",
+    "examples": ["EXPLAIN BROWSER SERVICE"],
+    "tags": ["browser service"],
+    "aliases": ["browser service"],
+    "related": ["browser", "click text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "browser",
+      "topic_key": "browser_service"
+    }
+  }
+]

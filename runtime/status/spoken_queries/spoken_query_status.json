@@ -2,7 +2,7 @@
   "ok": true,
   "state": "off",
   "service": "spoken_query_router",
-  "updated_at": 1777382085.8410544,
+  "updated_at": 1777383675.184883,
   "last_processed_line_number": 9,
   "last_runner_name": "stopped",
   "last_result_ok": false

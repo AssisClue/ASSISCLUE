@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "speech_out_help_001",
+    "space_id": "help",
+    "title": "Explain Speech Out",
+    "keyword": "speech_out",
+    "short_answer": "speech_out is the voice output layer of the app.",
+    "text": "speech_out receives text meant to be spoken, queues it, tracks playback, stores spoken history, and works with TTS audio output.",
+    "examples": ["EXPLAIN SPEECH_OUT"],
+    "tags": ["speech_out"],
+    "aliases": ["speech_out"],
+    "related": ["tts", "speech_text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "speech_out"
+    }
+  },
+  {
+    "item_id": "speech_out_help_002",
+    "space_id": "help",
+    "title": "Explain TTS",
+    "keyword": "tts",
+    "short_answer": "TTS turns assistant text into spoken audio.",
+    "text": "TTS is used after the assistant has an answer. It should receive speech_text, generate audio, and let playback state tell the system when the assistant is speaking.",
+    "examples": ["EXPLAIN TTS"],
+    "tags": ["tts"],
+    "aliases": ["tts"],
+    "related": ["speech_out", "latest_tts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "tts"
+    }
+  },
+  {
+    "item_id": "speech_out_help_003",
+    "space_id": "help",
+    "title": "Explain Speech Queue",
+    "keyword": "speech_queue",
+    "short_answer": "speech_queue.jsonl stores text waiting to be spoken.",
+    "text": "speech_queue is the queue used by the speech output system. It lets the app pass speakable responses to the speaker layer in order.",
+    "examples": ["EXPLAIN SPEECH_QUEUE"],
+    "tags": ["speech_queue", "file"],
+    "aliases": ["speech_queue"],
+    "related": ["speech_out", "speech_text"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "speech_queue"
+    }
+  },
+  {
+    "item_id": "speech_out_help_004",
+    "space_id": "help",
+    "title": "Explain Spoken History",
+    "keyword": "spoken_history",
+    "short_answer": "spoken_history.jsonl records what the assistant has spoken.",
+    "text": "spoken_history is useful for debugging, replay awareness, and checking what was actually sent to voice output.",
+    "examples": ["EXPLAIN SPOKEN_HISTORY"],
+    "tags": ["spoken_history", "file"],
+    "aliases": ["spoken_history"],
+    "related": ["speech_out", "jsonl"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "spoken_history"
+    }
+  },
+  {
+    "item_id": "speech_out_help_005",
+    "space_id": "help",
+    "title": "Explain Latest TTS",
+    "keyword": "latest_tts",
+    "short_answer": "latest_tts.json stores the latest generated TTS information.",
+    "text": "latest_tts helps debug what text was sent to TTS, what audio file was produced, and whether the last TTS step completed correctly.",
+    "examples": ["EXPLAIN LATEST_TTS"],
+    "tags": ["latest_tts", "file"],
+    "aliases": ["latest_tts"],
+    "related": ["tts", "speech_out"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "latest_tts"
+    }
+  },
+  {
+    "item_id": "speech_out_help_006",
+    "space_id": "help",
+    "title": "Explain Playback State",
+    "keyword": "playback_state",
+    "short_answer": "playback_state.json tells whether assistant audio is playing.",
+    "text": "Playback state matters because the microphone pipeline should avoid treating the assistant's own voice as new user input.",
+    "examples": ["EXPLAIN PLAYBACK_STATE"],
+    "tags": ["playback_state", "file"],
+    "aliases": ["playback_state"],
+    "related": ["tts", "anti echo"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "playback_state"
+    }
+  },
+  {
+    "item_id": "speech_out_help_007",
+    "space_id": "help",
+    "title": "Explain Speaker Status",
+    "keyword": "speaker_status",
+    "short_answer": "speaker_status.json stores the current status of the speaker layer.",
+    "text": "Speaker status helps debug whether the speech output system is idle, speaking, blocked, or failing.",
+    "examples": ["EXPLAIN SPEAKER_STATUS"],
+    "tags": ["speaker_status", "file"],
+    "aliases": ["speaker_status"],
+    "related": ["speech_out", "playback_state"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "speaker_status"
+    }
+  },
+  {
+    "item_id": "speech_out_help_008",
+    "space_id": "help",
+    "title": "Explain Speech Audio",
+    "keyword": "speech audio",
+    "short_answer": "Speech Audio is the generated audio file used for spoken output.",
+    "text": "Speech audio files are produced by TTS and played by the speaker layer. They are usually stored under runtime speech output audio folders.",
+    "examples": ["EXPLAIN SPEECH AUDIO"],
+    "tags": ["speech audio"],
+    "aliases": ["speech audio"],
+    "related": ["tts", "latest_tts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "speech_audio"
+    }
+  },
+  {
+    "item_id": "speech_out_help_009",
+    "space_id": "help",
+    "title": "Explain Anti Echo",
+    "keyword": "anti echo",
+    "short_answer": "Anti Echo prevents the assistant from hearing itself as user input.",
+    "text": "The app can check playback state or latest spoken text to avoid responding to its own TTS output through the microphone.",
+    "examples": ["EXPLAIN ANTI ECHO"],
+    "tags": ["anti echo"],
+    "aliases": ["anti echo"],
+    "related": ["playback_state", "tts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "anti_echo"
+    }
+  },
+  {
+    "item_id": "speech_out_help_010",
+    "space_id": "help",
+    "title": "Explain Voice Output",
+    "keyword": "voice output",
+    "short_answer": "Voice Output is the final spoken response from the assistant.",
+    "text": "Voice output starts from speech_text, passes through TTS, generates audio, updates playback state, and is heard by the user.",
+    "examples": ["EXPLAIN VOICE OUTPUT"],
+    "tags": ["voice output"],
+    "aliases": ["voice output"],
+    "related": ["speech_out", "tts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "speech_out",
+      "topic_key": "voice_output"
+    }
+  }
+]
