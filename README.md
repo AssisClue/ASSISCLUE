@@ -1,5 +1,5 @@
 ## Hi there 👋
-<img width="640" height="1028" alt="CLUE SUPER EXPLAINED" src="https://github.com/user-attachments/assets/0dfa540a-5014-4e36-b2ce-413f174aea67" />
+<img width="640" height="1028" alt="CLUE SUPER EXPLAINED" src="info/CLUE SUPER EXPLAINED.png" />
 
 
 # ASSISTANT CLUE
