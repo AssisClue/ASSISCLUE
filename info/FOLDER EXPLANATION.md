@@ -2,8 +2,9 @@
 
 This file gives a quick map of the main `APP` folders. It is for a new user who wants to know where the important parts live before reading all the READMEs.
 
-Main requirements are in:
-- `/ASSISCLUE/APP/requirements.txt`
+Main requirements are in the root folder:
+- `/ASSISCLUE/requirements.txt`
+- `/ASSISCLUE/requirements-linux.txt`
 - Moonshine STT is in `/ASSISCLUE/APP/inputfeed_to_text/providers/moonshine/`
 - Kokoro TTS is used from `/ASSISCLUE/APP/speech_out/` and configured in `/ASSISCLUE/APP/settings/`
 
@@ -22,7 +23,7 @@ Important files:
 - `bootstrap.py`
 - `config.py`
 - `main.py`
-- `requirements.txt`
+- Root requirements are outside this folder.
 
 Important note: `main.py` looks like a demo/entry test path in this project. The real running stack is mostly controlled by the scripts in `/ASSISCLUE/scripts/`.
 
@@ -272,7 +273,7 @@ Important files:
 - `llm_settings.py`
 - `tts_settings.py`
 
-Important note: use this folder for defaults and ENV-based settings. Main package requirements are still in `/ASSISCLUE/APP/requirements.txt`.
+Important note: use this folder for defaults and ENV-based settings. Main package requirements are in `/ASSISCLUE/requirements.txt` and `/ASSISCLUE/requirements-linux.txt`.
 
 ---
 

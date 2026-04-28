@@ -1,34 +1,145 @@
+# ASSISCLUE Linux Setup
 
-Here is the simple review:
+This is the beginner Linux install guide.
 
-app/inputfeed_to_text/mic_audio_source.py
-Added Linux microphone support using sounddevice. Windows still keeps the old WasapiMicAudioSource.
+Linux support is close, but still needs real testing for microphone, speaker, screenshot, and browser automation.
 
-app/inputfeed_to_text/inputfeed_to_text_service.py
-Now it asks a helper to choose the correct mic source. Windows gets Windows audio, Linux gets Linux audio.
+## 1. Install System Packages
 
-app/inputfeed_to_text/inputfeed_settings.py
-Default input backend is now smart: Windows = windows_wasapi_mic, Linux = sounddevice_mic.
+Ubuntu / Debian:
 
-scripts/start_main_stack.py
-Can now find running app processes on Linux using /proc, not only Windows wmic.
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip portaudio19-dev ffmpeg
+```
 
-scripts/stop_main_stack.py
-Can now stop Linux processes with SIGTERM, while Windows still uses taskkill.
+## 2. Download The Project
 
-app/ui_local/app.py
-UI buttons now work better on Linux. Process check uses Linux-safe logic, and clear chat has Python cleanup if PowerShell is not available.
+```bash
+mkdir -p ~/AI
+cd ~/AI
+git clone <YOUR_GITHUB_REPO_URL> ASSISCLUE
+cd ASSISCLUE
+```
 
-app/settings/audio_settings.py
-Linux no longer uses your Windows mic/speaker names by default. It uses default audio devices.
+Replace `<YOUR_GITHUB_REPO_URL>` with the real GitHub repo URL.
 
-app/ui_local/library_ui/workspace/services_workspace.py
-Fixed path matching so Linux paths like /home/user/file.txt do not get changed into Windows paths.
+## 3. Create Python Environment
 
-app/web_tools/config.py
-On Linux servers without a screen, browser automation starts headless automatically.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-linux.txt
+python -m playwright install --with-deps chromium
+```
 
-app/requirements-linux.txt
-New Linux install list. It removes PyAudioWPatch, because that is Windows-specific.
+## 4. Start The App
 
-Important detail: Linux should now be much closer, but real mic/screenshot testing still must happen on a Linux machine.
+```bash
+python scripts/start_main_stack.py
+python scripts/stop_main_stack.py
+```
+MAIN INTERFACE RUN FROM START
+
+Open the main Web UI:
+
+```text
+http://127.0.0.1:8000
+```
+
+Start library Web UI only:
+
+```bash
+uvicorn app.ui_local.library_ui.appdocs:app --host 127.0.0.1 --port 8001 --reload
+```
+
+Open library Web UI:
+
+```text
+http://127.0.0.1:8001
+```
+
+
+
+## Common Commands
+
+Run this first when you open a new terminal:
+
+```bash
+cd ~/AI/ASSISCLUE
+source .venv/bin/activate
+```
+
+Start the full app:
+
+```bash
+python scripts/start_main_stack.py
+```
+
+Stop the full app:
+
+```bash
+python scripts/stop_main_stack.py
+```
+
+
+Light clean runtime files:
+(this might need policy permissions
+)
+```bash
+python scripts/clean_all_lightrun.py
+```
+
+
+## Optional Test Commands
+
+```bash
+python -m py_compile app/inputfeed_to_text/mic_audio_source.py
+INPUTFEED_SOURCE_BACKEND=sounddevice_mic python -m app.inputfeed_to_text.inputfeed_to_text_service
+```
+
+## What Linux Changes
+
+ASSISCLUE was first built around Windows.
+
+Linux now has safer defaults for:
+
+- microphone input
+- process start / stop
+- browser headless mode
+- runtime cleaning
+
+Default microphone backend:
+
+- Windows: `windows_wasapi_mic`
+- Linux: `sounddevice_mic`
+
+## Known Linux Risks
+
+These parts may still need fixes after real Linux testing:
+
+- real microphone capture
+- speaker / TTS playback
+- screenshot capture with X11 or Wayland
+- browser automation on desktop or server
+
+## Common Problems
+
+If install fails on audio packages, run:
+
+```bash
+sudo apt install -y portaudio19-dev ffmpeg
+```
+
+If Playwright browser is missing, run:
+
+```bash
+python -m playwright install --with-deps chromium
+```
+
+If the app does not open, check that the terminal still says the server is running, then open:
+
+```text
+http://127.0.0.1:8000
+```
