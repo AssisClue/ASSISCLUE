@@ -1,0 +1,106 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="home-stack">
+    <div class="library-grid">
+        <section class="card roots-card">
+            <div class="section-label">Roots</div>
+            <h2>Registered Roots</h2>
+
+            <div class="stat-row">
+                <div class="stat-pill">roots = {{ root_count }}</div>
+                <div class="stat-pill">files = {{ item_count }}</div>
+                <div class="stat-pill">all = {{ all_item_count }}</div>
+            </div>
+
+            <div class="list-scroll">
+                {% if roots %}
+                    {% for root in roots %}
+                    <div class="root-item">
+                        <div class="root-name">{{ root.name }}</div>
+                        <div class="root-path">{{ root.path }}</div>
+                        <div class="root-meta">
+                            <span class="status-badge status-running">{{ root.kind }}</span>
+                            {% if root.tags %}
+                                {% for tag in root.tags %}
+                                <span class="tag-pill">{{ tag }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-box">No roots registered yet.</div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="card files-card">
+            <div class="section-label">Files</div>
+            <h2>Library Files</h2>
+
+            <form method="get" action="/" class="filter-bar">
+                <input type="text" name="search" value="{{ filters.search or '' }}" placeholder="Search file name or path" class="filter-input" />
+
+                <select name="extension" class="filter-select">
+                    <option value="">All extensions</option>
+                    {% for ext in extension_options %}
+                    <option value="{{ ext }}" {% if filters.extension == ext %}selected{% endif %}>{{ ext }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="root_id" class="filter-select">
+                    <option value="">All roots</option>
+                    {% for root in roots %}
+                    <option value="{{ root.root_id }}" {% if filters.root_id == root.root_id %}selected{% endif %}>{{ root.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">APPLY</button>
+                <a class="button-secondary" href="/">CLEAR</a>
+            </form>
+
+            {% include "partials/file_list.html" %}
+        </section>
+    </div>
+
+    <section class="card">
+        <div class="section-label">System Areas</div>
+        <h2>Real App Folders</h2>
+        <div class="hero-subtitle" style="margin-bottom: 14px;">
+            These are the real source and runtime folders that this UI should know about.
+        </div>
+
+        <div class="areas-grid">
+            {% for area in areas %}
+            <a class="area-card" href="/area/{{ area.key }}">
+                <div class="area-top">
+                    <div>
+                        <div class="area-title">{{ area.title }}</div>
+                        <div class="area-desc">{{ area.description }}</div>
+                    </div>
+                    {% if area.kind == "source" %}
+                    <span class="status-badge status-running">source</span>
+                    {% else %}
+                    <span class="status-badge status-idle">runtime</span>
+                    {% endif %}
+                </div>
+
+                <div class="area-folders">
+                    {% for folder in area.folders %}
+                    <div class="area-folder-row">
+                        <div class="area-folder-name">{{ folder.name }}</div>
+                        {% if folder.exists %}
+                        <span class="tag-pill">exists</span>
+                        {% else %}
+                        <span class="tag-pill">missing</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

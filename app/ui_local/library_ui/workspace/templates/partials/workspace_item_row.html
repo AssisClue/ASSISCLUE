@@ -1,0 +1,65 @@
+<div class="workspace-item-row">
+    <div class="workspace-item-main">
+        <div class="workspace-item-title">{{ item.file_name }}</div>
+        <div class="workspace-item-path">{{ item.path }}</div>
+
+        <div class="workspace-item-meta">
+            <span class="tag-pill">{{ item.source_type }}</span>
+
+            {% if item.extension %}
+            <span class="tag-pill">{{ item.extension }}</span>
+            {% endif %}
+
+            {% if item.exists %}
+            <span class="status-badge status-running">exists</span>
+            {% else %}
+            <span class="status-badge status-off">missing</span>
+            {% endif %}
+
+            {% if item.summary_ready %}
+            <span class="status-badge status-running">summary</span>
+            {% endif %}
+
+            {% if item.index_ready %}
+            <span class="status-badge status-running">indexed</span>
+            {% endif %}
+
+            {% if item.promoted %}
+            <span class="status-badge status-running">promoted</span>
+            {% endif %}
+        </div>
+
+        <div class="action-row">
+            {% if item.open_url %}
+            <a class="button-secondary" href="{{ item.open_url }}">OPEN</a>
+            {% endif %}
+
+            <form method="post" action="/workspace/actions/refresh/{{ item.mark_id }}">
+                <button type="submit">REFRESH</button>
+            </form>
+
+            {% if item.item_id %}
+            <form method="post" action="/workspace/actions/summarize/{{ item.mark_id }}">
+                <button type="submit">SUMMARIZE</button>
+            </form>
+
+            <form method="post" action="/workspace/actions/index/{{ item.mark_id }}">
+                <button type="submit">INDEX</button>
+            </form>
+
+            <form method="post" action="/workspace/actions/promote/{{ item.mark_id }}">
+                <button type="submit">PROMOTE</button>
+            </form>
+            {% endif %}
+
+            <form method="post" action="/workspace/actions/unmark/{{ item.mark_id }}">
+                <button type="submit">UNMARK</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="workspace-item-side">
+        <div class="workspace-item-status">{{ item.status }}</div>
+        <div class="workspace-item-updated">updated {{ item.updated_at }}</div>
+    </div>
+</div>

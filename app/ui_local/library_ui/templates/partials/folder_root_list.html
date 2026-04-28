@@ -1,0 +1,24 @@
+<div class="list-scroll">
+    {% if roots %}
+        {% for root in roots %}
+        <a class="file-row" href="/area/{{ area.key }}/browse?current_path={{ root.path | urlencode }}">
+            <div class="file-row-main">
+                <div class="file-name">{{ root.name }}</div>
+                <div class="file-path">{{ root.path }}</div>
+            </div>
+
+            <div class="file-row-side">
+                {% if root.exists %}
+                <div class="file-ext">root folder</div>
+                <div class="file-size">open</div>
+                {% else %}
+                <div class="file-ext">missing</div>
+                <div class="file-size">--</div>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-box">No root folders defined for this area.</div>
+    {% endif %}
+</div>

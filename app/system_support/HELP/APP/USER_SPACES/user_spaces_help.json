@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "user_spaces_help_001",
+    "space_id": "help",
+    "title": "Explain User Spaces",
+    "keyword": "user spaces",
+    "short_answer": "User Spaces are manual memory areas controlled by the user.",
+    "text": "User Spaces are for information the user intentionally saves and organizes. They should stay separate from inferred machine memory and separate from the HELP manual.",
+    "examples": ["EXPLAIN USER SPACES"],
+    "tags": ["user spaces"],
+    "aliases": ["user spaces"],
+    "related": ["manual memory", "notes"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "user_spaces"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_002",
+    "space_id": "help",
+    "title": "Explain Manual Memory",
+    "keyword": "manual memory",
+    "short_answer": "Manual memory is information saved on purpose by the user.",
+    "text": "Manual memory is different from inferred memory. It includes saved notes, rules, prompts, projects, and other user-controlled information.",
+    "examples": ["EXPLAIN MANUAL MEMORY"],
+    "tags": ["manual memory"],
+    "aliases": ["manual memory"],
+    "related": ["user spaces", "editable memory"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "manual_memory"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_003",
+    "space_id": "help",
+    "title": "Explain Editable Memory",
+    "keyword": "editable memory",
+    "short_answer": "Editable memory is memory the user can add, change, or remove.",
+    "text": "Editable memory should be user-controlled. It is useful for saved facts, special instructions, reusable prompts, and grouped project information.",
+    "examples": ["EXPLAIN EDITABLE MEMORY"],
+    "tags": ["editable memory"],
+    "aliases": ["editable memory"],
+    "related": ["manual memory", "notes"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "editable_memory"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_004",
+    "space_id": "help",
+    "title": "Explain Notes",
+    "keyword": "notes",
+    "short_answer": "Notes are saved facts, reminders, ideas, or loose information.",
+    "text": "Use notes when the information is useful later but is not a rule, prompt, or project. Notes are the simplest manual memory bucket.",
+    "examples": ["EXPLAIN NOTES"],
+    "tags": ["notes"],
+    "aliases": ["notes"],
+    "related": ["manual memory", "saved data"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "notes"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_005",
+    "space_id": "help",
+    "title": "Explain Rules",
+    "keyword": "rules",
+    "short_answer": "Rules are saved behavior instructions for the assistant.",
+    "text": "Rules are not random facts. They tell the assistant how to behave, what to avoid, what tone to use, or what response pattern to follow.",
+    "examples": ["EXPLAIN RULES"],
+    "tags": ["rules"],
+    "aliases": ["rules"],
+    "related": ["prompts", "manual memory"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "rules"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_006",
+    "space_id": "help",
+    "title": "Explain Prompts",
+    "keyword": "prompts",
+    "short_answer": "Prompts are saved instruction patterns the user may reuse.",
+    "text": "Prompts in User Spaces are reusable instruction templates. They are different from internal LLM prompts, but both shape how the assistant answers.",
+    "examples": ["EXPLAIN PROMPTS"],
+    "tags": ["prompts"],
+    "aliases": ["prompts"],
+    "related": ["rules", "llm_prompts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "prompts"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_007",
+    "space_id": "help",
+    "title": "Explain Projects",
+    "keyword": "projects",
+    "short_answer": "Projects are grouped manual memory items for a named effort.",
+    "text": "Use projects when saved information belongs to a specific workstream, app, idea, build, or long-running topic.",
+    "examples": ["EXPLAIN PROJECTS"],
+    "tags": ["projects"],
+    "aliases": ["projects"],
+    "related": ["collections", "saved data"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "projects"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_008",
+    "space_id": "help",
+    "title": "Explain Collections",
+    "keyword": "collections",
+    "short_answer": "Collections are grouped saved items under one theme.",
+    "text": "Collections help avoid one giant pile of saved memory. They let the user group related information, like recipes, project notes, rule groups, or reference lists.",
+    "examples": ["EXPLAIN COLLECTIONS"],
+    "tags": ["collections"],
+    "aliases": ["collections"],
+    "related": ["projects", "folders"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "collections"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_009",
+    "space_id": "help",
+    "title": "Explain Saved Data",
+    "keyword": "saved data",
+    "short_answer": "Saved Data is information intentionally stored so it can be found later.",
+    "text": "Saved Data can include facts, notes, reminders, project info, rule sets, prompts, or other useful manual knowledge.",
+    "examples": ["EXPLAIN SAVED DATA"],
+    "tags": ["saved data"],
+    "aliases": ["saved data"],
+    "related": ["manual memory", "custom data"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "saved_data"
+    }
+  },
+  {
+    "item_id": "user_spaces_help_010",
+    "space_id": "help",
+    "title": "Explain Custom Data",
+    "keyword": "custom data",
+    "short_answer": "Custom Data is user-defined saved information that may not fit a default bucket.",
+    "text": "Custom Data matters because the user may want to save unusual but useful information, like a book outline, personal system map, collection, or special reference list.",
+    "examples": ["EXPLAIN CUSTOM DATA"],
+    "tags": ["custom data"],
+    "aliases": ["custom data"],
+    "related": ["saved data", "collections"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "user_spaces",
+      "topic_key": "custom_data"
+    }
+  }
+]

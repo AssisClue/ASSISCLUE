@@ -1,0 +1,19 @@
+<div class="list-scroll">
+    {% if items %}
+        {% for item in items %}
+        <a class="file-row" href="/file/{{ item.item_id }}">
+            <div class="file-row-main">
+                <div class="file-name">{{ item.file_name }}</div>
+                <div class="file-path">{{ item.relative_path }}</div>
+            </div>
+
+            <div class="file-row-side">
+                <div class="file-ext">{{ item.extension }}</div>
+                <div class="file-size">{{ item.size_bytes }} bytes</div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-box">No files found in library map.</div>
+    {% endif %}
+</div>

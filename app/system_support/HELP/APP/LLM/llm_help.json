@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "llm_help_001",
+    "space_id": "help",
+    "title": "Explain LLM",
+    "keyword": "llm",
+    "short_answer": "LLM is the language model block that generates text answers.",
+    "text": "In this app, the LLM block is the central integration layer for text generation, prompts, model settings, and provider calls. Runners should use this layer instead of calling Ollama directly.",
+    "examples": ["EXPLAIN LLM"],
+    "tags": ["llm"],
+    "aliases": ["llm"],
+    "related": ["model", "llm service"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm"
+    }
+  },
+  {
+    "item_id": "llm_help_002",
+    "space_id": "help",
+    "title": "Explain Model",
+    "keyword": "model",
+    "short_answer": "A model is the AI engine that receives input and generates output.",
+    "text": "The model is the part that actually produces text or vision answers. In this project, the text model can be configured separately from the vision model.",
+    "examples": ["EXPLAIN MODEL"],
+    "tags": ["model"],
+    "aliases": ["model"],
+    "related": ["llm", "ollama"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "model"
+    }
+  },
+  {
+    "item_id": "llm_help_003",
+    "space_id": "help",
+    "title": "Explain LLM Settings",
+    "keyword": "llm_settings",
+    "short_answer": "llm_settings.py controls provider, models, timeouts, tokens, and temperature.",
+    "text": "The llm_settings file defines how the app connects to the language model system. It should own model names, provider choice, timeout behavior, max tokens, and temperature.",
+    "examples": ["EXPLAIN LLM_SETTINGS"],
+    "tags": ["llm_settings", "file"],
+    "aliases": ["llm_settings"],
+    "related": ["settings", "llm"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_settings"
+    }
+  },
+  {
+    "item_id": "llm_help_004",
+    "space_id": "help",
+    "title": "Explain LLM Types",
+    "keyword": "llm_types",
+    "short_answer": "llm_types.py defines request and result shapes for LLM calls.",
+    "text": "The llm_types file keeps the input and output structures predictable. It helps services, clients, and runners agree on what a model request or response looks like.",
+    "examples": ["EXPLAIN LLM_TYPES"],
+    "tags": ["llm_types", "file"],
+    "aliases": ["llm_types"],
+    "related": ["llm", "schema"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_types"
+    }
+  },
+  {
+    "item_id": "llm_help_005",
+    "space_id": "help",
+    "title": "Explain LLM Client",
+    "keyword": "llm_client",
+    "short_answer": "llm_client.py performs raw provider calls.",
+    "text": "The LLM client is the low-level connector to the model provider, such as Ollama. Higher layers should not duplicate raw provider-call logic.",
+    "examples": ["EXPLAIN LLM_CLIENT"],
+    "tags": ["llm_client", "file"],
+    "aliases": ["llm_client"],
+    "related": ["ollama", "llm service"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_client"
+    }
+  },
+  {
+    "item_id": "llm_help_006",
+    "space_id": "help",
+    "title": "Explain LLM Service",
+    "keyword": "llm_service",
+    "short_answer": "llm_service.py is the main entrypoint for text responses.",
+    "text": "The LLM service should be what other parts of the app call when they need a model-generated text answer. It hides provider details behind a cleaner app-level function.",
+    "examples": ["EXPLAIN LLM_SERVICE"],
+    "tags": ["llm_service", "file"],
+    "aliases": ["llm_service"],
+    "related": ["llm", "llm_client"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_service"
+    }
+  },
+  {
+    "item_id": "llm_help_007",
+    "space_id": "help",
+    "title": "Explain Vision Service",
+    "keyword": "vision_service",
+    "short_answer": "vision_service.py is the entrypoint for image or screenshot analysis.",
+    "text": "The vision service should handle model calls that involve images. It keeps screenshot or vision analysis separate from normal text generation.",
+    "examples": ["EXPLAIN VISION_SERVICE"],
+    "tags": ["vision_service", "file"],
+    "aliases": ["vision_service"],
+    "related": ["llm", "vision model"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "vision_service"
+    }
+  },
+  {
+    "item_id": "llm_help_008",
+    "space_id": "help",
+    "title": "Explain LLM Prompts",
+    "keyword": "llm_prompts",
+    "short_answer": "llm_prompts.py stores base prompts used by the LLM layer.",
+    "text": "Prompts are the instructions given to the model. This file should hold reusable prompt text, not random runner logic.",
+    "examples": ["EXPLAIN LLM_PROMPTS"],
+    "tags": ["llm_prompts", "file"],
+    "aliases": ["llm_prompts"],
+    "related": ["prompt", "llm"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_prompts"
+    }
+  },
+  {
+    "item_id": "llm_help_009",
+    "space_id": "help",
+    "title": "Explain LLM Formatters",
+    "keyword": "llm_formatters",
+    "short_answer": "llm_formatters.py shapes model output for UI and speech.",
+    "text": "Formatters clean or shorten model output so it fits the destination. UI can accept more text, but speech often needs a shorter and clearer version.",
+    "examples": ["EXPLAIN LLM_FORMATTERS"],
+    "tags": ["llm_formatters", "file"],
+    "aliases": ["llm_formatters"],
+    "related": ["speech text", "tts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "llm_formatters"
+    }
+  },
+  {
+    "item_id": "llm_help_010",
+    "space_id": "help",
+    "title": "Explain Ollama",
+    "keyword": "ollama",
+    "short_answer": "Ollama is the local provider used to run LLM models.",
+    "text": "Ollama is one provider option for local model calls. The app should talk to it through app/llm instead of spreading Ollama-specific code across runners.",
+    "examples": ["EXPLAIN OLLAMA"],
+    "tags": ["ollama", "provider"],
+    "aliases": ["ollama"],
+    "related": ["llm_client", "model"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "llm",
+      "topic_key": "ollama"
+    }
+  }
+]

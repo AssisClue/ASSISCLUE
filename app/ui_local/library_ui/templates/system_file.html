@@ -1,0 +1,46 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="file-grid">
+    <section class="card file-meta-card">
+        <div class="section-label">System File</div>
+        <h2>{{ entry.name }}</h2>
+
+        <div class="meta-grid">
+            <div class="meta-key">path</div>
+            <div class="meta-value break-all">{{ entry.path }}</div>
+
+            <div class="meta-key">type</div>
+            <div class="meta-value">{{ entry.entry_type }}</div>
+
+            <div class="meta-key">extension</div>
+            <div class="meta-value">{{ entry.extension or "-" }}</div>
+
+            <div class="meta-key">size</div>
+            <div class="meta-value">{{ entry.size_label }}</div>
+        </div>
+
+        <div class="action-row">
+            <form method="post" action="/actions/mark/system?area_key={{ area_key | urlencode }}&file_path={{ entry.path | urlencode }}">
+                <button type="submit">MARK</button>
+            </form>
+
+            <a class="button-secondary" href="/area/{{ area_key }}">BACK</a>
+            <a class="button-secondary" href="{{ raw_file_url }}" target="_blank">OPEN RAW FILE</a>
+        </div>
+    </section>
+
+    <section class="card file-preview-card">
+        <div class="section-label">Preview</div>
+        <h2>Content</h2>
+
+        {% if preview_kind == "pdf" %}
+            {% include "partials/preview_pdf.html" %}
+        {% elif preview_kind == "image" %}
+            {% include "partials/preview_image.html" %}
+        {% else %}
+            {% include "partials/preview_text.html" %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

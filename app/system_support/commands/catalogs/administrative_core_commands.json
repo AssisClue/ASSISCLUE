@@ -1,0 +1,312 @@
+[
+  {
+    "section": "SCREEN_CAPTURE",
+    "commands": [
+      {
+        "command_id": "take_screenshot",
+        "action_name": "take_screenshot",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": [
+          "take screenshot",
+          "take screenshot now",
+          "take a screenshot",
+          "capture screenshot",
+          "screenshot now",
+          "grab screenshot",
+          "take a picture",
+          "take a screen",
+          "capture the screen",
+          "screenshot this"
+        ]
+      },
+      {
+        "command_id": "take_full_screenshot",
+        "action_name": "take_full_screenshot",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "take full screenshot",
+          "capture full screen",
+          "screenshot full screen",
+          "take a full picture"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "SCREEN_ANALYSIS",
+    "commands": [
+      {
+        "command_id": "analyze_last_screenshot",
+        "action_name": "analyze_last_screenshot",
+        "capability_id": "display.analyze_last_screenshot",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": [
+          "analyze screen",
+          "analyze screenshot",
+          "analyze the screenshot",
+          "analyze last screen",
+          "analyze the last screen",
+          "analyze the screen",
+          "look at the screen",
+          "check the screen",
+          "read the screen",
+          "what is on screen",
+          "what's on screen",
+          "tell me what is on the screen",
+          "explain the screen"
+        ]
+      },
+      {
+        "command_id": "analyze_last_screenshot",
+        "action_name": "analyze_last_screenshot",
+        "capability_id": "display.analyze_last_screenshot",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": [
+          "analyze last screenshot",
+          "check last screenshot",
+          "look at last screenshot",
+          "tell me what is in the screenshot"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "ASSISTANT_FLOW",
+    "commands": [
+      {
+        "command_id": "repeat_last_response",
+        "action_name": "repeat_last_response",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "repeat that",
+          "say that again",
+          "repeat last answer",
+          "repeat last response",
+          "tell me again",
+          "say it again"
+        ]
+      },
+      {
+        "command_id": "stop_talking",
+        "action_name": "stop_talking",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": [
+          "stop",
+          "stop rick",
+          "stop talking",
+          "stop speaking",
+          "be quiet",
+          "quiet",
+          "shut up",
+          "enough",
+          "zip",
+          "shh",
+          "shut",
+          "shut the fuck up",
+          "zip it up",
+          "zipped it"
+        ]
+      },
+      {
+        "command_id": "pause_assistant",
+        "action_name": "pause_assistant",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "pause assistant",
+          "pause listening",
+          "go passive",
+          "stop listening for now"
+        ]
+      },
+      {
+        "command_id": "resume_assistant",
+        "action_name": "resume_assistant",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "resume assistant",
+          "resume listening",
+          "wake up",
+          "go active again",
+          "start listening again"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "SYSTEM_MODE",
+    "commands": [
+      {
+        "command_id": "set_mode_passive",
+        "action_name": "set_mode_passive",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "set mode passive",
+          "go passive",
+          "switch to passive mode"
+        ]
+      },
+      {
+        "command_id": "set_mode_fully_active",
+        "action_name": "set_mode_fully_active",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "set mode fully active",
+          "go fully active",
+          "switch to fully active mode"
+        ]
+      },
+      {
+        "command_id": "set_mode_listening_light",
+        "action_name": "set_mode_listening_light",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "set mode listening light",
+          "go listening light",
+          "switch to listening light mode"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "PERSONA_CONTROL",
+    "commands": [
+      {
+        "command_id": "set_persona_rick",
+        "action_name": "set_persona_rick",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "be rick",
+          "switch to rick",
+          "set persona rick",
+          "use rick persona"
+        ]
+      },
+      {
+        "command_id": "set_persona_default",
+        "action_name": "set_persona_default",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "use default persona",
+          "set persona default",
+          "go back to default voice",
+          "switch to default"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "CHAT_CONTROL",
+    "commands": [
+      {
+        "command_id": "clear_chat_history",
+        "action_name": "clear_chat_history",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "clear chat",
+          "clear chat history",
+          "reset chat",
+          "erase conversation",
+          "wipe chat"
+        ]
+      },
+      {
+        "command_id": "show_last_message",
+        "action_name": "show_last_message",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "show last message",
+          "read last message",
+          "what was the last message",
+          "show latest message"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "DEBUG_RUNTIME",
+    "commands": [
+      {
+        "command_id": "show_runtime_status",
+        "action_name": "show_runtime_status",
+        "capability_id": "system_controls.show_runtime_status",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "show runtime status",
+          "show system status",
+          "what is running",
+          "show running services",
+          "runtime status"
+        ]
+      },
+      {
+        "command_id": "show_transcript_status",
+        "action_name": "show_transcript_status",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "show transcript status",
+          "show stt status",
+          "transcript status",
+          "is transcript running"
+        ]
+      },
+      {
+        "command_id": "show_memory_status",
+        "action_name": "show_memory_status",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "show memory status",
+          "memory status",
+          "is memory running",
+          "show mem0 status"
+        ]
+      }
+    ]
+  },
+  {
+    "section": "AUDIO_CONTROL",
+    "commands": [
+      {
+        "command_id": "mute_tts",
+        "action_name": "mute_tts",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "mute voice",
+          "mute tts",
+          "turn voice off",
+          "disable speech"
+        ]
+      },
+      {
+        "command_id": "unmute_tts",
+        "action_name": "unmute_tts",
+        "requires_wakeword": true,
+        "allow_without_wakeword": false,
+        "aliases": [
+          "unmute voice",
+          "unmute tts",
+          "turn voice on",
+          "enable speech"
+        ]
+      }
+    ]
+  }
+]

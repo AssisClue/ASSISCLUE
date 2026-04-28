@@ -1,0 +1,90 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# =========================
+# Virtual environments
+# cubre con punto, sin punto, slash, backslash, distintos nombres
+# =========================
+.venv/
+.venv/*
+.venv/**
+venv/
+venv/*
+venv/**
+env/
+env/*
+env/**
+ENV/
+ENV/*
+ENV/**
+virtualenv/
+virtualenv/*
+virtualenv/**
+.ENV/
+.ENV/*
+.ENV/**
+
+# =========================
+# Windows / editor
+# =========================
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# =========================
+# Runtime / generated
+# Ajusta esto si luego quieres versionar algunos runtime base
+# =========================
+runtime/
+runtime/*
+runtime/**
+app/runtime/
+app/runtime/*
+app/runtime/**
+logs/
+logs/*
+logs/**
+
+# =========================
+# Local data / models
+# normalmente no conviene subir esto
+# =========================
+data/
+data/*
+data/**
+models/
+models/*
+models/**
+
+# =========================
+# UI / temp / local artifacts
+# =========================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+.env
+.env.*
+*.sqlite
+*.db
+
+# =========================
+# OS junk
+# =========================
+.DS_Store

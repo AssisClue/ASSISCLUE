@@ -1,0 +1,19 @@
+Cómo funciona HELP
+Flujo simple:
+
+Tú dices: explain llm o explicar algo.
+memory_required_matcher.py detecta que debe usar memoria.
+memory_query_hint_parser.py manda la búsqueda a user_spaces.help.
+memory_question_runner.py busca la respuesta.
+La respuesta sale como speech_text.
+speech_queue_writer.py la mete en cola.
+speaker_service.py la habla con TTS.
+Archivos relacionados importantes
+
+context_memory_service.py
+user_spaces_service.py
+json_user_space_store.py
+spoken_query_router.py
+runtime/queues/spoken_queries/spoken_query_results.jsonl
+runtime/queues/speech_out/speech_queue.jsonl
+runtime/queues/speech_out/spoken_history.jsonl

@@ -1,0 +1,27 @@
+<div class="list-scroll">
+    {% if entries %}
+        {% for entry in entries %}
+        {% if entry.entry_type == "dir" %}
+        <a class="file-row" href="/area/{{ area.key }}/browse?current_path={{ entry.path | urlencode }}">
+        {% else %}
+        <a class="file-row" href="/system-file?area_key={{ area.key }}&file_path={{ entry.path | urlencode }}">
+        {% endif %}
+            <div class="file-row-main">
+                <div class="file-name">{{ entry.name }}</div>
+                <div class="file-path">{{ entry.path }}</div>
+            </div>
+
+            <div class="file-row-side">
+                {% if entry.entry_type == "dir" %}
+                <div class="file-ext">folder</div>
+                {% else %}
+                <div class="file-ext">{{ entry.extension or "file" }}</div>
+                {% endif %}
+                <div class="file-size">{{ entry.size_label }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-box">No visible entries in this folder.</div>
+    {% endif %}
+</div>

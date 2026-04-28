@@ -1,0 +1,74 @@
+# Active packages used by this app.
+# Lines that start with # are comments and will NOT install.
+
+# =========================
+# UI / WEB
+# =========================
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+python-dotenv
+httpx
+pydantic
+pydantic-settings
+orjson
+requests
+
+# =========================
+# LLM / MEMORY INDEX
+# =========================
+qdrant-client
+
+# =========================
+# BROWSER / WEB TOOLS
+# After pip install, also run:
+# playwright install chromium
+# =========================
+playwright
+beautifulsoup4
+
+# =========================
+# STT / AUDIO INPUT
+# =========================
+faster-whisper
+moonshine-voice
+numpy
+soundfile
+PyAudioWPatch
+sounddevice
+torch
+silero-vad
+pyrnnoise
+
+# =========================
+# SCREEN CAPTURE
+# =========================
+mss
+pillow
+keyboard
+
+# =========================
+# TTS / AUDIO OUTPUT
+# =========================
+kokoro
+pyttsx3
+
+# =========================
+# DOCUMENT READING
+# =========================
+pypdf
+python-docx
+
+# =========================
+# OPTIONAL / NOT USED NOW
+# =========================
+# ollama          # Not imported; app talks to Ollama server with httpx.
+# mem0ai          # Optional Mem0 memory backend, not active now.
+# chatterbox-tts  # Optional Chatterbox TTS, not active now.
+# docling         # Optional advanced document/OCR pipeline, not active now.
+# rapidocr        # Optional OCR helper, not active now.
+# opencv-python   # Optional image/computer-vision helper, not active now.
+# lxml            # Optional HTML/XML parser.
+# markdown        # Optional markdown parsing.
+# sentence-transformers # Optional local embedding models.

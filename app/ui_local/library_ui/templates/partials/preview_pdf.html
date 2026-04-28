@@ -1,0 +1,11 @@
+<div class="preview-box pdf-preview-box">
+    {% if raw_file_url %}
+    <iframe
+        class="pdf-frame"
+        src="{{ raw_file_url }}"
+        title="PDF Preview">
+    </iframe>
+    {% else %}
+    <div class="empty-box">PDF file URL not available.</div>
+    {% endif %}
+</div>

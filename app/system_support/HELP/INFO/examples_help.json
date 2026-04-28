@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "examples_001",
+    "space_id": "help",
+    "title": "Explain Help Menu",
+    "keyword": "help menu",
+    "short_answer": "HELP MENU shows the main help options available.",
+    "text": "HELP MENU should be the first command when the user wants to know what the assistant can explain from the HELP section.",
+    "examples": ["HELP MENU"],
+    "tags": ["help menu", "menu"],
+    "aliases": ["help menu"],
+    "related": ["help", "examples"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "help_menu"
+    }
+  },
+  {
+    "item_id": "examples_002",
+    "space_id": "help",
+    "title": "Explain Help Explain On",
+    "keyword": "help explain on",
+    "short_answer": "HELP EXPLAIN ON makes EXPLAIN questions go to HELP.",
+    "text": "Use this when working on the HELP system. It makes phrases like EXPLAIN MEMORY or EXPLAIN LLM search the HELP files first.",
+    "examples": ["HELP EXPLAIN ON"],
+    "tags": ["help explain on", "capture"],
+    "aliases": ["help explain on"],
+    "related": ["help explain off", "help"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "help_explain_on"
+    }
+  },
+  {
+    "item_id": "examples_003",
+    "space_id": "help",
+    "title": "Explain Help Explain Off",
+    "keyword": "help explain off",
+    "short_answer": "HELP EXPLAIN OFF lets EXPLAIN return to normal question flow.",
+    "text": "Use this when you want EXPLAIN to stop being captured by HELP. After this, EXPLAIN why this failed can go to normal LLM or context flow again.",
+    "examples": ["HELP EXPLAIN OFF"],
+    "tags": ["help explain off", "capture"],
+    "aliases": ["help explain off"],
+    "related": ["help explain on", "help"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "help_explain_off"
+    }
+  },
+  {
+    "item_id": "examples_004",
+    "space_id": "help",
+    "title": "Explain Memory Example",
+    "keyword": "memory example",
+    "short_answer": "EXPLAIN MEMORY should describe the memory block.",
+    "text": "This is the basic example for checking whether HELP can explain the app's memory and context engine.",
+    "examples": ["EXPLAIN MEMORY"],
+    "tags": ["memory example", "memory"],
+    "aliases": ["memory example"],
+    "related": ["memory", "context memory"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "memory_example"
+    }
+  },
+  {
+    "item_id": "examples_005",
+    "space_id": "help",
+    "title": "Explain LLM Example",
+    "keyword": "llm example",
+    "short_answer": "EXPLAIN LLM should describe the model block.",
+    "text": "This example checks whether HELP can explain the LLM integration area, including models, service, prompts, and provider connection.",
+    "examples": ["EXPLAIN LLM"],
+    "tags": ["llm example", "llm"],
+    "aliases": ["llm example"],
+    "related": ["llm", "model"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "llm_example"
+    }
+  },
+  {
+    "item_id": "examples_006",
+    "space_id": "help",
+    "title": "Explain Runtime Example",
+    "keyword": "runtime example",
+    "short_answer": "EXPLAIN RUNTIME should describe live working files.",
+    "text": "This example checks whether HELP can explain where the app writes state, logs, output, queues, and latest runtime records.",
+    "examples": ["EXPLAIN RUNTIME"],
+    "tags": ["runtime example", "runtime"],
+    "aliases": ["runtime example"],
+    "related": ["runtime", "state"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "runtime_example"
+    }
+  },
+  {
+    "item_id": "examples_007",
+    "space_id": "help",
+    "title": "Explain Scripts Example",
+    "keyword": "scripts example",
+    "short_answer": "EXPLAIN SCRIPTS should describe runnable helper scripts.",
+    "text": "This example checks whether HELP can explain how scripts are used to start, test, clean, or diagnose the assistant app.",
+    "examples": ["EXPLAIN SCRIPTS"],
+    "tags": ["scripts example", "scripts"],
+    "aliases": ["scripts example"],
+    "related": ["scripts", "start scripts"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "scripts_example"
+    }
+  },
+  {
+    "item_id": "examples_008",
+    "space_id": "help",
+    "title": "Explain Settings Example",
+    "keyword": "settings example",
+    "short_answer": "EXPLAIN SETTINGS should describe app configuration.",
+    "text": "This example checks whether HELP can explain the settings folder, including app settings, play settings, audio settings, TTS settings, and LLM settings.",
+    "examples": ["EXPLAIN SETTINGS"],
+    "tags": ["settings example", "settings"],
+    "aliases": ["settings example"],
+    "related": ["settings", "app settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "settings_example"
+    }
+  },
+  {
+    "item_id": "examples_009",
+    "space_id": "help",
+    "title": "Explain Troubleshooting Example",
+    "keyword": "troubleshooting example",
+    "short_answer": "HELP TROUBLESHOOTING should give debug guidance.",
+    "text": "This example checks whether HELP can guide the user toward what to inspect when something does not work.",
+    "examples": ["HELP TROUBLESHOOTING"],
+    "tags": ["troubleshooting example", "debug"],
+    "aliases": ["troubleshooting example"],
+    "related": ["troubleshooting", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "troubleshooting_example"
+    }
+  },
+  {
+    "item_id": "examples_010",
+    "space_id": "help",
+    "title": "Explain Qdrant Example",
+    "keyword": "qdrant example",
+    "short_answer": "EXPLAIN QDRANT should describe semantic memory search support.",
+    "text": "This example checks whether HELP can explain Qdrant as an index/search backend, not as the whole memory architecture.",
+    "examples": ["EXPLAIN QDRANT"],
+    "tags": ["qdrant example", "qdrant"],
+    "aliases": ["qdrant example"],
+    "related": ["qdrant", "memory"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "examples",
+      "topic_key": "qdrant_example"
+    }
+  }
+]

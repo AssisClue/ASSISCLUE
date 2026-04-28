@@ -1,0 +1,73 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="file-grid">
+    <section class="card file-meta-card">
+        <div class="section-label">Area</div>
+        <h2>{{ area.title }}</h2>
+        <div class="hero-subtitle">{{ area.description }}</div>
+
+        {% if current_folder_path %}
+        <div class="section-label" style="margin-top: 18px;">Current Folder</div>
+        <div class="helper-text break-all">{{ current_folder_path }}</div>
+        {% else %}
+        <div class="section-label" style="margin-top: 18px;">Search Scope</div>
+        <div class="helper-text">Showing matches across the whole area.</div>
+        {% endif %}
+
+        <div class="action-row">
+            <a class="button-secondary" href="/area/{{ area.key }}">ROOTS</a>
+            <a class="button-secondary" href="/">HOME</a>
+        </div>
+    </section>
+
+    <section class="card file-preview-card">
+        <div class="section-label">Results</div>
+        <h2>{% if current_folder_path %}Browse Current Folder{% else %}Area Search Results{% endif %}</h2>
+
+        {% if current_folder_path %}
+        <div class="breadcrumbs">
+            {% for crumb in breadcrumbs %}
+            <a class="crumb-link" href="/area/{{ area.key }}/browse?current_path={{ crumb.path | urlencode }}">{{ crumb.label }}</a>
+            {% if not loop.last %}
+            <span class="crumb-sep">/</span>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="get" action="/area/{{ area.key }}/browse" class="filter-bar">
+            <input type="hidden" name="current_path" value="{{ current_folder_path or '' }}" />
+
+            <input type="text" name="search" value="{{ filters.search or '' }}" placeholder="Search file or folder" class="filter-input" />
+
+            <select name="extension" class="filter-select">
+                <option value="">All extensions</option>
+                {% for ext in extension_options %}
+                <option value="{{ ext }}" {% if filters.extension == ext %}selected{% endif %}>{{ ext }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="entry_type" class="filter-select">
+                <option value="">All types</option>
+                <option value="file" {% if filters.entry_type == 'file' %}selected{% endif %}>file</option>
+                <option value="dir" {% if filters.entry_type == 'dir' %}selected{% endif %}>folder</option>
+            </select>
+
+            <button type="submit">APPLY</button>
+            {% if current_folder_path %}
+            <a class="button-secondary" href="/area/{{ area.key }}/browse?current_path={{ current_folder_path | urlencode }}">CLEAR</a>
+            {% else %}
+            <a class="button-secondary" href="/area/{{ area.key }}">CLEAR</a>
+            {% endif %}
+        </form>
+
+        <div class="stat-row">
+            <div class="stat-pill">visible = {{ entries|length }}</div>
+            <div class="stat-pill">all = {{ all_entry_count }}</div>
+        </div>
+
+        {% include "partials/folder_entries.html" %}
+    </section>
+</div>
+{% endblock %}

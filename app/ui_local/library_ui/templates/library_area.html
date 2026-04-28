@@ -1,0 +1,70 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="file-grid">
+    <section class="card file-meta-card">
+        <div class="section-label">System Area</div>
+        <h2>{{ area.title }}</h2>
+        <div class="hero-subtitle">{{ area.description }}</div>
+
+        <div class="split-divider"></div>
+
+        <div class="section-label">What this is</div>
+        <div class="helper-text">
+            This area groups one or more real app folders. You can either open one root folder directly, or search across the whole area from here.
+        </div>
+
+        <div class="action-row">
+            <a class="button-secondary" href="/">BACK</a>
+        </div>
+    </section>
+
+    <section class="card file-preview-card">
+        <div class="section-label">Area Search</div>
+        <h2>Search Across This Whole Area</h2>
+
+        <form method="get" action="/area/{{ area.key }}/browse" class="filter-bar">
+            <input type="hidden" name="current_path" value="" />
+
+            <input type="text" name="search" value="" placeholder="Search all files and folders in this area" class="filter-input" />
+
+            <select name="extension" class="filter-select">
+                <option value="">All extensions</option>
+                <option value=".txt">.txt</option>
+                <option value=".md">.md</option>
+                <option value=".pdf">.pdf</option>
+                <option value=".docx">.docx</option>
+                <option value=".json">.json</option>
+                <option value=".jsonl">.jsonl</option>
+                <option value=".csv">.csv</option>
+                <option value=".log">.log</option>
+                <option value=".html">.html</option>
+                <option value=".png">.png</option>
+                <option value=".jpg">.jpg</option>
+                <option value=".jpeg">.jpeg</option>
+                <option value=".webp">.webp</option>
+                <option value=".gif">.gif</option>
+                <option value=".bmp">.bmp</option>
+                <option value=".wav">.wav</option>
+                <option value=".mp3">.mp3</option>
+                <option value=".mp4">.mp4</option>
+            </select>
+
+            <select name="entry_type" class="filter-select">
+                <option value="">All types</option>
+                <option value="file">file</option>
+                <option value="dir">folder</option>
+            </select>
+
+            <button type="submit">SEARCH AREA</button>
+        </form>
+
+        <div class="split-divider"></div>
+
+        <div class="section-label">Area Roots</div>
+        <h2>Choose a Root Folder</h2>
+
+        {% include "partials/folder_root_list.html" %}
+    </section>
+</div>
+{% endblock %}

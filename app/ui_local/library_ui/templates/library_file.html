@@ -1,0 +1,93 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="file-grid">
+    <section class="card file-meta-card">
+        <div class="section-label">File</div>
+        <h2>{{ item.file_name }}</h2>
+
+        {% include "partials/file_meta.html" %}
+        {% include "partials/file_actions.html" %}
+
+        <div class="action-row">
+            <form method="post" action="/actions/mark/library/{{ item.item_id }}">
+                <button type="submit">MARK</button>
+            </form>
+
+            {% if raw_file_url %}
+            <a class="button-secondary" href="{{ raw_file_url }}" target="_blank">OPEN RAW FILE</a>
+            {% endif %}
+        </div>
+
+        <div class="section-label" style="margin-top: 18px;">Status</div>
+        <div class="status-stack">
+            {% if flags.has_summary %}
+            <div><span class="status-badge status-running">summary ready</span></div>
+            {% else %}
+            <div><span class="status-badge status-idle">no summary yet</span></div>
+            {% endif %}
+
+            {% if flags.is_indexed %}
+            <div><span class="status-badge status-running">indexed</span></div>
+            {% else %}
+            <div><span class="status-badge status-idle">not indexed</span></div>
+            {% endif %}
+
+            {% if flags.is_promoted %}
+            <div><span class="status-badge status-running">promoted to memory</span></div>
+            {% else %}
+            <div><span class="status-badge status-idle">not promoted</span></div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="card file-preview-card">
+        <div class="section-label">Preview</div>
+        <h2>Content</h2>
+
+        {% if preview_kind == "pdf" %}
+            {% include "partials/preview_pdf.html" %}
+        {% elif preview_kind == "image" %}
+            {% include "partials/preview_image.html" %}
+        {% else %}
+            {% include "partials/preview_text.html" %}
+        {% endif %}
+
+        <div class="split-divider"></div>
+
+        <div class="section-label">Summary</div>
+        <h2>Latest Summary</h2>
+
+        {% if summary.summary_text %}
+        <div class="preview-box summary-box">
+            <pre class="text-preview">{{ summary.summary_text }}</pre>
+        </div>
+        {% else %}
+        <div class="empty-box">No summary generated yet.</div>
+        {% endif %}
+
+        <div class="split-divider"></div>
+
+        <div class="section-label">Index</div>
+        <h2>Index Status</h2>
+
+        {% if index_status %}
+        <div class="meta-grid">
+            <div class="meta-key">chunk_count</div>
+            <div class="meta-value">{{ index_status.chunk_count }}</div>
+
+            <div class="meta-key">manifest</div>
+            <div class="meta-value break-all">{{ index_status.chunk_manifest_path }}</div>
+
+            <div class="meta-key">summary_created</div>
+            <div class="meta-value">{{ index_status.summary_created }}</div>
+
+            <div class="meta-key">vector_status</div>
+            <div class="meta-value">{{ index_status.vector_result.status }}</div>
+        </div>
+        {% else %}
+        <div class="empty-box">No index data yet.</div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

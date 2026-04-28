@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{{ page_title or "Knowledge Library" }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/static/css/library_ui.css" />
+    <link rel="stylesheet" href="/static/css/workspace.css" />
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-left">
+                <div class="eyebrow">Assistant Core / Knowledge Library UI</div>
+                <h1>{{ page_heading or page_title or "Knowledge Library" }}</h1>
+                <div class="hero-subtitle">
+                    {{ page_tagline or "Browse sources, open files, and inspect runtime areas from a dedicated visual interface." }}
+                </div>
+
+                <div class="hero-meta-row">
+                    <span class="status-badge status-running">ui online</span>
+                    <span class="stat-pill">library files</span>
+                    <span class="stat-pill">system areas</span>
+                    <span class="stat-pill">visual explorer</span>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <form method="post" action="/actions/scan">
+                    <button type="submit">REFRESH SCAN</button>
+                </form>
+                <a class="button-secondary" href="/workspace">OPEN WORKSPACE</a>
+                <a class="button-secondary" href="/">HOME</a>
+            </div>
+        </header>
+
+        <nav class="top-menu">
+            <a class="menu-link {% if current_section == 'home' %}active{% endif %}" href="/">Library Files</a>
+            <a class="menu-link {% if current_section == 'areas' %}active{% endif %}" href="/area/library_sources">System Areas</a>
+            <a class="menu-link {% if current_section == 'workspace' %}active{% endif %}" href="/workspace">Workspace</a>
+        </nav>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="/static/js/library_ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+[
+  {
+    "section": "BROWSER_CONTROL",
+    "commands": [
+      {
+        "command_id": "open_browser",
+        "action_name": "open_browser",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["open browser", "start browser", "launch browser"]
+      },
+      {
+        "command_id": "open_url",
+        "action_name": "open_url",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["open url", "open website", "go to website", "go to url"]
+      },
+      {
+        "command_id": "look_for",
+        "action_name": "look_for",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["search", "search for", "look for", "find on web", "search web for"]
+      },
+      {
+        "command_id": "browser_scroll_down",
+        "action_name": "browser_scroll_down",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["scroll down", "browser scroll down", "page down"]
+      },
+      {
+        "command_id": "browser_scroll_up",
+        "action_name": "browser_scroll_up",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["scroll up", "browser scroll up", "page up"]
+      },
+      {
+        "command_id": "browser_save_visible_text",
+        "action_name": "browser_save_visible_text",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["save visible text as", "save page text as", "save text as"]
+      },
+      {
+        "command_id": "browser_save_full_page_text",
+        "action_name": "browser_save_full_page_text",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["save entire text as", "save all as", "save entire page text as"]
+      },
+      {
+        "command_id": "browser_click_text",
+        "action_name": "browser_click_text",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["click text"]
+      },
+      {
+        "command_id": "browser_click",
+        "action_name": "browser_click",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["click on", "click"]
+      },
+      {
+        "command_id": "browser_type",
+        "action_name": "browser_type",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["type", "type:"]
+      },
+      {
+        "command_id": "browser_press",
+        "action_name": "browser_press",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["press", "hit"]
+      },
+      {
+        "command_id": "browser_refresh",
+        "action_name": "browser_refresh",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["browser refresh", "browser reload", "refresh page", "reload page"]
+      },
+      {
+        "command_id": "browser_back",
+        "action_name": "browser_back",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["browser back", "go back in browser"]
+      },
+      {
+        "command_id": "browser_forward",
+        "action_name": "browser_forward",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["browser forward", "go forward in browser"]
+      },
+      {
+        "command_id": "browser_screenshot",
+        "action_name": "browser_screenshot",
+        "requires_wakeword": false,
+        "allow_without_wakeword": true,
+        "aliases": ["browser screenshot", "take browser screenshot", "website screenshot"]
+      }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+<div class="action-row">
+    <form method="post" action="/actions/summarize/{{ item.item_id }}">
+        <button type="submit">SUMMARIZE</button>
+    </form>
+
+    <form method="post" action="/actions/index/{{ item.item_id }}">
+        <button type="submit">INDEX</button>
+    </form>
+
+    <form method="post" action="/actions/promote/{{ item.item_id }}">
+        <button type="submit">PROMOTE</button>
+    </form>
+
+    <a class="button-secondary" href="/">BACK</a>
+</div>

@@ -1,0 +1,103 @@
+{% extends "library_layout.html" %}
+
+{% block content %}
+<div class="workspace-stack">
+    <section class="card">
+        <div class="section-label">Workspace</div>
+        <h2>Pipeline View</h2>
+
+        <div class="stat-row">
+            <div class="stat-pill">total = {{ total_count }}</div>
+            <div class="stat-pill">boxes = {{ boxes|length }}</div>
+        </div>
+
+        <div class="helper-text">
+            Each file appears in one box only, based on its highest completed stage.
+        </div>
+    </section>
+
+    <div class="workspace-grid-2x2">
+        {% for box in boxes %}
+        <section class="card workspace-box-card">
+            <div class="workspace-section-header">
+                <div>
+                    <div class="section-label">Stage</div>
+                    <h2>{{ box["label"] }}</h2>
+                </div>
+                <div class="stat-pill">items = {{ box["count"] }}</div>
+            </div>
+
+            {% if box["items"] %}
+            <div class="workspace-box-list">
+                {% for item in box["items"] %}
+                <div class="workspace-item-row">
+                    <div class="workspace-item-main">
+                        <div class="workspace-item-title">{{ item.file_name }}</div>
+                        <div class="workspace-item-path">{{ item.path }}</div>
+
+                        <div class="workspace-item-meta">
+                            <span class="tag-pill">{{ item.source_type }}</span>
+
+                            {% if item.extension %}
+                            <span class="tag-pill">{{ item.extension }}</span>
+                            {% endif %}
+
+                            {% if item.exists %}
+                            <span class="status-badge status-running">exists</span>
+                            {% else %}
+                            <span class="status-badge status-off">missing</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="action-row">
+                            {% if item.actions.can_open %}
+                            <a class="button-secondary" href="{{ item.open_url }}">OPEN</a>
+                            {% endif %}
+
+                            {% if item.actions.can_link %}
+                            <form method="post" action="/workspace/actions/link/{{ item.mark_id }}">
+                                <button type="submit">LINK TO LIBRARY</button>
+                            </form>
+                            {% endif %}
+
+                            {% if item.actions.can_summarize %}
+                            <form method="post" action="/workspace/actions/summarize/{{ item.mark_id }}">
+                                <button type="submit">SUMMARIZE</button>
+                            </form>
+                            {% endif %}
+
+                            {% if item.actions.can_index %}
+                            <form method="post" action="/workspace/actions/index/{{ item.mark_id }}">
+                                <button type="submit">INDEX</button>
+                            </form>
+                            {% endif %}
+
+                            {% if item.actions.can_promote %}
+                            <form method="post" action="/workspace/actions/promote/{{ item.mark_id }}">
+                                <button type="submit">PROMOTE</button>
+                            </form>
+                            {% endif %}
+
+                            {% if item.actions.can_unmark %}
+                            <form method="post" action="/workspace/actions/unmark/{{ item.mark_id }}">
+                                <button type="submit">UNMARK</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="workspace-item-side">
+                        <div class="workspace-item-status">{{ item.status }}</div>
+                        <div class="workspace-item-updated">updated {{ item.updated_at }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-box">No items yet.</div>
+            {% endif %}
+        </section>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

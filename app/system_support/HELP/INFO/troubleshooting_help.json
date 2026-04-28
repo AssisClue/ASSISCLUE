@@ -1,0 +1,222 @@
+[
+  {
+    "item_id": "trouble_001",
+    "space_id": "help",
+    "title": "Help troubleshooting overview",
+    "text": "Troubleshooting means checking the system in a simple order: what the user asked, what block should handle it, whether the block is enabled, whether runtime files changed, and whether logs show an error.",
+    "short_answer": "Troubleshooting is checking the request, the block, runtime files, and logs in order.",
+    "examples": [
+      "HELP TROUBLESHOOTING",
+      "HOW DO I DEBUG THE APP?",
+      "WHAT SHOULD I CHECK FIRST?"
+    ],
+    "checklist": [
+      "Confirm what the user asked.",
+      "Identify the responsible block.",
+      "Check if the block is enabled.",
+      "Check runtime state files.",
+      "Check logs.",
+      "Run a small test script if available."
+    ],
+    "tags": [
+      "troubleshooting",
+      "debug",
+      "checklist",
+      "errors"
+    ],
+    "aliases": [
+      "troubleshooting",
+      "help troubleshooting",
+      "debug help",
+      "fix help"
+    ],
+    "related": [
+      "RUNTIME",
+      "LOGS",
+      "STATE",
+      "SCRIPTS"
+    ],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "troubleshooting_overview"
+    }
+  },
+  {
+    "item_id": "trouble_002",
+    "space_id": "help",
+    "title": "Assistant did not answer",
+    "text": "If the assistant did not answer, check whether the input reached the app, whether the decision layer produced a task, whether the LLM generated text, and whether output files were written.",
+    "short_answer": "Check input, decision, LLM response, and output files.",
+    "examples": [
+      "WHY DID THE ASSISTANT NOT ANSWER?",
+      "ASSISTANT IS SILENT",
+      "NO RESPONSE DEBUG"
+    ],
+    "checklist": [
+      "Check latest input or transcript file.",
+      "Check latest decision state.",
+      "Check assistant core latest state.",
+      "Check latest_response.json.",
+      "Check logs for errors.",
+      "If TTS is involved, check latest_tts.json and tts_playback.json."
+    ],
+    "possible_runtime_files": [
+      "runtime/output/latest_response.json",
+      "runtime/state/latest_decision.json",
+      "runtime/state/assistant_core_latest.json",
+      "runtime/output/latest_tts.json",
+      "runtime/state/tts_playback.json"
+    ],
+    "tags": [
+      "no answer",
+      "silent",
+      "latest response",
+      "debug"
+    ],
+    "aliases": [
+      "assistant did not answer",
+      "assistant is silent",
+      "no response",
+      "empty response"
+    ],
+    "related": [
+      "RUNTIME",
+      "OUTPUT",
+      "LLM",
+      "TTS"
+    ],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "assistant_no_answer"
+    }
+  },
+  {
+    "item_id": "trouble_003",
+    "space_id": "help",
+    "title": "Memory not found",
+    "text": "If memory is not found, check whether the item was saved in the right space, whether the query uses similar words, whether the memory backend is active, and whether fallback storage has records.",
+    "short_answer": "Check the right space, query words, backend status, and fallback records.",
+    "examples": [
+      "WHY CAN'T IT FIND MEMORY?",
+      "MEMORY NOT FOUND",
+      "HELP MEMORY SEARCH"
+    ],
+    "checklist": [
+      "Confirm if the memory was manual or inferred.",
+      "Check the correct user space: notes, rules, prompts, projects, or help.",
+      "Search using words that exist in the saved item.",
+      "Check JSON fallback records.",
+      "If using Mem0 or Qdrant, confirm the service is running.",
+      "Run a memory smoke test if available."
+    ],
+    "tags": [
+      "memory",
+      "search",
+      "not found",
+      "retrieval"
+    ],
+    "aliases": [
+      "memory not found",
+      "cannot find memory",
+      "memory search failed",
+      "where is memory"
+    ],
+    "related": [
+      "MEMORY",
+      "USER SPACES",
+      "JSON BACKEND",
+      "QDRANT"
+    ],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "memory_not_found"
+    }
+  },
+  {
+    "item_id": "trouble_004",
+    "space_id": "help",
+    "title": "Command not recognized",
+    "text": "If a command is not recognized, check whether the command phrase exists in help examples, aliases, or command matcher patterns. Voice commands often need extra aliases because speech transcripts may not be exact.",
+    "short_answer": "Check aliases, command patterns, and speech transcript wording.",
+    "examples": [
+      "COMMAND NOT RECOGNIZED",
+      "WHY DIDN'T CLICK TEXT WORK?",
+      "VOICE COMMAND FAILED"
+    ],
+    "checklist": [
+      "Check the actual transcript text.",
+      "Check if the command has aliases.",
+      "Check if the command matcher expects a different phrase.",
+      "Add common speech variants if needed.",
+      "Test the command with a short direct phrase."
+    ],
+    "tags": [
+      "command",
+      "voice command",
+      "aliases",
+      "matcher"
+    ],
+    "aliases": [
+      "command not recognized",
+      "command failed",
+      "voice command failed",
+      "did not trigger"
+    ],
+    "related": [
+      "COMMANDS",
+      "VOICE",
+      "ALIASES",
+      "EXAMPLES"
+    ],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "command_not_recognized"
+    }
+  },
+  {
+    "item_id": "trouble_005",
+    "space_id": "help",
+    "title": "Help answer is weak",
+    "text": "If a help answer is weak, the help item probably needs a better short answer, clearer tags, more aliases, related topics, and real examples.",
+    "short_answer": "Improve the help item with better text, tags, aliases, related topics, and examples.",
+    "examples": [
+      "WHY IS HELP ANSWER WEAK?",
+      "HELP RESPONSE BAD",
+      "IMPROVE HELP ITEM"
+    ],
+    "checklist": [
+      "Add a short_answer.",
+      "Add direct examples.",
+      "Add common aliases.",
+      "Add related topics.",
+      "Make the text simpler.",
+      "Avoid vague explanations."
+    ],
+    "tags": [
+      "help quality",
+      "improve help",
+      "bad answer",
+      "documentation"
+    ],
+    "aliases": [
+      "help answer is weak",
+      "bad help answer",
+      "improve help",
+      "help response bad"
+    ],
+    "related": [
+      "HELP",
+      "EXAMPLES",
+      "GLOSSARY"
+    ],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "help_answer_weak"
+    }
+  }
+]

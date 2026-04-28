@@ -1,0 +1,7 @@
+<div class="preview-box image-preview-box">
+    {% if raw_file_url %}
+    <img class="image-preview" src="{{ raw_file_url }}" alt="{{ item.file_name }}" />
+    {% else %}
+    <div class="empty-box">Image file URL not available.</div>
+    {% endif %}
+</div>

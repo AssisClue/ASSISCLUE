@@ -1,0 +1,24 @@
+<div class="meta-grid">
+    <div class="meta-key">item_id</div>
+    <div class="meta-value break-all">{{ item.item_id }}</div>
+
+    <div class="meta-key">root</div>
+    <div class="meta-value">{{ item.root_name }}</div>
+
+    <div class="meta-key">path</div>
+    <div class="meta-value break-all">{{ item.absolute_path }}</div>
+
+    <div class="meta-key">extension</div>
+    <div class="meta-value">{{ item.extension }}</div>
+
+    <div class="meta-key">size</div>
+    <div class="meta-value">{{ item.size_bytes }} bytes</div>
+
+    <div class="meta-key">sha1</div>
+    <div class="meta-value break-all">{{ item.sha1 }}</div>
+
+    <div class="meta-key">status</div>
+    <div class="meta-value">
+        <span class="status-badge status-running">{{ item.status or "mapped" }}</span>
+    </div>
+</div>

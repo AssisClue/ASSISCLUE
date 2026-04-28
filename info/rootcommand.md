@@ -1,0 +1,29 @@
+
+--------------------------
+POWER SHELL COMMANDS :
+--------------------------
+
+
+--------------------------
+Start and Stop:
+
+powershell -ExecutionPolicy Bypass -File .\scripts\start_main_stack.py
+
+powershell -ExecutionPolicy Bypass -File .\scripts\stop_main_stack.py
+--------------------------
+--------------------------
+Ejecutar light runtime clean :
+
+powershell -ExecutionPolicy Bypass -File .\scripts\clean_all_lightrun.ps1
+--------------------------
+--------------------------
+WEB UI : 
+
+uvicorn app.ui_local.app:app --host 127.0.0.1 --port 8000 --reload  
+--------------------------
+WEB UI LIBRARY : 
+
+uvicorn app.ui_local.library_ui.appdocs:app --host 127.0.0.1 --port 8001 --reload  
+--------------------------
+--------------------------
+

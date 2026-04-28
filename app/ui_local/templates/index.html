@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{{ app_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        /* ########################################################
+           ROOT COLORS / GLOBAL TOKENS
+        ######################################################## */
+        :root {
+            --bg: #08111d;
+            --bg-soft: #0d1727;
+            --panel: #111d31;
+            --panel-2: #15243b;
+            --line: #27415f;
+            --text: #edf3ff;
+            --muted: #9cb0ca;
+            --blue: #4f8edc;
+            --green: #48c67c;
+            --yellow: #e8bf67;
+            --red: #ef6b6b;
+            --assistant-bg: rgba(79, 142, 220, 0.10);
+            --user-bg: rgba(72, 198, 124, 0.10);
+            --transcript-bg: rgba(255, 255, 255, 0.03);
+            --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+            --hero-height: 270px;
+            --top-row-height: 180px;
+            --thumb: rgba(127, 162, 209, 0.55);
+            --thumb-hover: rgba(157, 190, 236, 0.8);
+            --track: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ########################################################
+           GLOBAL RESET
+        ######################################################## */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(79, 142, 220, 0.16), transparent 20%),
+                linear-gradient(180deg, #050d17 0%, #091321 100%);
+        }
+
+        .page {
+            max-width: 1480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--thumb) var(--track);
+        }
+
+        *::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: var(--track);
+            border-radius: 999px;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(123, 167, 230, 0.85), rgba(82, 132, 203, 0.75));
+            border-radius: 999px;
+            border: 2px solid rgba(8, 17, 29, 0.65);
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(158, 198, 255, 0.95), rgba(101, 156, 232, 0.85));
+        }
+
+        /* ########################################################
+           HERO / TOP BAR
+        ######################################################## */
+        .hero {
+            background: linear-gradient(180deg, rgba(18, 31, 52, 0.96), rgba(10, 19, 33, 0.98));
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 16px;
+            min-height: var(--hero-height);
+            display: grid;
+            grid-template-rows: auto auto auto;
+            gap: 14px;
+        }
+
+        .hero-top,
+        .row-between {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .muted { color: var(--muted); }
+
+        .clock-box {
+            min-width: 180px;
+            text-align: right;
+        }
+
+        .hero-side {
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-end;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero-summary {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .clock-time {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .clock-date {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* ########################################################
+           STATUS PILLS
+        ######################################################## */
+        .pill,
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 13px;
+        }
+
+        .status-badge {
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-running,
+        .status-on,
+        .status-active,
+        .status-ready,
+        .status-executed,
+        .status-ok {
+            color: var(--green);
+            border-color: rgba(72, 198, 124, 0.35);
+            background: rgba(72, 198, 124, 0.12);
+        }
+
+        .status-idle,
+        .status-starting,
+        .status-passive,
+        .status-warn,
+        .status-skipped {
+            color: var(--yellow);
+            border-color: rgba(232, 191, 103, 0.35);
+            background: rgba(232, 191, 103, 0.12);
+        }
+
+        .status-off,
+        .status-error,
+        .status-startup_failed,
+        .status-failed {
+            color: var(--red);
+            border-color: rgba(239, 107, 107, 0.35);
+            background: rgba(239, 107, 107, 0.12);
+        }
+
+        /* ########################################################
+           MAIN LAYOUT
+        ######################################################## */
+        .app-layout {
+            display: grid;
+            grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+            grid-template-rows: var(--top-row-height) auto auto;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .sidebar {
+            display: contents;
+        }
+
+        .main-column {
+            display: contents;
+        }
+
+        .app-layout > .card,
+        .sidebar > .card,
+        .main-column > .card {
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity-card { grid-column: 1; grid-row: 1; }
+        .runtime-card { grid-column: 1; grid-row: 2 / span 2; }
+        .debug-card { grid-column: 2; grid-row: 1; }
+        .inputfeed-card { grid-column: 2; grid-row: 2; }
+        .conversation-card { grid-column: 2; grid-row: 3; }
+
+        /* ########################################################
+           CARD STYLE
+        ######################################################## */
+        .card {
+            background: linear-gradient(180deg, rgba(16, 28, 46, 0.96), rgba(10, 19, 32, 0.98));
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+        }
+
+        .screenshot-card {
+            width: 280px;
+            padding: 12px;
+        }
+
+        .screenshot-preview {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            margin-top: 10px;
+        }
+
+        .screenshot-empty {
+            display: grid;
+            place-items: center;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .screenshot-meta {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        .section-label {
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+
+        h2, h3 {
+            margin: 0 0 12px 0;
+        }
+
+        /* ########################################################
+           LEFT SIDEBAR CARDS
+        ######################################################## */
+        .simple-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 11px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Keep service boxes stable even if detail text is long (no layout jump). */
+        .service-item > div {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-name {
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-detail {
+            color: var(--muted);
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 8px 12px;
+            font-size: 14px;
+        }
+
+        .kv .key { color: var(--muted); }
+        .kv .value { word-break: break-word; }
+
+        .sidebar-scroll {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        /* ########################################################
+           BIG RIGHT BOX WITH VERTICAL SPLIT
+        ######################################################## */
+        .split-panel {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .split-section {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .split-top {
+            flex: 1.05;
+        }
+
+        .split-bottom {
+            flex: 1;
+        }
+
+        .split-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.10);
+            margin: 12px 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        /* ########################################################
+           SCROLL AREAS
+        ######################################################## */
+        .history-box,
+        .chat-box {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            display: grid;
+            gap: 10px;
+            padding-right: 6px;
+        }
+
+        .debug-box {
+            display: grid;
+            gap: 10px;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 6px;
+            align-content: start;
+        }
+
+        .debug-row {
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 11px 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .debug-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .debug-tags {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .debug-tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 3px 9px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .debug-tag.transcript { color: #8db7f1; background: rgba(79, 142, 220, 0.14); }
+        .debug-tag.listener { color: #78d8ff; background: rgba(74, 192, 247, 0.14); }
+        .debug-tag.router { color: #f0c972; background: rgba(232, 191, 103, 0.14); }
+        .debug-tag.spoken { color: #8fe3a6; background: rgba(72, 198, 124, 0.14); }
+        .debug-tag.speech { color: #d1a6ff; background: rgba(187, 133, 255, 0.14); }
+
+        .debug-reason {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .debug-reason.status-ok { color: var(--green); }
+        .debug-reason.status-warn { color: var(--yellow); }
+        .debug-reason.status-error { color: var(--red); }
+        .debug-reason.status-idle { color: var(--muted); }
+
+        .debug-time {
+            color: var(--muted);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .debug-text {
+            line-height: 1.45;
+            margin-bottom: 6px;
+            white-space: pre-wrap;
+        }
+
+        .debug-detail {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        /* ########################################################
+           TOP HISTORY FEED ITEMS
+        ######################################################## */
+        .history-item {
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: var(--transcript-bg);
+        }
+
+        .history-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .history-source {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #8db7f1;
+        }
+
+        .history-time {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .history-text {
+            white-space: pre-wrap;
+            line-height: 1.45;
+        }
+
+        /* ########################################################
+           BOTTOM CHAT ITEMS
+        ######################################################## */
+        .chat-bubble {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+
+        .chat-bubble.user {
+            background: var(--user-bg);
+            border-color: rgba(72, 198, 124, 0.28);
+        }
+
+        .chat-bubble.assistant {
+            background: var(--assistant-bg);
+            border-color: rgba(79, 142, 220, 0.28);
+        }
+
+        .chat-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .chat-role {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+        }
+
+        .chat-role.user { color: var(--green); }
+        .chat-role.assistant { color: #8db7f1; }
+
+        .chat-time {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .chat-text {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        /* ########################################################
+           CONVERSATION PANEL: SMALLER TEXT + UNIFORM BOX HEIGHTS
+        ######################################################## */
+        .conversation-card .section-label { font-size: 11px; }
+        .conversation-card h3 { font-size: 16px; }
+        .conversation-card .history-source,
+        .conversation-card .history-time,
+        .conversation-card .chat-role,
+        .conversation-card .chat-time { font-size: 11px; }
+        .conversation-card .history-text,
+        .conversation-card .chat-text { font-size: 15px; }
+        .inputfeed-card #transcript-history {
+            flex: 0 0 auto;
+            height: 8em; /* small banner; scales with zoom */
+        }
+        .conversation-card .chat-box {
+            flex: 0 0 auto;
+            height: 24em; /* scales with zoom */
+        }
+
+        /* ########################################################
+           BUTTONS
+        ######################################################## */
+        button {
+            border: 1px solid #2f5a8d;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: white;
+            background: linear-gradient(180deg, #1c4b82, #173c67);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        .button-secondary {
+            background: linear-gradient(180deg, #172a46, #122138);
+            border-color: #314d72;
+            color: #e4edff;
+        }
+
+        .control-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .control-status {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* ########################################################
+           RESPONSIVE
+        ######################################################## */
+        @media (max-width: 1180px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+
+            .sidebar {
+                display: grid;
+                gap: 16px;
+            }
+
+            .main-column {
+                display: grid;
+                gap: 16px;
+            }
+
+            .activity-card,
+            .runtime-card,
+            .debug-card,
+            .conversation-card {
+                grid-column: auto;
+                grid-row: auto;
+            }
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --hero-height: auto;
+                --top-row-height: auto;
+            }
+
+            .kv {
+                grid-template-columns: 1fr;
+            }
+
+            .clock-box {
+                text-align: left;
+            }
+
+            .split-panel {
+                height: auto;
+                min-height: 0;
+            }
+
+            .history-box,
+            .chat-box,
+            .debug-box,
+            .sidebar-scroll {
+                max-height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- ########################################################
+             HERO / TOP BAR
+        ######################################################## -->
+        <section class="hero">
+            <div class="hero-top">
+                <div class="hero-summary">
+                    <h1>{{ app_name }} <span class="muted">v{{ app_version }}</span></h1>
+                    <div class="muted" style="margin-top: 8px;">
+                        Minimal technical dashboard focused on live transcript history and assistant conversation.
+                    </div>
+                    <div class="control-bar">
+                        <button type="button" id="btn-start">START</button>
+                        <button type="button" id="btn-stop" class="button-secondary">STOP</button>
+                        <button type="button" id="btn-restart" class="button-secondary">RESTART</button>
+                        <span class="control-status" id="control-status">control ready</span>
+                    </div>
+                </div>
+
+                <div class="hero-side">
+                    <section
+                        class="card screenshot-card"
+                        id="latest-screenshot-panel"
+                        data-image-key="{{ screenshots_panel.image_key or '' }}"
+                    >
+                        <div class="section-label">{{ screenshots_panel.title }}</div>
+                        <form method="post" action="/capture-screenshot">
+                            <button type="submit">TAKE A SCREENSHOT</button>
+                        </form>
+
+                        {% if screenshots_panel.image_url %}
+                        <img
+                            src="{{ screenshots_panel.image_url }}"
+                            alt="Latest Screenshot Preview"
+                            class="screenshot-preview"
+                            id="latest-screenshot-img"
+                        />
+                        <div class="screenshot-meta" id="latest-screenshot-name">{{ screenshots_panel.image_name }}</div>
+                        {% else %}
+                        <div class="screenshot-empty" id="latest-screenshot-empty">No screenshot saved yet.</div>
+                        {% endif %}
+                    </section>
+
+                    <div class="clock-box">
+                        <div id="live-clock" class="clock-time">--:--:--</div>
+                        <div id="live-date" class="clock-date">loading date...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pill-row">
+                <span class="status-badge status-{{ status }}">{{ status }}</span>
+                <span class="pill">mode = {{ mode }}</span>
+                <span class="pill">persona = {{ persona }}</span>
+                <span class="pill">pending_tasks = {{ pending_tasks }}</span>
+                <span class="pill">memory_backend = {{ mem0_runtime.active_backend or "json" }}</span>
+                <span class="pill">live_intent = {{ assistant_flow_status.live_intent or "n/a" }}</span>
+                <span class="pill">reply_mode = {{ assistant_flow_status.reply_mode or "n/a" }}</span>
+                <span class="pill">branch = {{ assistant_flow_status.final_branch or "n/a" }}</span>
+                {% if system_runtime and system_runtime.conversation_state %}
+                <span class="pill">conversation = {{ system_runtime.conversation_state }}</span>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 12px;" class="muted">
+                {{ mode_description }}
+            </div>
+        </section>
+
+        <!-- ########################################################
+             BODY LAYOUT
+        ######################################################## -->
+        <div class="app-layout">
+
+            <!-- ####################################################
+                 LEFT SIDEBAR
+            ##################################################### -->
+            <aside class="sidebar">
+                <section class="card activity-card">
+                    <div class="section-label">Activity</div>
+                    <h3>Assistant Flow</h3>
+
+                    <div class="sidebar-scroll">
+                    <div class="kv">
+                        <div class="key">latest_mic_turn</div>
+                        <div class="value">{{ assistant_flow_status.latest_mic_turn or "n/a" }}</div>
+
+                        <div class="key">mic_reason</div>
+                        <div class="value">{{ assistant_flow_status.mic_reason or "n/a" }}</div>
+
+                        <div class="key">live_intent</div>
+                        <div class="value">{{ assistant_flow_status.live_intent or "n/a" }}</div>
+
+                        <div class="key">reply_mode</div>
+                        <div class="value">{{ assistant_flow_status.reply_mode or "n/a" }}</div>
+
+                        <div class="key">final_branch</div>
+                        <div class="value">{{ assistant_flow_status.final_branch or "n/a" }}</div>
+
+                        <div class="key">response_ready</div>
+                        <div class="value">{{ assistant_flow_status.latest_response_has_text }}</div>
+
+                        <div class="key">tts_status</div>
+                        <div class="value">{{ assistant_flow_status.tts_status or "idle" }}</div>
+                    </div>
+                    </div>
+                </section>
+
+                <section class="card runtime-card">
+                    <div class="section-label">Runtime</div>
+                    <h3>Running Now</h3>
+
+                    <div class="sidebar-scroll">
+                        <div class="simple-list" id="running-services">
+                            {% for item in running_services %}
+                            <div class="service-item">
+                                <div>
+                                    <div class="item-name">{{ item.name }}</div>
+                                    <div class="item-detail">{{ item.detail }}</div>
+                                </div>
+                                <span class="status-badge status-{{ item.status }}">{{ item.status }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- ####################################################
+                 RIGHT MAIN BIG PANEL
+            ##################################################### -->
+            <main class="main-column">
+                <section class="card debug-card">
+                    <div class="panel-header">
+                        <div>
+                            <div class="section-label">Debug Box</div>
+                            <h3>Last 5 Voice Flow Events</h3>
+                        </div>
+                    </div>
+
+                    <div class="debug-box" id="debug-events">
+                        {% for item in debug_events %}
+                        <div class="debug-row">
+                            <div class="debug-top">
+                                <div class="debug-tags">
+                                    <span class="debug-tag {{ item.stage_class }}">{{ item.stage }}</span>
+                                    <span class="debug-reason status-{{ item.status_class }}">{{ item.reason }}</span>
+                                </div>
+                                <div class="debug-time">{{ item.ts_short or "" }}</div>
+                            </div>
+                            <div class="debug-text">{{ item.text }}</div>
+                            <div class="debug-detail">{{ item.detail }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="card inputfeed-card">
+                    <div class="panel-header">
+                        <div>
+                            <div class="section-label">Input Feed</div>
+                            <h3>Live Transcript History</h3>
+                        </div>
+                    </div>
+
+                    <div class="history-box" id="transcript-history">
+                        {% if transcript_history %}
+                            {% for item in transcript_history %}
+                            <div class="history-item">
+                                <div class="history-meta">
+                                    <div class="history-source">
+                                        {{ item.source or "audio_input" }}
+                                        {% if item.language %} | {{ item.language }}{% endif %}
+                                    </div>
+                                    <div class="history-time">{{ item.ts_short or "" }}</div>
+                                </div>
+
+                                <div class="history-text">{{ item.text }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="muted">No transcript history yet.</div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <section class="card conversation-card">
+                    <div class="panel-header">
+                        <div>
+                            <div class="section-label">Conversation</div>
+                            <h3>Main Conversation {% if view == "history" %}(History){% else %}(Live){% endif %}</h3>
+                        </div>
+
+                        <form method="post" action="/clear-chat">
+                            <button type="submit" class="button-secondary">CLEAN QUEUE</button>
+                        </form>
+                    </div>
+                    <div style="display:flex; gap:10px; margin: 8px 0 0 0;">
+                        {% if view == "history" %}
+                            <a class="button-secondary" href="/">Go Live</a>
+                        {% else %}
+                            <a class="button-secondary" href="/?view=history">Open History</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="chat-box" id="chat-history">
+                        {% if chat_history %}
+                            {% for item in chat_history %}
+                            <div class="chat-bubble {{ item.role_class }}">
+                                <div class="chat-meta">
+                                    <div class="chat-role {{ item.role_class }}">{{ item.ui_role }}</div>
+                                    <div class="chat-time">{{ item.ts_short or "" }}</div>
+                                </div>
+                                <div class="chat-text">{{ item.text }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="muted">No chat history yet.</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="split-divider" style="margin: 12px 0;"></div>
+
+                    <div class="panel-header">
+                        <div>
+                            <div class="section-label">Voice Log</div>
+                            <h3>Spoken (TTS)</h3>
+                        </div>
+                    </div>
+
+                    <div class="chat-box" id="spoken-history">
+                        {% if spoken_history %}
+                            {% for item in spoken_history %}
+                            <div class="chat-bubble {{ item.role_class }}">
+                                <div class="chat-meta">
+                                    <div class="chat-role {{ item.role_class }}">{{ item.ui_role }}</div>
+                                    <div class="chat-time">{{ item.ts_short or "" }}</div>
+                                </div>
+                                <div class="chat-text">{{ item.text }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="muted">No spoken history yet.</div>
+                        {% endif %}
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeText = now.toLocaleTimeString();
+            const dateText = now.toLocaleDateString(undefined, {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+
+            const timeEl = document.getElementById("live-clock");
+            const dateEl = document.getElementById("live-date");
+
+            if (timeEl) timeEl.textContent = timeText;
+            if (dateEl) dateEl.textContent = dateText;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+    <script>
+        (() => {
+            if (window.__ASSISCLUEUiPollingStarted) {
+                return;
+            }
+            window.__ASSISCLUEUiPollingStarted = true;
+
+            const POLL_MS = 1000;
+            const VIEW = "{{ view or 'live' }}";
+            const SESSION_START_TS = Date.now() / 1000;
+            const since = VIEW === "history" ? "" : `?since_ts=${encodeURIComponent(String(SESSION_START_TS))}`;
+            let lastScreenshotKey = (
+                document.getElementById("latest-screenshot-panel")?.dataset?.imageKey || ""
+            );
+
+            function escHtml(value) {
+                return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    "\"": "&quot;",
+                    "'": "&#39;",
+                }[ch]));
+            }
+
+            async function fetchJson(path) {
+                const res = await fetch(path, { cache: "no-store" });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            }
+
+            async function postJson(path) {
+                const res = await fetch(path, { method: "POST" });
+                return res.json();
+            }
+
+            function renderTranscript(items) {
+                if (!items || !items.length) return '<div class="muted">No transcript history yet.</div>';
+                return items.map((item) => `
+                    <div class="history-item">
+                        <div class="history-meta">
+                            <div class="history-source">${escHtml(item.source || "audio_input")}${item.language ? ` | ${escHtml(item.language)}` : ""}</div>
+                            <div class="history-time">${escHtml(item.ts_short || "")}</div>
+                        </div>
+                        <div class="history-text">${escHtml(item.text || "")}</div>
+                    </div>
+                `).join("");
+            }
+
+            function renderChat(items) {
+                if (!items || !items.length) return '<div class="muted">No chat history yet.</div>';
+                return items.map((item) => `
+                    <div class="chat-bubble ${escHtml(item.role_class || "assistant")}">
+                        <div class="chat-meta">
+                            <div class="chat-role ${escHtml(item.role_class || "assistant")}">${escHtml(item.ui_role || "ASSISTANT")}</div>
+                            <div class="chat-time">${escHtml(item.ts_short || "")}</div>
+                        </div>
+                        <div class="chat-text">${escHtml(item.text || "")}</div>
+                    </div>
+                `).join("");
+            }
+
+            function renderServices(items) {
+                if (!items || !items.length) return "";
+                return items.map((item) => `
+                    <div class="service-item">
+                        <div>
+                            <div class="item-name">${escHtml(item.name)}</div>
+                            <div class="item-detail">${escHtml(item.detail)}</div>
+                        </div>
+                        <span class="status-badge status-${escHtml(item.status)}">${escHtml(item.status)}</span>
+                    </div>
+                `).join("");
+            }
+
+            function renderDebug(items) {
+                if (!items || !items.length) return '<div class="muted">No debug events yet.</div>';
+                return items.map((item) => `
+                    <div class="debug-row">
+                        <div class="debug-top">
+                            <div class="debug-tags">
+                                <span class="debug-tag ${escHtml(item.stage_class || "transcript")}">${escHtml(item.stage || "DEBUG")}</span>
+                                <span class="debug-reason status-${escHtml(item.status_class || "idle")}">${escHtml(item.reason || "n/a")}</span>
+                            </div>
+                            <div class="debug-time">${escHtml(item.ts_short || "")}</div>
+                        </div>
+                        <div class="debug-text">${escHtml(item.text || "")}</div>
+                        <div class="debug-detail">${escHtml(item.detail || "")}</div>
+                    </div>
+                `).join("");
+            }
+
+            async function tick() {
+                try {
+                    const [transcript, chat, spoken, services, screenshot, control, debug] = await Promise.all([
+                        fetchJson(`/api/transcript${since}`),
+                        fetchJson(`/api/chat${since}`),
+                        fetchJson(`/api/spoken${since}`),
+                        fetchJson("/api/services"),
+                        fetchJson("/api/screenshot"),
+                        fetchJson("/api/control/status"),
+                        fetchJson(`/api/debug${since}`),
+                    ]);
+
+                    const transcriptBox = document.getElementById("transcript-history");
+                    if (transcriptBox) transcriptBox.innerHTML = renderTranscript(transcript.items);
+
+                    const chatBox = document.getElementById("chat-history");
+                    if (chatBox) chatBox.innerHTML = renderChat(chat.items);
+
+                    const spokenBox = document.getElementById("spoken-history");
+                    if (spokenBox) spokenBox.innerHTML = renderChat(spoken.items);
+
+                    const servicesBox = document.getElementById("running-services");
+                    if (servicesBox) servicesBox.innerHTML = renderServices(services.items);
+
+                    const debugBox = document.getElementById("debug-events");
+                    if (debugBox) debugBox.innerHTML = renderDebug(debug.items);
+
+                    const img = document.getElementById("latest-screenshot-img");
+                    const name = document.getElementById("latest-screenshot-name");
+                    const empty = document.getElementById("latest-screenshot-empty");
+
+                    const panel = document.getElementById("latest-screenshot-panel");
+                    const nextKey = screenshot.image_key || "";
+                    if (panel) panel.dataset.imageKey = nextKey;
+
+                    if (screenshot.image_url) {
+                        const nextImageUrl = String(screenshot.image_url || "").split("?")[0];
+                        if (nextKey && nextKey !== lastScreenshotKey && img) {
+                            img.src = nextImageUrl;
+                        }
+                        if (img) img.style.display = "";
+                        if (name) name.textContent = screenshot.image_name || "";
+                        if (empty) empty.style.display = "none";
+                    } else {
+                        if (empty) empty.style.display = "";
+                    }
+                    lastScreenshotKey = nextKey;
+
+                    const controlStatus = document.getElementById("control-status");
+                    if (controlStatus) {
+                        controlStatus.textContent = `${control.status || "idle"}${control.busy ? "..." : ""}`;
+                    }
+
+                    const buttons = [
+                        document.getElementById("btn-start"),
+                        document.getElementById("btn-stop"),
+                        document.getElementById("btn-restart"),
+                    ].filter(Boolean);
+                    buttons.forEach((btn) => {
+                        btn.disabled = Boolean(control.busy);
+                    });
+                } catch (_) {
+                    // Keep UI stable if polling fails.
+                }
+            }
+
+            async function runControl(action) {
+                const statusEl = document.getElementById("control-status");
+                if (statusEl) statusEl.textContent = `${action}...`;
+                try {
+                    await postJson(`/api/control/${action}`);
+                } finally {
+                    tick();
+                }
+            }
+
+            const startBtn = document.getElementById("btn-start");
+            const stopBtn = document.getElementById("btn-stop");
+            const restartBtn = document.getElementById("btn-restart");
+            if (startBtn) startBtn.addEventListener("click", () => runControl("start"));
+            if (stopBtn) stopBtn.addEventListener("click", () => runControl("stop"));
+            if (restartBtn) restartBtn.addEventListener("click", () => runControl("restart"));
+
+            tick();
+            setInterval(tick, POLL_MS);
+        })();
+    </script>
+</body>
+</html>

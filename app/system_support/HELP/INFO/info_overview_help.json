@@ -1,0 +1,172 @@
+[
+  {
+    "item_id": "info_overview_001",
+    "space_id": "help",
+    "title": "Explain Help",
+    "keyword": "help",
+    "short_answer": "HELP is the app manual that the assistant can search and explain.",
+    "text": "HELP is the internal manual of the assistant. It explains app folders, files, blocks, commands, runtime files, and troubleshooting topics using saved JSON entries instead of guessing.",
+    "examples": ["EXPLAIN HELP"],
+    "tags": ["help", "manual", "guide"],
+    "aliases": ["help"],
+    "related": ["info", "examples", "troubleshooting"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "help"
+    }
+  },
+  {
+    "item_id": "info_overview_002",
+    "space_id": "help",
+    "title": "Explain Info",
+    "keyword": "info",
+    "short_answer": "INFO is the general explanation area inside HELP.",
+    "text": "INFO contains general explanations that are not tied to only one app block. It is used for overview topics, examples, glossary ideas, troubleshooting, and roadmap notes.",
+    "examples": ["EXPLAIN INFO"],
+    "tags": ["info", "general", "overview"],
+    "aliases": ["info"],
+    "related": ["help", "glossary", "roadmap"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "info"
+    }
+  },
+  {
+    "item_id": "info_overview_003",
+    "space_id": "help",
+    "title": "Explain Manual",
+    "keyword": "manual",
+    "short_answer": "Manual means saved explanation that helps the assistant describe the app.",
+    "text": "The manual is not random documentation. It is structured help content that the assistant can search when the user asks what a folder, file, command, or system block means.",
+    "examples": ["EXPLAIN MANUAL"],
+    "tags": ["manual", "documentation"],
+    "aliases": ["manual"],
+    "related": ["help", "guide"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "manual"
+    }
+  },
+  {
+    "item_id": "info_overview_004",
+    "space_id": "help",
+    "title": "Explain Guide",
+    "keyword": "guide",
+    "short_answer": "A guide explains what to do, not only what something means.",
+    "text": "A guide gives practical direction. In this app, guide entries should explain what a block does, where it lives, what command to try, and what file to check when something fails.",
+    "examples": ["EXPLAIN GUIDE"],
+    "tags": ["guide", "usage"],
+    "aliases": ["guide"],
+    "related": ["help", "examples"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "guide"
+    }
+  },
+  {
+    "item_id": "info_overview_005",
+    "space_id": "help",
+    "title": "Explain Topic",
+    "keyword": "topic",
+    "short_answer": "A topic is one explainable subject inside HELP.",
+    "text": "A topic should be specific. Good topics are words like memory, llm, runtime, qdrant, scripts, logs, prompts, or settings. Each important app word should have its own explain entry.",
+    "examples": ["EXPLAIN TOPIC"],
+    "tags": ["topic", "explain"],
+    "aliases": ["topic"],
+    "related": ["keyword", "help"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "topic"
+    }
+  },
+  {
+    "item_id": "info_overview_006",
+    "space_id": "help",
+    "title": "Explain Keyword",
+    "keyword": "keyword",
+    "short_answer": "A keyword is the main word that triggers one HELP explanation.",
+    "text": "A keyword should be precise and stable. Version 2.0 should avoid many aliases and instead give important folders, files, and concepts their own clear keyword.",
+    "examples": ["EXPLAIN KEYWORD"],
+    "tags": ["keyword", "search"],
+    "aliases": ["keyword"],
+    "related": ["topic", "aliases"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "keyword"
+    }
+  },
+  {
+    "item_id": "info_overview_007",
+    "space_id": "help",
+    "title": "Explain Alias",
+    "keyword": "alias",
+    "short_answer": "An alias is an alternate name for a HELP topic, but it should be rare.",
+    "text": "Aliases should not become a messy pile of possible names. In this HELP version, each explain topic should usually have one main alias, or two only when the second word is truly necessary.",
+    "examples": ["EXPLAIN ALIAS"],
+    "tags": ["alias", "search"],
+    "aliases": ["alias"],
+    "related": ["keyword", "topic"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "alias"
+    }
+  },
+  {
+    "item_id": "info_overview_008",
+    "space_id": "help",
+    "title": "Explain Folder",
+    "keyword": "folder",
+    "short_answer": "A folder groups related files inside the app or HELP system.",
+    "text": "Folders are important because the assistant project is modular. Any folder that represents a real block should have an explain entry so the user can understand what lives there and why.",
+    "examples": ["EXPLAIN FOLDER"],
+    "tags": ["folder", "structure"],
+    "aliases": ["folder"],
+    "related": ["file", "block"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "folder"
+    }
+  },
+  {
+    "item_id": "info_overview_009",
+    "space_id": "help",
+    "title": "Explain File",
+    "keyword": "file",
+    "short_answer": "A file owns a specific piece of logic, data, settings, or runtime state.",
+    "text": "Important files should have explain entries. A good file explanation says what the file does, who uses it, whether it is config, code, runtime state, or saved help content.",
+    "examples": ["EXPLAIN FILE"],
+    "tags": ["file", "structure"],
+    "aliases": ["file"],
+    "related": ["folder", "json"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "file"
+    }
+  },
+  {
+    "item_id": "info_overview_010",
+    "space_id": "help",
+    "title": "Explain Json",
+    "keyword": "json",
+    "short_answer": "JSON is structured text used by the app for saved data and help entries.",
+    "text": "In HELP, JSON files store explainable topics. In runtime, JSON files store current state. In settings and memory, JSON-style structures help keep data predictable and readable.",
+    "examples": ["EXPLAIN JSON"],
+    "tags": ["json", "data"],
+    "aliases": ["json"],
+    "related": ["file", "runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "info",
+      "topic_key": "json"
+    }
+  }
+]

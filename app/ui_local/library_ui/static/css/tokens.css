@@ -1,0 +1,16 @@
+:root {
+    --bg: #08111d;
+    --bg-soft: #0d1727;
+    --panel: #111d31;
+    --panel-2: #15243b;
+    --line: #27415f;
+    --text: #edf3ff;
+    --muted: #9cb0ca;
+    --blue: #4f8edc;
+    --green: #48c67c;
+    --yellow: #e8bf67;
+    --red: #ef6b6b;
+    --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+    --track: rgba(255, 255, 255, 0.05);
+    --thumb: rgba(127, 162, 209, 0.55);
+}
