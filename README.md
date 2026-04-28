@@ -1,132 +1,256 @@
 ## Hi there 👋
 <img width="640" height="1028" alt="CLUE SUPER EXPLAINED" src="info/CLUE SUPER EXPLAINED.png" />
-
-
-# ASSISTANT CLUE
-# ASSISTANT IS NOT FINISHED , FILES MIGHT BE MIXED UP , FALLBACKS AND PLACEHOLDERS STILL COULD BE HIT , IDEAS ARE WELCOME ! #
-
-## IM CREATIG A HELP THAT WILL BE A QUICK RESPONSE FOR EACH SECTION AND BLOCK AND ANYTHING THAT IS INSIDE THE ASSISNT 
-Using "explain" as command and follow with any Assistant reference will trigger a info about that 
----
-Example: explain prompts? explain notes ? explain web browser ? explain memory ? .... 
-
 ##
-CLUE is a local AI assistant project built to connect voice, browser control, memory, document reading, and local AI models into one modular system.
+##
 
-The goal is simple: an assistant that can listen, understand context, use tools, remember useful information, search through stored knowledge, and respond in a natural way.
+# 🧩 ASSISTANT CLUE
 
-This project is still in active development. Many core blocks already exist and work, but not every advanced option is fully integrated yet. Some features are active now, while others are prepared as optional modules for future expansion.
+> ⚠️ **Status:** Assistant Clue is **not finished yet**.  
+> Some files may still be mixed, fallbacks/placeholders may still be triggered, and some blocks are still being cleaned or connected.  
+> Ideas, feedback, and improvements are welcome.
 
 ---
 
-## What This App Can Do
+## 🧠 What is Assistant Clue?
 
-CLUE is designed as a local assistant with separate blocks for:
+**CLUE** is a local AI assistant project built to connect:
 
-- Voice input and speech-to-text
-- Local LLM responses
-- Browser automation
-- Knowledge library and document reading
-- Memory and retrieval with Qdrant
-- Text-to-speech output
-- Screen capture and system interaction
-- Optional advanced memory, OCR, and document parsing tools
+- 🎙️ Voice input
+- 🧠 Local AI models
+- 🌐 Browser control
+- 📚 Memory and knowledge retrieval
+- 📄 Document reading
+- 🔊 Text-to-speech output
+- 🖥️ Screen/system interaction
 
-The app is built in a modular way, so each block can be improved, replaced, disabled, or expanded without rebuilding the whole system.
+The goal is simple:
 
-##
-##
-## Install simple
+> Build a local assistant that can listen, understand context, use tools, remember useful information, search stored knowledge, and respond naturally.
 
-### 
-1. Crear la carpeta principal
+---
 
-Abrí PowerShell y creá el root del proyecto:
+## 🚧 Development Status
 
+This project is in **active development**.
 
-powershell
+Many core blocks already exist and work, but not every advanced option is fully integrated yet.
 
+Some features are active today.  
+Other features are prepared as optional modules for future expansion.
+
+The system is designed to be modular, so each block can be improved, replaced, disabled, or expanded without rebuilding the whole app.
+
+---
+
+## ❓ Built-in Help System
+
+I am creating a help system that gives quick explanations for each section, block, command, and internal assistant feature.
+
+The idea is simple:
+
+```text
+explain + assistant reference
+```
+
+Examples:
+
+```text
+explain prompts
+explain notes
+explain web browser
+explain memory
+explain knowledge library
+explain voice input
+```
+
+Using `explain` followed by an Assistant Clue reference should return a quick explanation about that section.
+
+---
+
+## ✅ What This App Can Do
+
+Assistant Clue is designed as a local assistant with separate blocks for:
+
+- 🎙️ **Voice input and speech-to-text**
+- 🧠 **Local LLM responses**
+- 🌐 **Browser automation**
+- 📚 **Knowledge library and document reading**
+- 🧩 **Memory and retrieval**
+- 🗂️ **Qdrant vector database support**
+- 🔊 **Text-to-speech output**
+- 🖥️ **Screen capture and system interaction**
+- 👁️ **Optional OCR tools**
+- 📄 **Optional advanced document parsing**
+- 🧠 **Optional advanced memory modules**
+
+---
+
+## 🧱 Why Modular?
+
+Assistant Clue is built in blocks.
+
+That means one part can fail, restart, or be replaced without destroying the whole system.
+
+Example:
+
+- Memory can use advanced retrieval with Qdrant.
+- If Qdrant is disabled, the app can still use simpler fallback memory.
+- Voice, browser, memory, documents, and LLM logic are separated.
+- Heavy blocks can be turned on only when needed.
+
+This makes the assistant easier to debug, easier to upgrade, and better for local machines.
+
+---
+
+# ⚙️ Simple Install — Windows
+
+## 1. Create the main project folder
+
+Open **PowerShell** and create the project root:
+
+```powershell
 mkdir C:\AI\ASSISCLUE
 cd C:\AI\ASSISCLUE
-##
-2. Crear el entorno virtual
+```
 
-Dentro de ASSISCLUE, creá el venv:
+---
 
+## 2. Create the virtual environment
+
+Inside `ASSISCLUE`, create the venv:
+
+```powershell
 python -m venv .venv
-##
-3. Activar el entorno virtual
+```
+
+---
+
+## 3. Activate the virtual environment
+
+```powershell
 .\.venv\Scripts\Activate.ps1
+```
 
-Si aparece un error de permisos en PowerShell, ejecutá una vez:
+If PowerShell shows a permission error, run this once:
 
+```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
 
-Después activalo otra vez:
+Then activate again:
 
+```powershell
 .\.venv\Scripts\Activate.ps1
-##
-4. Instalar dependencias
+```
 
-Con el venv activado:
+---
 
+## 4. Install dependencies
+
+With the venv activated:
+
+```powershell
 pip install --upgrade pip
-##
 pip install -r requirements.txt
-------
+```
 
------
-##
-##
-##
---
-##
+---
 
-## Install simple en Linux
+## 5. Run the app
 
-### 1. Crear la carpeta principal
+From the project root:
 
-Abrí la terminal y creá el root del proyecto:
+```powershell
+uvicorn app.ui_local.app:app --reload
+```
 
-bash
---
-mkdir -p ~/AI/ASSISCLUE
---
-cd ~/AI/ASSISCLUE
-2. Crear el entorno virtual
+Open in your browser:
 
-Dentro de ASSISCLUE, creá el venv:
-
-python3 -m venv .venv
---
-3. Activar el entorno virtual
-source .venv/bin/activate
---
-4. Instalar dependencias
-
-Con el venv activado:
-
-python -m pip install --upgrade pip
-##
-python -m pip install -r requirements.txt
---
-5. Ejecutar la app
-
-
-Abrí en el navegador:
-
+```text
 http://127.0.0.1:8000
-Estructura esperada
-##
-~/AI/ASSISCLUE
+```
+
+---
+
+# 🐧 Simple Install — Linux
+
+## 1. Create the main project folder
+
+```bash
+mkdir -p ~/AI/ASSISCLUE
+cd ~/AI/ASSISCLUE
+```
+
+---
+
+## 2. Create the virtual environment
+
+```bash
+python3 -m venv .venv
+```
+
+---
+
+## 3. Activate the virtual environment
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## 4. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+---
+
+## 5. Run the app
+
+```bash
+uvicorn app.ui_local.app:app --reload
+```
+
+Open in your browser:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+## 📁 Expected Project Structure
+
+```text
+ASSISCLUE/
 │
 ├── app/
 ├── runtime/
 ├── scripts/
 ├── requirements.txt
 └── .venv/
-##
-ASSISCLUE es el root principal.
-.venv es el entorno virtual local del proyecto.
-app/ contiene el código principal.
-runtime/ guarda archivos temporales, estados, logs y outputs generados por la app.
+```
+
+### Folder meaning
+
+- `app/` — main application code
+- `runtime/` — temporary states, logs, generated files, outputs
+- `scripts/` — helper scripts, tests, startup tools
+- `requirements.txt` — Python dependencies
+- `.venv/` — local Python virtual environment
+
+---
+
+## 🧪 Notes
+
+This project is experimental but functional in parts.
+
+The current goal is to keep improving the assistant block by block until it becomes a clean local AI system that can:
+
+> listen, understand, remember, use tools, read files, control browser actions, and answer with voice or text.
+
+
+
