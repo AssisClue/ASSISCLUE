@@ -16,10 +16,9 @@ sudo apt install -y git python3 python3-venv python3-pip portaudio19-dev ffmpeg
 ## 2. Download The Project
 
 ```bash
-mkdir -p ~/AI
-cd ~/AI
-git clone <YOUR_GITHUB_REPO_URL> ASSISCLUE
-cd ASSISCLUE
+mkdir -p ~/AI/ASSISCLUE  
+cd ~/AI/ASSISCLUE
+git clone https://github.com/AssisClue/ASSISCLUE.git
 ```
 
 Replace `<YOUR_GITHUB_REPO_URL>` with the real GitHub repo URL.
