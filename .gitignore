@@ -51,6 +51,7 @@ Desktop.ini
 # Ajusta esto si luego quieres versionar algunos runtime base
 # =========================
 
+runtime/
 runtime/queues/speech_out/audio/**
 
 # =========================
