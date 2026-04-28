@@ -1,25 +1,21 @@
+NEXT CHANGES COMING!
+
+HELP SECTION 
+HELP is gonna be the main way to understand and walk thru this app in a easy and friendly way.
+Help is meant to be simple and also DEEP. 
+Im creating a simple response for HELP but also a deeper one for those who really want to dig in this APP!
 
 
+C:\AI\ASSISCLUE\app\system_support\HELP
+examples:
+- EXPLAIN MEMORY
+- EXPLAIN LLM
+- EXPLAIN RUNTIME
+- HELP COMMANDS
+- HELP TROUBLESHOOTING
 
 
-Done (minimum scope).
+THE IDEA :
+- EXPLAIN "ANYTHING" and "EVERYTHING" should retrieve a responde about our APP
 
-Who reads what now (live listeners):
-
-primary_listener reads assembled sacred: runtime/sacred/live_transcript_assembled.jsonl
-administrative_listener now ALSO reads assembled sacred (changed)
-context_runner does not read transcripts directly; it reads runtime/sacred/live_moment_history.jsonl (and those moments come from administrative_listener, so it benefits automatically)
-
-Anybody else listening to other files?
-
-Only these use TranscriptReader(...): primary_listener, administrative_listener
-The assembler reads raw STT: runtime/sacred/live_transcript_history.jsonl and writes the assembled file.
-Better “cut sentence” merging (assembler upgrade, still minimal):
-
-If it hears just Rick (wakeword) and then the command comes a few seconds later, it now merges them (bigger window).
-If a sentence is mid-way (no .?! yet), it waits longer before “flushing”, so it doesn’t split in the middle so easily.
-It also won’t merge across different session_id.
-Files changed
-
-app/live_listeners/administrative_listener/administrative_listener_service.py
-app/live_listeners/shared/assembled_transcript_builder.py
+More way to talk and interact coming up..
