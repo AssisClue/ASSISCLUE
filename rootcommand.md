@@ -9,7 +9,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start_main_stack.py
 
 powershell -ExecutionPolicy Bypass -File .\scripts\stop_main_stack.py
 
-
 --------------------------
 WEB UI : 
 --------------------------
