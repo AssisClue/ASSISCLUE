@@ -51,9 +51,13 @@ Desktop.ini
 # Ajusta esto si luego quieres versionar algunos runtime base
 # =========================
 
-/runtime/
-/runtime/**
+runtime/
 
+runtime/**
+!runtime/
+!runtime/**/
+!runtime/**/.gitkeep
+!runtime/README.md
 # =========================
 # Local data / models
 # normalmente no conviene subir esto
