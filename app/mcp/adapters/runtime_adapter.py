@@ -74,7 +74,7 @@ class RuntimeAdapter:
         return _safe_load_json(path)
 
     def read_latest_tts(self) -> dict[str, Any]:
-        path = _runtime_root() / "output" / "latest_tts.json"
+        path = _runtime_root() / "queues" / "speech_out" / "latest_tts.json"
         return _safe_load_json(path)
 
     def read_latest_decision(self) -> dict[str, Any]:

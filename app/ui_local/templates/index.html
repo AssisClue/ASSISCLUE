@@ -26,7 +26,7 @@
             --transcript-bg: rgba(255, 255, 255, 0.03);
             --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
             --hero-height: 270px;
-            --top-row-height: 180px;
+            --top-row-height: 280px;
             --thumb: rgba(127, 162, 209, 0.55);
             --thumb-hover: rgba(157, 190, 236, 0.8);
             --track: rgba(255, 255, 255, 0.05);
@@ -112,6 +112,9 @@
         .clock-box {
             min-width: 180px;
             text-align: right;
+            display: grid;
+            gap: 8px;
+            justify-items: end;
         }
 
         .hero-side {
@@ -408,7 +411,7 @@
         .debug-box {
             display: grid;
             gap: 10px;
-            height: 100%;
+            height: 18em;
             overflow-y: auto;
             padding-right: 6px;
             align-content: start;
@@ -581,7 +584,7 @@
         .conversation-card .chat-text { font-size: 15px; }
         .inputfeed-card #transcript-history {
             flex: 0 0 auto;
-            height: 8em; /* small banner; scales with zoom */
+            height: 18em; /* show more log rows */
         }
         .conversation-card .chat-box {
             flex: 0 0 auto;
@@ -609,6 +612,12 @@
             background: linear-gradient(180deg, #172a46, #122138);
             border-color: #314d72;
             color: #e4edff;
+        }
+
+        .button-danger {
+            background: linear-gradient(180deg, #7b2323, #5c1919);
+            border-color: #a34b4b;
+            color: #ffeaea;
         }
 
         .control-bar {
@@ -696,7 +705,6 @@
                     <div class="control-bar">
                         <button type="button" id="btn-start">START</button>
                         <button type="button" id="btn-stop" class="button-secondary">STOP</button>
-                        <button type="button" id="btn-restart" class="button-secondary">RESTART</button>
                         <span class="control-status" id="control-status">control ready</span>
                     </div>
                 </div>
@@ -726,6 +734,7 @@
                     </section>
 
                     <div class="clock-box">
+                        <button type="button" id="btn-shutdown" class="button-danger">SHUTDOWN</button>
                         <div id="live-clock" class="clock-time">--:--:--</div>
                         <div id="live-date" class="clock-date">loading date...</div>
                     </div>
@@ -986,7 +995,17 @@
 
             async function postJson(path) {
                 const res = await fetch(path, { method: "POST" });
-                return res.json();
+                let data = {};
+                try {
+                    data = await res.json();
+                } catch (_) {
+                    data = {};
+                }
+                if (!res.ok) {
+                    const msg = data?.message || `HTTP ${res.status}`;
+                    throw new Error(msg);
+                }
+                return data;
             }
 
             function renderTranscript(items) {
@@ -1101,7 +1120,7 @@
                     const buttons = [
                         document.getElementById("btn-start"),
                         document.getElementById("btn-stop"),
-                        document.getElementById("btn-restart"),
+                        document.getElementById("btn-shutdown"),
                     ].filter(Boolean);
                     buttons.forEach((btn) => {
                         btn.disabled = Boolean(control.busy);
@@ -1115,7 +1134,16 @@
                 const statusEl = document.getElementById("control-status");
                 if (statusEl) statusEl.textContent = `${action}...`;
                 try {
-                    await postJson(`/api/control/${action}`);
+                    const result = await postJson(`/api/control/${action}`);
+                    if (statusEl) {
+                        if (result?.ok) {
+                            statusEl.textContent = String(result?.message || `${action} ok`);
+                        } else {
+                            statusEl.textContent = String(result?.message || `${action} failed`);
+                        }
+                    }
+                } catch (err) {
+                    if (statusEl) statusEl.textContent = String(err?.message || `${action} failed`);
                 } finally {
                     tick();
                 }
@@ -1123,10 +1151,10 @@
 
             const startBtn = document.getElementById("btn-start");
             const stopBtn = document.getElementById("btn-stop");
-            const restartBtn = document.getElementById("btn-restart");
+            const shutdownBtn = document.getElementById("btn-shutdown");
             if (startBtn) startBtn.addEventListener("click", () => runControl("start"));
             if (stopBtn) stopBtn.addEventListener("click", () => runControl("stop"));
-            if (restartBtn) restartBtn.addEventListener("click", () => runControl("restart"));
+            if (shutdownBtn) shutdownBtn.addEventListener("click", () => runControl("shutdown"));
 
             tick();
             setInterval(tick, POLL_MS);

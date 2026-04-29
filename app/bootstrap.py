@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 import json
 import time
 
@@ -31,7 +32,7 @@ class BootstrapResult:
     message: str
 
 
-def _write_json_if_missing(path: Path, payload: dict) -> None:
+def _write_json_if_missing(path: Path, payload: Any) -> None:
     if path.exists():
         return
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -39,6 +40,13 @@ def _write_json_if_missing(path: Path, payload: dict) -> None:
         json.dumps(payload, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+
+
+def _write_text_if_missing(path: Path, text: str = "") -> None:
+    if path.exists():
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
 
 
 def _ensure_runtime_structure(config: AppConfig) -> None:
@@ -49,16 +57,32 @@ def _ensure_runtime_structure(config: AppConfig) -> None:
         runtime_dir / "sacred",
         runtime_dir / "status",
         runtime_dir / "stt_archive",
+        runtime_dir / "browser",
         runtime_dir / "queues" / "router_dispatch",
+        runtime_dir / "queues" / "browser",
         runtime_dir / "display_actions" / "results",
         runtime_dir / "display_actions" / "screenshots",
         runtime_dir / "display_actions" / "status",
         runtime_dir / "queues" / "spoken_queries",
+        runtime_dir / "status" / "router_dispatch",
+        runtime_dir / "status" / "browser",
+        runtime_dir / "status" / "memory",
         runtime_dir / "status" / "spoken_queries",
         runtime_dir / "queues" / "speech_out" / "audio",
         runtime_dir / "status" / "speech_out",
         runtime_dir / "state",
+        runtime_dir / "state" / "live_listeners",
+        runtime_dir / "state" / "memory" / "snapshots",
+        runtime_dir / "state" / "speech_out",
         runtime_dir / "output",
+        runtime_dir / "memory" / "profile",
+        runtime_dir / "knowledge_library" / "indexing",
+        runtime_dir / "knowledge_library" / "logs",
+        runtime_dir / "knowledge_library" / "maps",
+        runtime_dir / "knowledge_library" / "summaries",
+        runtime_dir / "knowledge_library" / "workspace",
+        runtime_dir / "web" / "pages",
+        runtime_dir / "web" / "screenshots",
         config.paths.data_dir,
         config.paths.models_dir,
         config.paths.assets_dir,
@@ -70,8 +94,12 @@ def _ensure_runtime_structure(config: AppConfig) -> None:
         directory.mkdir(parents=True, exist_ok=True)
 
     text_files = [
+        runtime_dir / "sacred" / "live_transcript_raw.jsonl",
         runtime_dir / "sacred" / "live_transcript_history.jsonl",
         runtime_dir / "sacred" / "live_transcript_assembled.jsonl",
+        runtime_dir / "sacred" / "live_moment_history.jsonl",
+        runtime_dir / "queues" / "browser" / "request_queue.jsonl",
+        runtime_dir / "queues" / "browser" / "result_queue.jsonl",
         runtime_dir / "queues" / "router_dispatch" / "router_input_queue.jsonl",
         runtime_dir / "queues" / "router_dispatch" / "action_queue.jsonl",
         runtime_dir / "queues" / "router_dispatch" / "response_queue.jsonl",
@@ -80,15 +108,29 @@ def _ensure_runtime_structure(config: AppConfig) -> None:
         runtime_dir / "queues" / "speech_out" / "speech_queue.jsonl",
         runtime_dir / "queues" / "speech_out" / "spoken_history.jsonl",
         runtime_dir / "output" / "chat_history.jsonl",
+        runtime_dir / "knowledge_library" / "indexing" / "jobs.jsonl",
+        runtime_dir / "knowledge_library" / "summaries" / "book_summaries.jsonl",
+        runtime_dir / "knowledge_library" / "summaries" / "file_summaries.jsonl",
     ]
     for path in text_files:
-        if not path.exists():
-            path.write_text("", encoding="utf-8")
+        _write_text_if_missing(path)
 
+    _write_json_if_missing(runtime_dir / "sacred" / "live_transcript_raw_latest.json", {})
     _write_json_if_missing(runtime_dir / "sacred" / "live_transcript_latest.json", {})
+    _write_json_if_missing(runtime_dir / "sacred" / "live_transcript_assembled_latest.json", {})
+    _write_json_if_missing(runtime_dir / "sacred" / "context_snapshot.json", {})
+    _write_json_if_missing(runtime_dir / "sacred" / "memory_snapshot.json", {})
+    _write_json_if_missing(runtime_dir / "sacred" / "world_state.json", {})
     _write_json_if_missing(runtime_dir / "status" / "inputfeed_to_text_status.json", {})
     _write_json_if_missing(runtime_dir / "status" / "assembled_transcript_builder_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "primary_listener_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "administrative_listener_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "raw_interrupt_listener_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "context_runner_status.json", {})
     _write_json_if_missing(runtime_dir / "status" / "router_dispatch" / "router_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "browser" / "status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "memory" / "context_memory_runtime_status.json", {})
+    _write_json_if_missing(runtime_dir / "status" / "memory" / "qdrant_index_status.json", {})
     _write_json_if_missing(
         runtime_dir / "display_actions" / "status" / "display_action_runner_status.json",
         {},
@@ -107,9 +149,23 @@ def _ensure_runtime_structure(config: AppConfig) -> None:
     )
     _write_json_if_missing(runtime_dir / "queues" / "speech_out" / "latest_tts.json", {})
     _write_json_if_missing(runtime_dir / "state" / "speech_out" / "playback_state.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "live_listeners" / "raw_interrupt_listener_cursor.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "live_listeners" / "primary_listener_cursor.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "live_listeners" / "administrative_listener_cursor.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "live_listeners" / "context_runner_cursor.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "memory" / "snapshots" / "live_context.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "memory" / "snapshots" / "recent_context.json", {})
     _write_json_if_missing(runtime_dir / "state" / "system_runtime.json", {})
     _write_json_if_missing(runtime_dir / "state" / "session_snapshot.json", {})
+    _write_json_if_missing(runtime_dir / "state" / "latest_decision.json", {})
     _write_json_if_missing(runtime_dir / "output" / "latest_response.json", {})
+    _write_json_if_missing(runtime_dir / "memory" / "memory_items.json", [])
+    _write_json_if_missing(runtime_dir / "memory" / "profile" / "user_profile.json", {})
+    _write_json_if_missing(runtime_dir / "knowledge_library" / "indexing" / "indexed_files.json", {})
+    _write_json_if_missing(runtime_dir / "knowledge_library" / "maps" / "file_hash_index.json", {})
+    _write_json_if_missing(runtime_dir / "knowledge_library" / "maps" / "folder_scan_status.json", {})
+    _write_json_if_missing(runtime_dir / "knowledge_library" / "maps" / "library_map.json", {})
+    _write_json_if_missing(runtime_dir / "knowledge_library" / "workspace" / "marked_items.json", [])
 
 
 def _load_current_mode(config: AppConfig) -> str:

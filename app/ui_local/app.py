@@ -241,25 +241,10 @@ def _read_runtime_service_statuses(runtime_dir: Path) -> dict[str, dict[str, Any
 
 
 async def _run_control_action(action: str) -> dict[str, Any]:
-    script_name = "start_main_stack.py" if action in {"start", "restart"} else "stop_main_stack.py"
+    if action not in {"start", "stop"}:
+        raise ValueError(f"unknown control action: {action}")
+    script_name = "start_main_stack.py" if action == "start" else "stop_main_stack.py"
     args = [sys.executable, str(_stack_script_path(script_name)), "--backend-only"]
-    if action == "restart":
-        stop_proc = await asyncio.to_thread(
-            subprocess.run,
-            [sys.executable, str(_stack_script_path("stop_main_stack.py")), "--backend-only"],
-            cwd=str(PROJECT_ROOT),
-            capture_output=True,
-            text=True,
-        )
-        if stop_proc.returncode != 0:
-            return {
-                "ok": False,
-                "action": action,
-                "code": stop_proc.returncode,
-                "stdout": stop_proc.stdout,
-                "stderr": stop_proc.stderr,
-                "message": "stop failed",
-            }
 
     proc = await asyncio.to_thread(
         subprocess.run,
@@ -276,6 +261,18 @@ async def _run_control_action(action: str) -> dict[str, Any]:
         "stderr": proc.stderr,
         "message": "ok" if proc.returncode == 0 else "failed",
     }
+
+
+def _launch_shutdown_action() -> None:
+    args = [sys.executable, str(_stack_script_path("stop_main_stack.py"))]
+    popen_kwargs: dict[str, Any] = {
+        "cwd": str(PROJECT_ROOT),
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL,
+    }
+    if os.name == "nt":
+        popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
+    subprocess.Popen(args, **popen_kwargs)
 
 
 def _project_root() -> Path:
@@ -759,10 +756,9 @@ def _build_running_services(
             status = "running" if system_runtime.get(spec.running_key) else "off"
             detail = (
                 str(
-                    latest_tts.get("spoken_text")
-                    or latest_tts.get("status")
+                    latest_tts.get("status")
                     or status_payload.get("last_status")
-                    or "stopped"
+                    or "active"
                 ).strip()
                 if system_runtime.get(spec.running_key)
                 else "stopped"
@@ -965,6 +961,16 @@ async def api_control_start() -> dict[str, Any]:
         CONTROL_STATE.update({"busy": True, "action": "start", "status": "running", "message": "starting"})
         try:
             result = await _run_control_action("start")
+            CONTROL_STATE.update(
+                {
+                    "action": "start",
+                    "status": "running" if result["ok"] else "error",
+                    "message": "started" if result["ok"] else "start failed",
+                    "last_code": result["code"],
+                    "last_stdout": result["stdout"],
+                    "last_stderr": result["stderr"],
+                }
+            )
             return {"ok": result["ok"], **result}
         except Exception as exc:
             CONTROL_STATE.update(
@@ -990,6 +996,16 @@ async def api_control_stop() -> dict[str, Any]:
         CONTROL_STATE.update({"busy": True, "action": "stop", "status": "stopping", "message": "stopping"})
         try:
             result = await _run_control_action("stop")
+            CONTROL_STATE.update(
+                {
+                    "action": "stop",
+                    "status": "stopped" if result["ok"] else "error",
+                    "message": "stopped" if result["ok"] else "stop failed",
+                    "last_code": result["code"],
+                    "last_stdout": result["stdout"],
+                    "last_stderr": result["stderr"],
+                }
+            )
             return {"ok": result["ok"], **result}
         except Exception as exc:
             CONTROL_STATE.update(
@@ -1007,27 +1023,39 @@ async def api_control_stop() -> dict[str, Any]:
             CONTROL_STATE["busy"] = False
 
 
-@app.post("/api/control/restart")
-async def api_control_restart() -> dict[str, Any]:
+@app.post("/api/control/shutdown")
+async def api_control_shutdown() -> dict[str, Any]:
     if CONTROL_LOCK.locked():
         return {"ok": False, "message": "control already busy"}
     async with CONTROL_LOCK:
-        CONTROL_STATE.update({"busy": True, "action": "restart", "status": "restarting", "message": "restarting"})
+        CONTROL_STATE.update(
+            {"busy": True, "action": "shutdown", "status": "stopping", "message": "shutting down"}
+        )
         try:
-            result = await _run_control_action("restart")
-            return {"ok": result["ok"], **result}
+            await asyncio.to_thread(_launch_shutdown_action)
+            CONTROL_STATE.update(
+                {
+                    "action": "shutdown",
+                    "status": "shutdown",
+                    "message": "shutting down",
+                    "last_code": 0,
+                    "last_stdout": "",
+                    "last_stderr": "",
+                }
+            )
+            return {"ok": True, "action": "shutdown", "code": 0, "message": "shutting down"}
         except Exception as exc:
             CONTROL_STATE.update(
                 {
-                    "action": "restart",
+                    "action": "shutdown",
                     "status": "error",
-                    "message": "restart exception",
+                    "message": "shutdown exception",
                     "last_code": -1,
                     "last_stdout": "",
                     "last_stderr": f"{type(exc).__name__}: {exc}",
                 }
             )
-            return {"ok": False, "message": "restart exception", "error": f"{type(exc).__name__}: {exc}"}
+            return {"ok": False, "message": "shutdown exception", "error": f"{type(exc).__name__}: {exc}"}
         finally:
             CONTROL_STATE["busy"] = False
 
