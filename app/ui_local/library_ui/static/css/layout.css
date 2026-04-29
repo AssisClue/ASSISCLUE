@@ -1,5 +1,5 @@
 .hero {
-    background: linear-gradient(180deg, rgba(18, 31, 52, 0.96), rgba(10, 19, 33, 0.98));
+    background: linear-gradient(180deg, rgba(18, 31, 52, 0.50), rgba(10, 19, 33, 0.50));
     border: 1px solid var(--line);
     border-radius: 18px;
     box-shadow: var(--shadow);

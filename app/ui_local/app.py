@@ -44,6 +44,7 @@ app = FastAPI(title="ASSISCLUE_INPUTFEED_DASHBOARD")
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/screenshots", StaticFiles(directory=str(SCREENSHOTS_DIR)), name="screenshots")
+app.mount("/info_assets", StaticFiles(directory=str(PROJECT_ROOT / "info")), name="info_assets")
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
@@ -793,6 +794,36 @@ def _build_screenshots_panel(project_root: Path) -> dict[str, Any]:
     }
 
 
+def _build_whats_going_on(assistant_flow_status: dict[str, Any], activity_status: dict[str, Any]) -> dict[str, str]:
+    last_heard = str(assistant_flow_status.get("latest_mic_turn") or "").strip()
+    last_intent = str(assistant_flow_status.get("live_intent") or "").strip()
+    action = str(
+        assistant_flow_status.get("reply_mode")
+        or assistant_flow_status.get("final_branch")
+        or activity_status.get("action")
+        or ""
+    ).strip()
+    speech = str(assistant_flow_status.get("tts_status") or "idle").strip()
+    speech_state = speech.lower()
+
+    if speech_state not in {"", "idle", "off", "stopped", "primed"}:
+        now = "Speaking the answer"
+    elif assistant_flow_status.get("latest_response_has_text"):
+        now = "Answer ready"
+    elif last_heard:
+        now = "Processing the last voice input"
+    else:
+        now = "Listening for your voice"
+
+    return {
+        "now": now,
+        "last_heard": last_heard or "nothing yet",
+        "last_intent": last_intent or "none",
+        "action": action or "waiting",
+        "speech": speech or "idle",
+    }
+
+
 def _build_running_services(
     *,
     system_runtime: dict[str, Any],
@@ -802,6 +833,11 @@ def _build_running_services(
     assistant_mode: str,
     llm_model_fallback: str,
 ) -> list[dict[str, str]]:
+    def display_detail(service_id: str, detail: str) -> str:
+        if service_id == "router_dispatch" and detail.startswith("primary_command:"):
+            return detail.split(":", 1)[1].replace(".", " ")
+        return detail
+
     def service_item(name: str, status: str, detail: str) -> dict[str, str]:
         normalized = (status or "off").strip().lower()
         return {
@@ -826,6 +862,7 @@ def _build_running_services(
     for spec in backend_service_specs(panel_only=True):
         status_payload = service_statuses.get(spec.service_id, {})
         status, detail = _service_status_from_runtime(system_runtime, spec.running_key, status_payload)
+        detail = display_detail(spec.service_id, detail)
         if spec.service_id == "speaker_service":
             status = "running" if system_runtime.get(spec.running_key) else "off"
             detail = (
@@ -908,6 +945,7 @@ def build_home_context(project_root: Path, request: Request) -> dict[str, Any]:
 
     activity_status = get_activity_status(project_root)
     assistant_flow_status = get_assistant_flow_status(project_root)
+    whats_going_on = _build_whats_going_on(assistant_flow_status, activity_status)
     screenshots_panel = _build_screenshots_panel(project_root)
     debug_events = (
         _filter_since_ts(_build_debug_events(runtime_dir), live_since_ts)
@@ -959,6 +997,7 @@ def build_home_context(project_root: Path, request: Request) -> dict[str, Any]:
         "mem0_runtime": mem0_runtime,
         "activity_status": activity_status,
         "assistant_flow_status": assistant_flow_status,
+        "whats_going_on": whats_going_on,
         "debug_events": debug_events,
     }
 

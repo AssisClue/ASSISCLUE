@@ -14,6 +14,7 @@ from .workspace.routes_workspace import configure_workspace_templates, router as
 app = FastAPI(title="ASSISCLUE_KNOWLEDGE_LIBRARY_UI")
 
 app.mount("/static", StaticFiles(directory=str(static_dir())), name="static")
+app.mount("/info_assets", StaticFiles(directory=str(Path(__file__).resolve().parents[3] / "info")), name="info_assets")
 
 main_templates = templates_dir()
 workspace_templates = Path(__file__).resolve().parent / "workspace" / "templates"

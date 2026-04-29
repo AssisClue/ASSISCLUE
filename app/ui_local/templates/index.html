@@ -12,8 +12,8 @@
         :root {
             --bg: #08111d;
             --bg-soft: #0d1727;
-            --panel: #111d31;
-            --panel-2: #15243b;
+            --panel: rgba(17, 29, 49, 0.76);
+            --panel-2: rgba(21, 36, 59, 0.74);
             --line: #27415f;
             --text: #edf3ff;
             --muted: #9cb0ca;
@@ -39,11 +39,12 @@
 
         body {
             margin: 0;
+            min-height: 100vh;
             font-family: Inter, Arial, sans-serif;
             color: var(--text);
             background:
-                radial-gradient(circle at top right, rgba(79, 142, 220, 0.16), transparent 20%),
-                linear-gradient(180deg, #050d17 0%, #091321 100%);
+                linear-gradient(180deg, rgba(5, 13, 23, 0.58), rgba(9, 19, 33, 0.72)),
+                url("/info_assets/Clu_fight_squarejpg.jpg") center top / cover fixed no-repeat;
         }
 
         .page {
@@ -81,7 +82,7 @@
            HERO / TOP BAR
         ######################################################## */
         .hero {
-            background: linear-gradient(180deg, rgba(18, 31, 52, 0.96), rgba(10, 19, 33, 0.98));
+            background: linear-gradient(180deg, rgba(18, 31, 52, 0.50), rgba(10, 19, 33, 0.50));
             border: 1px solid var(--line);
             border-radius: 18px;
             box-shadow: var(--shadow);
@@ -241,7 +242,7 @@
            CARD STYLE
         ######################################################## */
         .card {
-            background: linear-gradient(180deg, rgba(16, 28, 46, 0.96), rgba(10, 19, 32, 0.98));
+            background: linear-gradient(180deg, rgba(18, 31, 52, 0.50), rgba(10, 19, 33, 0.50));
             border: 1px solid var(--line);
             border-radius: 16px;
             box-shadow: var(--shadow);
@@ -700,7 +701,7 @@
                 <div class="hero-summary">
                     <h1>{{ app_name }} <span class="muted">v{{ app_version }}</span></h1>
                     <div class="muted" style="margin-top: 8px;">
-                        Minimal technical dashboard focused on live transcript history and assistant conversation.
+                        ASSISCLUE is listening for your voice, ready to route commands, answer questions, and use screen context.
                     </div>
                     <div class="control-bar">
                         <button type="button" id="btn-start">START</button>
@@ -740,20 +741,13 @@
 
             <div class="pill-row">
                 <span class="status-badge status-{{ status }}">{{ status }}</span>
-                <span class="pill">mode = {{ mode }}</span>
-                <span class="pill">persona = {{ persona }}</span>
-                <span class="pill">pending_tasks = {{ pending_tasks }}</span>
-                <span class="pill">memory_backend = {{ mem0_runtime.active_backend or "json" }}</span>
-                <span class="pill">live_intent = {{ assistant_flow_status.live_intent or "n/a" }}</span>
-                <span class="pill">reply_mode = {{ assistant_flow_status.reply_mode or "n/a" }}</span>
-                <span class="pill">branch = {{ assistant_flow_status.final_branch or "n/a" }}</span>
-                {% if system_runtime and system_runtime.conversation_state %}
-                <span class="pill">conversation = {{ system_runtime.conversation_state }}</span>
-                {% endif %}
+                <span class="pill">Profile: {{ persona }}</span>
+                <span class="pill">Mode: {{ mode }}</span>
+                <span class="pill">Session: {{ system_runtime.conversation_state or "idle" }}</span>
             </div>
 
             <div style="margin-top: 12px;" class="muted">
-                {{ mode_description }}
+                Listening Light: direct commands and quick questions are active.
             </div>
         </section>
 
@@ -767,31 +761,25 @@
             ##################################################### -->
             <aside class="sidebar">
                 <section class="card activity-card">
-                    <div class="section-label">Activity</div>
-                    <h3>Assistant Flow</h3>
+                    <div class="section-label">Live Activity</div>
+                    <h3>What's Going On</h3>
 
                     <div class="sidebar-scroll">
                     <div class="kv">
-                        <div class="key">latest_mic_turn</div>
-                        <div class="value">{{ assistant_flow_status.latest_mic_turn or "n/a" }}</div>
+                        <div class="key">Now</div>
+                        <div class="value">{{ whats_going_on.now }}</div>
 
-                        <div class="key">mic_reason</div>
-                        <div class="value">{{ assistant_flow_status.mic_reason or "n/a" }}</div>
+                        <div class="key">Last heard</div>
+                        <div class="value">{{ whats_going_on.last_heard }}</div>
 
-                        <div class="key">live_intent</div>
-                        <div class="value">{{ assistant_flow_status.live_intent or "n/a" }}</div>
+                        <div class="key">Last intent</div>
+                        <div class="value">{{ whats_going_on.last_intent }}</div>
 
-                        <div class="key">reply_mode</div>
-                        <div class="value">{{ assistant_flow_status.reply_mode or "n/a" }}</div>
+                        <div class="key">Action</div>
+                        <div class="value">{{ whats_going_on.action }}</div>
 
-                        <div class="key">final_branch</div>
-                        <div class="value">{{ assistant_flow_status.final_branch or "n/a" }}</div>
-
-                        <div class="key">response_ready</div>
-                        <div class="value">{{ assistant_flow_status.latest_response_has_text }}</div>
-
-                        <div class="key">tts_status</div>
-                        <div class="value">{{ assistant_flow_status.tts_status or "idle" }}</div>
+                        <div class="key">Speech</div>
+                        <div class="value">{{ whats_going_on.speech }}</div>
                     </div>
                     </div>
                 </section>
