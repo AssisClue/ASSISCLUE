@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+from contextlib import contextmanager
+import os
 import time
 
 from app.system_support.runtime_files import read_runtime_json, write_runtime_json
@@ -36,16 +38,46 @@ def _normalized_payload(payload: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+@contextmanager
+def _runtime_file_lock(path: Path, *, timeout_seconds: float = 5.0):
+    lock_path = path.with_suffix(path.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    deadline = time.time() + timeout_seconds
+    fd: int | None = None
+    while fd is None:
+        try:
+            fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_RDWR)
+        except FileExistsError:
+            if time.time() >= deadline:
+                try:
+                    if time.time() - lock_path.stat().st_mtime > timeout_seconds:
+                        lock_path.unlink()
+                        continue
+                except Exception:
+                    pass
+                raise TimeoutError(f"timeout waiting for runtime lock: {lock_path}")
+            time.sleep(0.05)
+    try:
+        yield
+    finally:
+        os.close(fd)
+        try:
+            lock_path.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def write_system_runtime_state(project_root: str | Path, payload: dict[str, Any]) -> None:
     path = system_runtime_state_path(project_root)
-    previous = read_runtime_json(path) or {}
+    with _runtime_file_lock(path):
+        previous = read_runtime_json(path) or {}
 
-    merged: dict[str, Any] = dict(previous)
-    merged.update(dict(payload))
-    merged["updated_at"] = time.time()
-    merged["started_at"] = merged.get("started_at") or previous.get("started_at") or time.time()
+        merged: dict[str, Any] = dict(previous)
+        merged.update(dict(payload))
+        merged["updated_at"] = time.time()
+        merged["started_at"] = merged.get("started_at") or previous.get("started_at") or time.time()
 
-    write_runtime_json(path, merged)
+        write_runtime_json(path, merged)
 
 
 def build_system_runtime_payload(

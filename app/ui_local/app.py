@@ -145,7 +145,61 @@ def _find_service_pid(needle: str) -> int | None:
     return None
 
 
+def _process_matches_needles(pid: Any, needles: tuple[str, ...]) -> bool:
+    try:
+        pid_int = int(pid)
+    except Exception:
+        return False
+    lowered_needles = tuple(needle.lower() for needle in needles)
+    for row_pid, name, cmd in _list_process_rows():
+        if row_pid != pid_int:
+            continue
+        hay = f"{name} {cmd}".lower()
+        return all(needle in hay for needle in lowered_needles)
+    return False
+
+
+def _process_parent_pid(pid: int) -> int | None:
+    if os.name != "nt":
+        try:
+            return os.getppid() if pid == os.getpid() else None
+        except Exception:
+            return None
+    ps_cmd = f"(Get-CimInstance Win32_Process -Filter \"ProcessId = {int(pid)}\").ParentProcessId"
+    try:
+        raw = subprocess.check_output(
+            ["powershell", "-NoProfile", "-Command", ps_cmd],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        return int(raw) if raw else None
+    except Exception:
+        return None
+
+
+def _same_ui_process_family(owner_pid: int, current_pid: int) -> bool:
+    return _process_parent_pid(current_pid) == owner_pid or _process_parent_pid(owner_pid) == current_pid
+
+
+def _ensure_single_ui_owner() -> None:
+    state = read_system_runtime_state(PROJECT_ROOT)
+    current_pid = os.getpid()
+    try:
+        owner_pid = int(state.get(UI_SERVICE_SPEC.pid_key) or 0)
+    except Exception:
+        owner_pid = 0
+    if (
+        owner_pid
+        and owner_pid != current_pid
+        and not _same_ui_process_family(owner_pid, current_pid)
+        and _pid_alive(owner_pid)
+        and _process_matches_needles(owner_pid, UI_SERVICE_SPEC.process_needles)
+    ):
+        raise RuntimeError(f"official UI already running at PID {owner_pid}")
+
+
 def _update_ui_runtime_state() -> None:
+    _ensure_single_ui_owner()
     state = read_system_runtime_state(PROJECT_ROOT)
     state["ui_pid"] = os.getpid()
     state["ui_running"] = True
@@ -161,17 +215,20 @@ async def _on_startup() -> None:
 
 def _control_snapshot() -> dict[str, Any]:
     state = _normalize_runtime_state(read_system_runtime_state(PROJECT_ROOT))
+    backend_running = state.get("status") == "running"
+    control_status = str(CONTROL_STATE["status"] or "idle")
+    final_status = control_status if CONTROL_STATE["busy"] or control_status == "error" else ("running" if backend_running else "stopped")
     return {
         "busy": bool(CONTROL_STATE["busy"]),
         "action": CONTROL_STATE["action"],
-        "status": CONTROL_STATE["status"],
+        "status": final_status,
         "message": CONTROL_STATE["message"],
         "last_code": CONTROL_STATE["last_code"],
         "last_stdout": CONTROL_STATE["last_stdout"],
         "last_stderr": CONTROL_STATE["last_stderr"],
         "ui_pid": os.getpid(),
         "ui_running": True,
-        "backend_running": state.get("status") == "running",
+        "backend_running": backend_running,
         "system_status": state.get("status") or "unknown",
         "system_runtime": state,
     }

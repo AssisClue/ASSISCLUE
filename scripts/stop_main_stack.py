@@ -17,6 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from app.bootstrap import bootstrap_app
 from app.system_support.runtime_service_registry import (
     BACKEND_SERVICE_SPECS,
+    UI_SERVICE_SPEC,
     backend_service_specs,
     stack_process_needles,
     starter_chain_text,
@@ -201,6 +202,18 @@ def _live_pid_set() -> set[int]:
     return {pid for pid, _, _ in _wmic_list_processes()}
 
 
+def _pid_matches_needles(pid: int | None, needles: tuple[str, ...]) -> bool:
+    if not pid:
+        return False
+    lowered_needles = tuple(needle.lower() for needle in needles)
+    for row_pid, name, cmd in _wmic_list_processes():
+        if row_pid != int(pid):
+            continue
+        hay = f"{name} {cmd}".lower()
+        return all(needle in hay for needle in lowered_needles)
+    return False
+
+
 def _print_windows_process_snapshot() -> None:
     print("\nWINDOWS PROCESS SNAPSHOT")
     print("-" * 80)
@@ -331,20 +344,27 @@ def main() -> None:
     state = read_system_runtime_state(PROJECT_ROOT)
     starter_chain = starter_chain_text(include_ui=not args.backend_only)
 
-    known_runtime_pids = [state.get("ui_pid")]
-    known_runtime_pids.extend(state.get(spec.pid_key) for spec in backend_service_specs())
+    known_runtime_pids: list[tuple[int | None, tuple[str, ...]]] = [
+        (state.get("ui_pid"), UI_SERVICE_SPEC.process_needles)
+    ]
+    known_runtime_pids.extend((state.get(spec.pid_key), spec.process_needles) for spec in backend_service_specs())
     known_runtime_pids.extend(
         [
-            state.get("assistant_loop_pid"),
-            state.get("stt_loop_pid"),
-            state.get("screenshot_loop_pid"),
+            (state.get("assistant_loop_pid"), ("app.router_dispatch.router_service",)),
+            (state.get("stt_loop_pid"), ("app.inputfeed_to_text.inputfeed_to_text_service",)),
+            (state.get("screenshot_loop_pid"), ("app.display_actions.runners.display_action_router",)),
         ]
     )
 
     if args.backend_only:
-        known_runtime_pids = [pid for pid in known_runtime_pids if pid and pid != state.get("ui_pid")]
-    killed_pids: list[int] = [int(pid) for pid in known_runtime_pids if pid]
-    _kill_many(known_runtime_pids)
+        known_runtime_pids = [
+            (pid, needles) for pid, needles in known_runtime_pids if pid and pid != state.get("ui_pid")
+        ]
+    killable_pids = [
+        int(pid) for pid, needles in known_runtime_pids if pid and _pid_matches_needles(int(pid), needles)
+    ]
+    killed_pids: list[int] = list(killable_pids)
+    _kill_many(killable_pids)
     killed_pids.extend(_kill_stack_tree_with_proof(include_ui=not args.backend_only))
 
     still_alive = _find_stack_pids(include_ui=not args.backend_only)
@@ -378,6 +398,8 @@ def main() -> None:
 
     payload["inputfeed_to_text_pid"] = None
     payload["inputfeed_to_text_running"] = False
+    payload["library_ui_pid"] = None
+    payload["library_ui_running"] = False
     payload["assembled_transcript_builder_pid"] = None
     payload["assembled_transcript_builder_running"] = False
     payload["primary_listener_pid"] = None
@@ -418,6 +440,7 @@ def main() -> None:
     print(f"killed_pids = {sorted(set(killed_pids))}")
     if args.backend_only:
         print("UI: uvicorn app.ui_local.app:app")
+    print("LIBRARY_UI: uvicorn app.ui_local.library_ui.appdocs:app")
     for spec in BACKEND_SERVICE_SPECS:
         print(f"SERVICE: {spec.process_needles[0]}")
 

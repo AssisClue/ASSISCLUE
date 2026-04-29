@@ -23,6 +23,7 @@ from app.bootstrap import bootstrap_app
 from app.settings.play_settings import PlaySettings
 from app.system_support.runtime_service_registry import (
     BACKEND_SERVICE_SPECS,
+    UI_SERVICE_SPEC,
     backend_service_specs,
     expected_root_process_count,
     stack_process_needles,
@@ -155,6 +156,18 @@ def _pid_alive(pid: int | None) -> bool:
     return bool(pid) and int(pid) in _live_pid_set()
 
 
+def _pid_matches_needles(pid: int | None, needles: tuple[str, ...]) -> bool:
+    if not pid:
+        return False
+    lowered_needles = tuple(needle.lower() for needle in needles)
+    for row_pid, name, cmd in _wmic_list_processes():
+        if row_pid != int(pid):
+            continue
+        hay = f"{name} {cmd}".lower()
+        return all(needle in hay for needle in lowered_needles)
+    return False
+
+
 def _stack_pid_details() -> list[tuple[int, str, str]]:
     needles = stack_process_needles(include_ui=True)
     rows: list[tuple[int, str, str]] = []
@@ -200,7 +213,6 @@ def _kill_stack_tree_with_proof_for(*, include_ui: bool) -> list[int]:
                 pid
                 for pid, name, cmd in _stack_pid_details()
                 if pid in _live_pid_set()
-                and "uvicorn" not in f"{name} {cmd}".lower()
                 and "app.ui_local.app:app" not in f"{name} {cmd}".lower()
             ]
         if not remaining:
@@ -215,26 +227,32 @@ def _kill_stack_tree_with_proof_for(*, include_ui: bool) -> list[int]:
 
 def _preclean_previous_stack(*, backend_only: bool) -> list[int]:
     state = read_system_runtime_state(PROJECT_ROOT)
-    known_runtime_pids = [state.get(spec.pid_key) for spec in backend_service_specs()]
+    known_runtime_pids: list[tuple[int | None, tuple[str, ...]]] = [
+        (state.get(spec.pid_key), spec.process_needles) for spec in backend_service_specs()
+    ]
     known_runtime_pids.extend(
         [
-            state.get("assistant_loop_pid"),
-            state.get("stt_loop_pid"),
-            state.get("screenshot_loop_pid"),
+            (state.get("assistant_loop_pid"), ("app.router_dispatch.router_service",)),
+            (state.get("stt_loop_pid"), ("app.inputfeed_to_text.inputfeed_to_text_service",)),
+            (state.get("screenshot_loop_pid"), ("app.display_actions.runners.display_action_router",)),
         ]
     )
     if not backend_only:
-        known_runtime_pids.insert(0, state.get("ui_pid"))
+        known_runtime_pids.insert(0, (state.get("ui_pid"), UI_SERVICE_SPEC.process_needles))
     killed: list[int] = []
-    for pid in known_runtime_pids:
-        if pid and pid in _live_pid_set():
+    for pid, needles in known_runtime_pids:
+        if pid and pid in _live_pid_set() and _pid_matches_needles(int(pid), needles):
             _kill_pid(pid)
             killed.append(int(pid))
     killed.extend(_kill_stack_tree_with_proof_for(include_ui=not backend_only))
 
     remaining = [pid for pid, _, _ in _stack_pid_details() if pid in _live_pid_set()]
     if backend_only:
-        remaining = [pid for pid, name, cmd in _stack_pid_details() if pid in _live_pid_set() and "uvicorn" not in f"{name} {cmd}".lower()]
+        remaining = [
+            pid
+            for pid, name, cmd in _stack_pid_details()
+            if pid in _live_pid_set() and "app.ui_local.app:app" not in f"{name} {cmd}".lower()
+        ]
     if remaining:
         raise RuntimeError(f"preclean failed; stack still alive: {remaining}")
     return sorted(set(killed))
@@ -379,6 +397,7 @@ def main() -> None:
 
     processes: dict[str, subprocess.Popen | None] = {
         "ui": None,
+        "library_ui": None,
         "inputfeed_to_text": None,
         "assembled_transcript_builder": None,
         "primary_listener": None,
@@ -411,6 +430,18 @@ def main() -> None:
                 ui_cmd.append("--reload")
             processes["ui"] = _popen(ui_cmd)
 
+        processes["library_ui"] = _popen(
+            [
+                PYTHON_EXE,
+                "-m",
+                "uvicorn",
+                "app.ui_local.library_ui.appdocs:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8002",
+            ]
+        )
         processes["inputfeed_to_text"] = _popen(
             [PYTHON_EXE, "-m", "app.inputfeed_to_text.inputfeed_to_text_service"]
         )
@@ -461,7 +492,7 @@ def main() -> None:
                 continue
             if pid not in live_before_spawn:
                 continue
-            if args.backend_only and "uvicorn" in f"{name} {cmd}".lower():
+            if args.backend_only and "app.ui_local.app:app" in f"{name} {cmd}".lower():
                 continue
             if pid not in {p.pid for p in processes.values() if p}:
                 duplicate_stack_pids.append(pid)
@@ -470,6 +501,7 @@ def main() -> None:
 
         if settings.enable_ui and not args.backend_only:
             _assert_process_alive("uvicorn_ui", processes["ui"])
+        _assert_process_alive("library_ui", processes["library_ui"])
         _assert_process_alive("inputfeed_to_text_service", processes["inputfeed_to_text"])
         _assert_process_alive("assembled_transcript_builder", processes["assembled_transcript_builder"])
         _assert_process_alive("primary_listener_service", processes["primary_listener"])
@@ -516,6 +548,7 @@ def main() -> None:
             if settings.enable_ui and not args.backend_only
             else {"pid": preserved_ui_pid, "running": preserved_ui_running}
         )
+        library_ui_info = live_only(processes["library_ui"])
         input_info = live_only(processes["inputfeed_to_text"])
         assembled_info = live_only(processes["assembled_transcript_builder"])
         primary_info = live_only(processes["primary_listener"])
@@ -533,6 +566,9 @@ def main() -> None:
 
         payload["inputfeed_to_text_pid"] = input_info["pid"]
         payload["inputfeed_to_text_running"] = input_info["running"]
+
+        payload["library_ui_pid"] = library_ui_info["pid"]
+        payload["library_ui_running"] = library_ui_info["running"]
 
         payload["assembled_transcript_builder_pid"] = assembled_info["pid"]
         payload["assembled_transcript_builder_running"] = assembled_info["running"]
@@ -577,7 +613,23 @@ def main() -> None:
         payload["stt_loop_running"] = input_info["running"]
         payload["screenshot_loop_pid"] = display_info["pid"]
         payload["screenshot_loop_running"] = display_info["running"]
-        payload["root_process_count"] = expected_root_process_count(include_ui=not args.backend_only)
+        live_root_infos = [
+            ui_info,
+            library_ui_info,
+            input_info,
+            assembled_info,
+            primary_info,
+            administrative_info,
+            browser_info,
+            raw_interrupt_info,
+            router_info,
+            display_info,
+            spoken_info,
+            context_memory_info,
+            writer_info,
+            speaker_info,
+        ]
+        payload["root_process_count"] = sum(1 for info in live_root_infos if info["running"])
         payload["ollama_managed_by_starter"] = False
 
         write_system_runtime_state(PROJECT_ROOT, payload)
@@ -585,16 +637,17 @@ def main() -> None:
         print("STARTED")
         print(f"starter_name = {STARTER_NAME}")
         print(f"starter_chain = {starter_chain}")
-        print(f"root_process_count = {expected_root_process_count(include_ui=not args.backend_only)}")
+        print(f"root_process_count = {payload['root_process_count']}")
         print("ollama_managed_by_starter = False")
         print(f"backend_only = {args.backend_only}")
         print(f"killed_pids = {killed_pids}")
         print(
             "started_pids = "
-            f"{[info['pid'] for info in [ui_info, input_info, assembled_info, primary_info, administrative_info, browser_info, raw_interrupt_info, router_info, display_info, spoken_info, context_memory_info, writer_info, speaker_info] if info['pid']]}"
+            f"{[info['pid'] for info in [ui_info, library_ui_info, input_info, assembled_info, primary_info, administrative_info, browser_info, raw_interrupt_info, router_info, display_info, spoken_info, context_memory_info, writer_info, speaker_info] if info['pid']]}"
         )
         if not args.backend_only:
             print("UI: uvicorn app.ui_local.app:app")
+        print("LIBRARY_UI: uvicorn app.ui_local.library_ui.appdocs:app")
         for spec in BACKEND_SERVICE_SPECS:
             print(f"SERVICE: {spec.process_needles[0]}")
 
@@ -616,6 +669,8 @@ def main() -> None:
 
         payload["inputfeed_to_text_pid"] = None
         payload["inputfeed_to_text_running"] = False
+        payload["library_ui_pid"] = None
+        payload["library_ui_running"] = False
         payload["assembled_transcript_builder_pid"] = None
         payload["assembled_transcript_builder_running"] = False
         payload["primary_listener_pid"] = None

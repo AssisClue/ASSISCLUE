@@ -19,12 +19,20 @@ UI_SERVICE_SPEC = RuntimeServiceSpec(
     display_name="UI",
     pid_key="ui_pid",
     running_key="ui_running",
-    process_needles=("uvicorn", "app.ui_local.app:app"),
+    process_needles=("app.ui_local.app:app",),
     panel_visible=False,
 )
 
 
 BACKEND_SERVICE_SPECS: tuple[RuntimeServiceSpec, ...] = (
+    RuntimeServiceSpec(
+        service_id="library_ui",
+        display_name="Library UI",
+        pid_key="library_ui_pid",
+        running_key="library_ui_running",
+        process_needles=("app.ui_local.library_ui.appdocs:app",),
+        status_relpath=None,
+    ),
     RuntimeServiceSpec(
         service_id="inputfeed_to_text",
         display_name="InputFeed",

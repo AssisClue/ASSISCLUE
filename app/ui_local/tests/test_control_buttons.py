@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import asyncio
+import tempfile
 import subprocess
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from app.system_support.runtime_service_registry import UI_SERVICE_SPEC, backend_service_specs, stack_process_needles
+from app.system_support.system_runtime_state import read_system_runtime_state, write_system_runtime_state
 from app.ui_local import app as ui_app
+from scripts import start_main_stack, stop_main_stack
 
 
 class ControlButtonTests(unittest.IsolatedAsyncioTestCase):
@@ -145,6 +149,48 @@ class ControlButtonTests(unittest.IsolatedAsyncioTestCase):
         html = (Path(ui_app.TEMPLATES_DIR) / "index.html").read_text(encoding="utf-8")
         self.assertIn("btn-shutdown", html)
         self.assertIn("SHUTDOWN", html)
+
+    def test_single_ui_guard_blocks_second_official_ui(self) -> None:
+        with (
+            patch.object(ui_app, "read_system_runtime_state", return_value={"ui_pid": 1234}),
+            patch.object(ui_app.os, "getpid", return_value=9999),
+            patch.object(ui_app, "_pid_alive", return_value=True),
+            patch.object(ui_app, "_process_matches_needles", return_value=True),
+            patch.object(ui_app, "_same_ui_process_family", return_value=False),
+        ):
+            with self.assertRaises(RuntimeError):
+                ui_app._ensure_single_ui_owner()
+
+    def test_strict_ui_process_matching(self) -> None:
+        self.assertEqual(UI_SERVICE_SPEC.process_needles, ("app.ui_local.app:app",))
+        self.assertNotIn("uvicorn", stack_process_needles(include_ui=True))
+
+    def test_library_ui_service_registered(self) -> None:
+        specs = {spec.service_id: spec for spec in backend_service_specs()}
+        library = specs["library_ui"]
+        self.assertEqual(library.pid_key, "library_ui_pid")
+        self.assertEqual(library.running_key, "library_ui_running")
+        self.assertEqual(library.process_needles, ("app.ui_local.library_ui.appdocs:app",))
+
+    def test_runtime_state_write_keeps_previous_values(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_system_runtime_state(root, {"status": "stopped", "ui_pid": 111})
+            write_system_runtime_state(root, {"status": "running"})
+            state = read_system_runtime_state(root)
+
+        self.assertEqual(state["status"], "running")
+        self.assertEqual(state["ui_pid"], 111)
+        self.assertIn("updated_at", state)
+
+    def test_pid_validation_requires_matching_command(self) -> None:
+        rows = [(10, "python.exe", "python -m uvicorn app.ui_local.app:app --port 8000")]
+        with patch.object(start_main_stack, "_wmic_list_processes", return_value=rows):
+            self.assertTrue(start_main_stack._pid_matches_needles(10, ("app.ui_local.app:app",)))
+            self.assertFalse(start_main_stack._pid_matches_needles(10, ("app.ui_local.library_ui.appdocs:app",)))
+        with patch.object(stop_main_stack, "_wmic_list_processes", return_value=rows):
+            self.assertTrue(stop_main_stack._pid_matches_needles(10, ("app.ui_local.app:app",)))
+            self.assertFalse(stop_main_stack._pid_matches_needles(99, ("app.ui_local.app:app",)))
 
 
 if __name__ == "__main__":
