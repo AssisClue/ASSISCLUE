@@ -41,32 +41,30 @@ Other features are prepared as optional modules for future expansion.
 The system is designed to be modular, so each block can be improved, replaced, disabled, or expanded without rebuilding the whole app.
 
 ---
+## 🧭 HELP System — Quick Read
 
-## ❓ Built-in Help System
+HELP is ASSISCLUE’s internal manual.
+It lets the assistant explain its own folders, files, settings, commands, runtime paths, and app blocks using saved project info.
 
-I am creating a help system that gives quick explanations for each section, block, command, and internal assistant feature.
+How to use it:
 
-The idea is simple:
+- 🔊  EXPLAIN MEMORY
+- 🔊  EXPLAIN QDRANT + EXPLAIN MORE
+- 🔊  EXPLAIN SETTINGS
+- 🔊  EXPLAIN MENU + EXPLAIN MORE
 
-```text
-explain + assistant reference
-```
+For deeper detail after any explain:
+- 🔊 EXPLAIN MORE
+to get a second deeper explanation, more technical ! 
 
-Examples:
-
-```text
-explain prompts
-explain notes
-explain web browser
-explain memory
-explain knowledge library
-explain voice input
-```
-
-Using `explain` followed by an Assistant Clue reference should return a quick explanation about that section.
-
----
-
+- 📚 We have a Help Structure Agent (agent_helpers), that creates and updates these HELP files from READMEs, code files, settings, runtime paths, and keywords.
+- 📚 Goal: HELP is not just documentation — it is the assistant’s self-map.
+#
+📍 Location folders:
+- Agenthelper (agents)
+- app/system_support/HELP/  (help jsons)
+ #
+--
 ## ✅ What This App Can Do
 
 Assistant Clue is designed as a local assistant with separate blocks for:
@@ -102,7 +100,7 @@ This makes the assistant easier to debug, easier to upgrade, and better for loca
 
 ---
 
-# ⚙️ Simple Install — Windows
+## ⚙️ Simple Install — Windows
 
 ## 1. Create the main project folder
 
