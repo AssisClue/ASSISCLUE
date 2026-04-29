@@ -18,6 +18,7 @@ from app.spoken_queries.runners.request_text import get_request_text
 APP_DIR = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = APP_DIR.parent
 HELP_ROOT = APP_DIR / "system_support" / "HELP"
+LAST_HELP_TOPIC_JSON = PROJECT_ROOT / "runtime" / "queues" / "spoken_queries" / "last_help_topic.json"
 
 
 def _load_json_file(path: Path) -> Any:
@@ -84,6 +85,7 @@ def _score_item(query: str, item: dict[str, Any]) -> int:
     if not query_norm:
         return 0
 
+    keyword = normalize_text(str(item.get("keyword", "")))
     title = normalize_text(str(item.get("title", "")))
     short_answer = normalize_text(str(item.get("short_answer", "")))
     text = normalize_text(str(item.get("text", "")))
@@ -94,6 +96,8 @@ def _score_item(query: str, item: dict[str, Any]) -> int:
 
     score = 0
 
+    if query_norm == keyword:
+        score += 110
     if query_norm == title:
         score += 100
     if query_norm in aliases:
@@ -103,16 +107,27 @@ def _score_item(query: str, item: dict[str, Any]) -> int:
     if query_norm in related:
         score += 45
 
-    if title and query_norm in title:
-        score += 50
-    if short_answer and query_norm in short_answer:
-        score += 25
-    if text and query_norm in text:
-        score += 20
-
     query_words = set(query_norm.split())
+    single_word_query = len(query_words) == 1
+
+    if single_word_query:
+        word = next(iter(query_words))
+        if word in title.split():
+            score += 50
+        if word in short_answer.split():
+            score += 25
+        if word in text.split():
+            score += 20
+    else:
+        if title and query_norm in title:
+            score += 50
+        if short_answer and query_norm in short_answer:
+            score += 25
+        if text and query_norm in text:
+            score += 20
+
     haystack_words = set(
-        " ".join([title, short_answer, text, *aliases, *tags, *related]).split()
+        " ".join([keyword, title, short_answer, text, *aliases, *tags, *related]).split()
     )
 
     score += len(query_words & haystack_words) * 8
@@ -174,6 +189,40 @@ def _answer_from_item(item: dict[str, Any]) -> str:
 
     return answer or "I found that help topic, but it has no readable answer yet."
 
+
+def _write_last_help_topic(item: dict[str, Any], *, query_text: str, help_query_text: str) -> None:
+    LAST_HELP_TOPIC_JSON.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "ts": time.time(),
+        "query_text": query_text,
+        "help_query_text": help_query_text,
+        "item_id": str(item.get("item_id", "")).strip(),
+        "title": str(item.get("title", "")).strip(),
+        "keyword": str(item.get("keyword", "")).strip(),
+        "source_path": str(item.get("_source_path", "")).strip(),
+        "answer_text": _answer_from_item(item),
+        "more": str(item.get("more") or "").strip(),
+    }
+    LAST_HELP_TOPIC_JSON.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def _read_last_help_topic() -> dict[str, Any]:
+    if not LAST_HELP_TOPIC_JSON.exists():
+        return {}
+    try:
+        payload = json.loads(LAST_HELP_TOPIC_JSON.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            return payload
+    except Exception:
+        return {}
+    return {}
+
+
+def _is_more_request(cleaned_query: str) -> bool:
+    return normalize_text(cleaned_query) in {"more", "tell me more", "explain more", "help more"}
 
 
 
@@ -248,6 +297,49 @@ def run_help_question(request: dict[str, Any]) -> dict[str, Any]:
 
     items = _load_all_help_items()
 
+    if _is_more_request(intent.cleaned_query):
+        last_topic = _read_last_help_topic()
+        answer = str(last_topic.get("more") or "").strip()
+        if not answer:
+            answer = str(last_topic.get("answer_text") or "").strip()
+
+        if answer:
+            return _build_result(
+                request,
+                query_text=query_text,
+                help_query_text=intent.cleaned_query,
+                answer=answer,
+                meta={
+                    "help_connected": True,
+                    "help_root": str(HELP_ROOT),
+                    "help_items_loaded": len(items),
+                    "help_mode": "more",
+                    "help_explain_capture_enabled": is_help_explain_capture_enabled(PROJECT_ROOT),
+                    "last_help_topic_path": str(LAST_HELP_TOPIC_JSON),
+                    "last_help_title": str(last_topic.get("title", "")),
+                    "last_help_keyword": str(last_topic.get("keyword", "")),
+                    "source_path": str(last_topic.get("source_path", "")),
+                },
+            )
+
+        answer = "I do not have a previous HELP topic yet. Ask something like: EXPLAIN SETTINGS."
+        return _build_result(
+            request,
+            query_text=query_text,
+            help_query_text=intent.cleaned_query,
+            answer=answer,
+            meta={
+                "help_connected": True,
+                "help_root": str(HELP_ROOT),
+                "help_items_loaded": len(items),
+                "help_mode": "more_missing_last_topic",
+                "help_explain_capture_enabled": is_help_explain_capture_enabled(PROJECT_ROOT),
+                "last_help_topic_path": str(LAST_HELP_TOPIC_JSON),
+            },
+            ok=False,
+            error_code="missing_last_help_topic",
+        )
+
     if intent.is_menu_request:
         answer = _build_help_menu(items)
         return _build_result(
@@ -275,6 +367,11 @@ def run_help_question(request: dict[str, Any]) -> dict[str, Any]:
 
     if best_item:
         answer = _answer_from_item(best_item)
+        _write_last_help_topic(
+            best_item,
+            query_text=query_text,
+            help_query_text=intent.cleaned_query,
+        )
         meta = {
             "help_connected": True,
             "help_root": str(HELP_ROOT),
@@ -285,6 +382,7 @@ def run_help_question(request: dict[str, Any]) -> dict[str, Any]:
             "best_score": best_score,
             "best_title": str(best_item.get("title", "")),
             "source_path": str(best_item.get("_source_path", "")),
+            "last_help_topic_path": str(LAST_HELP_TOPIC_JSON),
         }
     else:
         answer = "I did not find help for that topic yet. Try: HELP MENU."

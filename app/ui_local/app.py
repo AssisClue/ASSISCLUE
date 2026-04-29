@@ -19,7 +19,6 @@ from app.services.activity_status_service import (
     get_activity_status,
     get_assistant_flow_status,
 )
-from app.services.capture_loop_service import run_screenshot_capture_once
 from app.services.mode_service import get_runtime_mode_description
 from app.services.settings_summary_service import build_settings_summary
 from app.system_support.runtime_service_registry import (
@@ -41,7 +40,7 @@ from app.display_actions.helpers.screenshot_paths import SCREENSHOTS_DIR
 
 SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
 
-app = FastAPI(title="ASSISTANT_CORE_INPUTFEED_DASHBOARD")
+app = FastAPI(title="ASSISCLUE_INPUTFEED_DASHBOARD")
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/screenshots", StaticFiles(directory=str(SCREENSHOTS_DIR)), name="screenshots")
@@ -65,6 +64,22 @@ UI_LIVE_STARTED_AT = time.time()
 
 def _stack_script_path(name: str) -> Path:
     return PROJECT_ROOT / "scripts" / name
+
+
+def _project_python() -> str:
+    venv_python = PROJECT_ROOT / ".venv" / ("Scripts" if os.name == "nt" else "bin") / (
+        "python.exe" if os.name == "nt" else "python"
+    )
+    return str(venv_python) if venv_python.exists() else sys.executable
+
+
+def _project_env() -> dict[str, str]:
+    env = os.environ.copy()
+    venv_python = Path(_project_python())
+    if venv_python.exists() and venv_python.parent.name.lower() in {"scripts", "bin"}:
+        env["VIRTUAL_ENV"] = str(venv_python.parents[1])
+        env["PATH"] = str(venv_python.parent) + os.pathsep + env.get("PATH", "")
+    return env
 
 
 def _pid_alive(pid: Any) -> bool:
@@ -301,12 +316,13 @@ async def _run_control_action(action: str) -> dict[str, Any]:
     if action not in {"start", "stop"}:
         raise ValueError(f"unknown control action: {action}")
     script_name = "start_main_stack.py" if action == "start" else "stop_main_stack.py"
-    args = [sys.executable, str(_stack_script_path(script_name)), "--backend-only"]
+    args = [_project_python(), str(_stack_script_path(script_name)), "--backend-only"]
 
     proc = await asyncio.to_thread(
         subprocess.run,
         args,
         cwd=str(PROJECT_ROOT),
+        env=_project_env(),
         capture_output=True,
         text=True,
     )
@@ -321,9 +337,10 @@ async def _run_control_action(action: str) -> dict[str, Any]:
 
 
 def _launch_shutdown_action() -> None:
-    args = [sys.executable, str(_stack_script_path("stop_main_stack.py"))]
+    args = [_project_python(), str(_stack_script_path("stop_main_stack.py"))]
     popen_kwargs: dict[str, Any] = {
         "cwd": str(PROJECT_ROOT),
+        "env": _project_env(),
         "stdout": subprocess.DEVNULL,
         "stderr": subprocess.DEVNULL,
     }
@@ -754,7 +771,7 @@ def _build_screenshots_panel(project_root: Path) -> dict[str, Any]:
 
     if not candidates:
         return {
-            "title": "Screenshot",
+            "title": "Last Screenshot Capture Taken",
             "image_url": "",
             "image_name": "",
             "image_mtime_ns": 0,
@@ -768,7 +785,7 @@ def _build_screenshots_panel(project_root: Path) -> dict[str, Any]:
         image_mtime_ns = 0
     image_key = f"{latest.name}:{image_mtime_ns}" if image_mtime_ns else latest.name
     return {
-        "title": "Screenshot",
+        "title": "Last Screenshot Capture Taken",
         "image_url": f"/screenshots/{latest.name}",
         "image_name": latest.name,
         "image_mtime_ns": image_mtime_ns,
@@ -1172,8 +1189,3 @@ async def clear_chat():
     return RedirectResponse(url="/", status_code=303)
 
 
-@app.post("/capture-screenshot")
-async def debug_capture_screenshot():
-    project_root = _project_root()
-    run_screenshot_capture_once(project_root, trigger="ui_manual")
-    return RedirectResponse(url="/", status_code=303)

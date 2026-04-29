@@ -11,7 +11,7 @@ from .routes import configure_templates, router
 from .runtime.ui_paths import static_dir, templates_dir
 from .workspace.routes_workspace import configure_workspace_templates, router as workspace_router
 
-app = FastAPI(title="ASSISTANT_CORE_KNOWLEDGE_LIBRARY_UI")
+app = FastAPI(title="ASSISCLUE_KNOWLEDGE_LIBRARY_UI")
 
 app.mount("/static", StaticFiles(directory=str(static_dir())), name="static")
 

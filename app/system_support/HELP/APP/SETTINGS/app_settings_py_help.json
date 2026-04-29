@@ -65,7 +65,7 @@
         "keyword":  "app identity",
         "short_answer":  "App identity is the app_name and app_version stored in AppSettings.",
         "text":  "App identity names the app and its version. These values are basic labels, not behavior switches.",
-        "more":  "In app/settings/app_settings.py, app_name defaults to ASSISTANT_CORE and app_version defaults to 0.1.0. Before changing these, be clear whether you only want a display label change or an actual release/version change. Do not use these fields to control features.",
+        "more":  "In app/settings/app_settings.py, app_name defaults to assistant_core and app_version defaults to 0.1.0. Before changing these, be clear whether you only want a display label change or an actual release/version change. Do not use these fields to control features.",
         "examples":  [
                          "EXPLAIN APP IDENTITY"
                      ],

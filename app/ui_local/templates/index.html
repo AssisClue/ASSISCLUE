@@ -716,9 +716,6 @@
                         data-image-key="{{ screenshots_panel.image_key or '' }}"
                     >
                         <div class="section-label">{{ screenshots_panel.title }}</div>
-                        <form method="post" action="/capture-screenshot">
-                            <button type="submit">TAKE A SCREENSHOT</button>
-                        </form>
 
                         {% if screenshots_panel.image_url %}
                         <img
@@ -969,7 +966,8 @@
             }
             window.__ASSISCLUEUiPollingStarted = true;
 
-            const POLL_MS = 1000;
+            const POLL_MS = 2000;
+            const SCREENSHOT_POLL_MS = 5000;
             const VIEW = "{{ view or 'live' }}";
             const SESSION_START_TS = Date.now() / 1000;
             const since = VIEW === "history" ? "" : `?since_ts=${encodeURIComponent(String(SESSION_START_TS))}`;
@@ -1064,14 +1062,45 @@
                 `).join("");
             }
 
+            function updateScreenshotPanel(screenshot) {
+                const img = document.getElementById("latest-screenshot-img");
+                const name = document.getElementById("latest-screenshot-name");
+                const empty = document.getElementById("latest-screenshot-empty");
+                const panel = document.getElementById("latest-screenshot-panel");
+                const nextKey = screenshot.image_key || "";
+                if (panel) panel.dataset.imageKey = nextKey;
+
+                if (screenshot.image_url) {
+                    const nextImageUrl = `${screenshot.image_url}?v=${encodeURIComponent(nextKey)}`;
+                    if (nextKey && nextKey !== lastScreenshotKey && img) {
+                        img.src = nextImageUrl;
+                    }
+                    if (img) img.style.display = "";
+                    if (name) name.textContent = screenshot.image_name || "";
+                    if (empty) empty.style.display = "none";
+                } else {
+                    if (img) img.style.display = "none";
+                    if (name) name.textContent = "";
+                    if (empty) empty.style.display = "";
+                }
+                lastScreenshotKey = nextKey;
+            }
+
+            async function tickScreenshot() {
+                try {
+                    updateScreenshotPanel(await fetchJson("/api/screenshot"));
+                } catch (_) {
+                    // Keep the last image visible if screenshot polling fails.
+                }
+            }
+
             async function tick() {
                 try {
-                    const [transcript, chat, spoken, services, screenshot, control, debug] = await Promise.all([
+                    const [transcript, chat, spoken, services, control, debug] = await Promise.all([
                         fetchJson(`/api/transcript${since}`),
                         fetchJson(`/api/chat${since}`),
                         fetchJson(`/api/spoken${since}`),
                         fetchJson("/api/services"),
-                        fetchJson("/api/screenshot"),
                         fetchJson("/api/control/status"),
                         fetchJson(`/api/debug${since}`),
                     ]);
@@ -1090,27 +1119,6 @@
 
                     const debugBox = document.getElementById("debug-events");
                     if (debugBox) debugBox.innerHTML = renderDebug(debug.items);
-
-                    const img = document.getElementById("latest-screenshot-img");
-                    const name = document.getElementById("latest-screenshot-name");
-                    const empty = document.getElementById("latest-screenshot-empty");
-
-                    const panel = document.getElementById("latest-screenshot-panel");
-                    const nextKey = screenshot.image_key || "";
-                    if (panel) panel.dataset.imageKey = nextKey;
-
-                    if (screenshot.image_url) {
-                        const nextImageUrl = String(screenshot.image_url || "").split("?")[0];
-                        if (nextKey && nextKey !== lastScreenshotKey && img) {
-                            img.src = nextImageUrl;
-                        }
-                        if (img) img.style.display = "";
-                        if (name) name.textContent = screenshot.image_name || "";
-                        if (empty) empty.style.display = "none";
-                    } else {
-                        if (empty) empty.style.display = "";
-                    }
-                    lastScreenshotKey = nextKey;
 
                     const controlStatus = document.getElementById("control-status");
                     if (controlStatus) {
@@ -1157,7 +1165,9 @@
             if (shutdownBtn) shutdownBtn.addEventListener("click", () => runControl("shutdown"));
 
             tick();
+            tickScreenshot();
             setInterval(tick, POLL_MS);
+            setInterval(tickScreenshot, SCREENSHOT_POLL_MS);
         })();
     </script>
 </body>

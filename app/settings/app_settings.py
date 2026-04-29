@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class AppSettings:
-    app_name: str = "ASSISTANT_CORE"
+    app_name: str = "ASSISCLUE"
     app_version: str = "0.1.0"
     offline_mode: bool = True
     private_mode: bool = False

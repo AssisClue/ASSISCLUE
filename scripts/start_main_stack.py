@@ -259,9 +259,14 @@ def _preclean_previous_stack(*, backend_only: bool) -> list[int]:
 
 
 def _popen(cmd: list[str]) -> subprocess.Popen:
+    env = os.environ.copy()
+    if _VENV_PY.exists():
+        env["VIRTUAL_ENV"] = str(_VENV_PY.parents[1])
+        env["PATH"] = str(_VENV_PY.parent) + os.pathsep + env.get("PATH", "")
     return subprocess.Popen(
         cmd,
         cwd=str(PROJECT_ROOT),
+        env=env,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -285,6 +290,48 @@ def _assert_process_alive(name: str, proc: subprocess.Popen | None) -> None:
     returncode = proc.poll()
     if returncode is not None:
         raise RuntimeError(f"{name} exited immediately with code {returncode}.")
+
+
+def _tcp_listener_owner(port: int) -> int | None:
+    try:
+        raw = subprocess.check_output(["netstat", "-ano", "-p", "tcp"], stderr=subprocess.DEVNULL, text=True)
+    except Exception:
+        return None
+    suffix = f":{int(port)}"
+    for line in raw.splitlines():
+        parts = line.split()
+        if len(parts) < 5 or parts[3].upper() != "LISTENING":
+            continue
+        if parts[1].endswith(suffix):
+            try:
+                return int(parts[-1])
+            except Exception:
+                return None
+    return None
+
+
+def _parent_pid(pid: int) -> int | None:
+    if os.name != "nt":
+        return None
+    try:
+        raw = subprocess.check_output(
+            ["powershell", "-NoProfile", "-Command", f"(Get-CimInstance Win32_Process -Filter \"ProcessId = {int(pid)}\").ParentProcessId"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        return int(raw) if raw else None
+    except Exception:
+        return None
+
+
+def _assert_port_owner(name: str, port: int, proc: subprocess.Popen | None) -> int | None:
+    if proc is None:
+        return None
+    owner = _tcp_listener_owner(port)
+    same_family = owner == proc.pid or _parent_pid(owner or 0) == proc.pid or _parent_pid(proc.pid) == owner
+    if owner and not same_family:
+        raise RuntimeError(f"{name} port {port} is owned by PID {owner}, not started PID {proc.pid}.")
+    return owner
 
 
 def _file_size(path: Path) -> int:
@@ -501,7 +548,11 @@ def main() -> None:
 
         if settings.enable_ui and not args.backend_only:
             _assert_process_alive("uvicorn_ui", processes["ui"])
+            ui_port_owner_pid = _assert_port_owner("uvicorn_ui", int(settings.ui_port), processes["ui"])
+        else:
+            ui_port_owner_pid = None
         _assert_process_alive("library_ui", processes["library_ui"])
+        library_ui_port_owner_pid = _assert_port_owner("library_ui", 8002, processes["library_ui"])
         _assert_process_alive("inputfeed_to_text_service", processes["inputfeed_to_text"])
         _assert_process_alive("assembled_transcript_builder", processes["assembled_transcript_builder"])
         _assert_process_alive("primary_listener_service", processes["primary_listener"])
@@ -606,7 +657,9 @@ def main() -> None:
 
 
         payload["ui_pid"] = ui_info["pid"]
+        payload["ui_port_owner_pid"] = ui_port_owner_pid
         payload["ui_running"] = ui_info["running"]
+        payload["library_ui_port_owner_pid"] = library_ui_port_owner_pid
         payload["assistant_loop_pid"] = router_info["pid"]
         payload["assistant_loop_running"] = router_info["running"]
         payload["stt_loop_pid"] = input_info["pid"]

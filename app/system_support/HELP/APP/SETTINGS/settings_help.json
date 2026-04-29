@@ -135,7 +135,7 @@
     "more": "The README lists common ENV keys: LLM_PROVIDER, OLLAMA_BASE_URL, OLLAMA_HOST, LLM_TEXT_MODEL, LLM_VISION_MODEL, ASSISCLUE_TTS_BACKEND, ASSISCLUE_KOKORO_LANG, ASSISCLUE_KOKORO_VOICE, and ASSISCLUE_TTS_SAMPLE_RATE. These are read mainly in app/settings/llm_settings.py and app/settings/tts_settings.py. If no ENV is set, the dataclass defaults are used.",
     "examples": ["EXPLAIN ENV"],
     "tags": ["env", "models", "tts"],
-    "aliases": ["environment"],
+    "aliases": ["environment", "emb", "en ve"],
     "related": ["llm_settings", "tts_settings"],
     "metadata": {
       "kind": "help_node",
