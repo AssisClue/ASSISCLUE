@@ -1,0 +1,300 @@
+﻿[
+    {
+        "item_id":  "app_settings_py_help_001",
+        "space_id":  "help",
+        "title":  "Explain App Settings Py",
+        "keyword":  "app_settings.py",
+        "short_answer":  "app_settings.py holds the main app-wide switches for ASSISCLUE.",
+        "text":  "app_settings.py is where broad app defaults live. Use it when you need to understand high-level behavior like mode, privacy, tools, web search, cleanup, and visible panels.",
+        "more":  "The file is app/settings/app_settings.py and it defines the AppSettings dataclass with slots=True. Before changing it, be clear whether you are changing a general app default or a more specific feature setting that may belong in another settings file. Keep changes small because these values can affect many parts of the app.",
+        "examples":  [
+                         "EXPLAIN APP_SETTINGS.PY"
+                     ],
+        "tags":  [
+                     "app_settings.py",
+                     "app settings",
+                     "change"
+                 ],
+        "aliases":  [
+                        "app settings pie",
+                        "app setings py"
+                    ],
+        "related":  [
+                        "change app settings",
+                        "system mode"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "app_settings_py"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_002",
+        "space_id":  "help",
+        "title":  "Change App Settings",
+        "keyword":  "change app settings",
+        "short_answer":  "Change app settings only when you want to change broad default behavior.",
+        "text":  "Changing app settings means editing the defaults inside app_settings.py. First decide what behavior you want, then change only the matching field.",
+        "more":  "The editable defaults are in app/settings/app_settings.py inside class AppSettings. Good change targets include offline_mode, private_mode, system_mode, enable_tools, enable_web_search, max_pending_tasks, runtime_cleanup_days, and show_*_panel values. Avoid changing app_name or app_version unless you really mean to rename or version the app.",
+        "examples":  [
+                         "EXPLAIN CHANGE APP SETTINGS"
+                     ],
+        "tags":  [
+                     "change app settings",
+                     "app_settings.py"
+                 ],
+        "aliases":  [
+                        "change app setings",
+                        "edit app settings"
+                    ],
+        "related":  [
+                        "app_settings.py",
+                        "system mode"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "change_app_settings"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_003",
+        "space_id":  "help",
+        "title":  "Explain App Identity",
+        "keyword":  "app identity",
+        "short_answer":  "App identity is the app_name and app_version stored in AppSettings.",
+        "text":  "App identity names the app and its version. These values are basic labels, not behavior switches.",
+        "more":  "In app/settings/app_settings.py, app_name defaults to ASSISTANT_CORE and app_version defaults to 0.1.0. Before changing these, be clear whether you only want a display label change or an actual release/version change. Do not use these fields to control features.",
+        "examples":  [
+                         "EXPLAIN APP IDENTITY"
+                     ],
+        "tags":  [
+                     "app identity",
+                     "app_name",
+                     "app_version"
+                 ],
+        "aliases":  [
+                        "app name",
+                        "app version"
+                    ],
+        "related":  [
+                        "app_settings.py",
+                        "change app settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "app_identity"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_004",
+        "space_id":  "help",
+        "title":  "Change Offline Mode",
+        "keyword":  "offline mode",
+        "short_answer":  "Offline Mode is the AppSettings switch for local-first behavior.",
+        "text":  "offline_mode is a true or false setting. It should stay clear because it tells the app whether offline behavior is expected.",
+        "more":  "In app/settings/app_settings.py, offline_mode defaults to True. Before changing it to False, be clear that you want behavior that may no longer be offline-first. This file only shows the setting value; check the calling code before assuming every service fully follows it.",
+        "examples":  [
+                         "EXPLAIN OFFLINE MODE"
+                     ],
+        "tags":  [
+                     "offline mode",
+                     "change"
+                 ],
+        "aliases":  [
+                        "off line mode",
+                        "offline_mode"
+                    ],
+        "related":  [
+                        "private mode",
+                        "app_settings.py"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "offline_mode"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_005",
+        "space_id":  "help",
+        "title":  "Change Private Mode",
+        "keyword":  "private mode",
+        "short_answer":  "Private Mode is the AppSettings switch for privacy-related behavior.",
+        "text":  "private_mode is a true or false privacy switch. Use it when you need a clear privacy default in the app settings.",
+        "more":  "In app/settings/app_settings.py, private_mode defaults to False. Before changing it, decide what privacy behavior you expect and verify which app parts read this value. The file defines the setting but does not show every effect of the setting.",
+        "examples":  [
+                         "EXPLAIN PRIVATE MODE"
+                     ],
+        "tags":  [
+                     "private mode",
+                     "privacy",
+                     "change"
+                 ],
+        "aliases":  [
+                        "privet mode",
+                        "private_mode"
+                    ],
+        "related":  [
+                        "offline mode",
+                        "app_settings.py"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "private_mode"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_006",
+        "space_id":  "help",
+        "title":  "Change System Mode",
+        "keyword":  "system mode",
+        "short_answer":  "System Mode is the AppSettings text value for how active the app should be.",
+        "text":  "system_mode stores the app activity mode. The file comments show the allowed ideas: passive, listening_light, smart_background, and fully_active.",
+        "more":  "In app/settings/app_settings.py, system_mode defaults to passive and has a comment listing passive | listening_light | smart_background | fully_active. Before changing it, choose one of those exact strings and be clear how active you want the app to be. Avoid inventing a new mode name unless the rest of the app code supports it.",
+        "examples":  [
+                         "EXPLAIN SYSTEM MODE"
+                     ],
+        "tags":  [
+                     "system mode",
+                     "mode",
+                     "change"
+                 ],
+        "aliases":  [
+                        "sistem mode",
+                        "system_mode"
+                    ],
+        "related":  [
+                        "change app settings",
+                        "background capture"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "system_mode"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_007",
+        "space_id":  "help",
+        "title":  "Change Background Capture",
+        "keyword":  "background capture",
+        "short_answer":  "Background Capture controls whether the app may capture information in the background.",
+        "text":  "enable_background_capture is the broad switch for background capture. enable_background_processing is separate and controls background processing.",
+        "more":  "In app/settings/app_settings.py, enable_background_capture defaults to True and enable_background_processing defaults to False. Before changing either one, be clear if you want the app to collect background input, process it, or both. Do not turn on processing just because capture is on; they are separate choices.",
+        "examples":  [
+                         "EXPLAIN BACKGROUND CAPTURE"
+                     ],
+        "tags":  [
+                     "background capture",
+                     "processing",
+                     "change"
+                 ],
+        "aliases":  [
+                        "back ground capture",
+                        "enable_background_capture"
+                    ],
+        "related":  [
+                        "system mode",
+                        "app_settings.py"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "background_capture"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_008",
+        "space_id":  "help",
+        "title":  "Change Tool And Web Search Switches",
+        "keyword":  "tools and web search",
+        "short_answer":  "Tool and web search switches control whether tools and web search are allowed by default.",
+        "text":  "enable_tools and enable_web_search are permission-style switches. They should be changed carefully because they affect what the app is allowed to use.",
+        "more":  "In app/settings/app_settings.py, enable_tools defaults to True and enable_web_search defaults to False. Before enabling web search, be clear that this may allow online lookup behavior where supported by the app. If you only want local behavior, keep enable_web_search False.",
+        "examples":  [
+                         "EXPLAIN TOOLS AND WEB SEARCH"
+                     ],
+        "tags":  [
+                     "tools",
+                     "web search",
+                     "change"
+                 ],
+        "aliases":  [
+                        "web serch",
+                        "enable_web_search"
+                    ],
+        "related":  [
+                        "offline mode",
+                        "change app settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "tools_and_web_search"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_009",
+        "space_id":  "help",
+        "title":  "Change Task And Cleanup Limits",
+        "keyword":  "task and cleanup limits",
+        "short_answer":  "Task and cleanup limits control pending task count and runtime cleanup age.",
+        "text":  "max_pending_tasks limits how many pending tasks the app allows. runtime_cleanup_days controls how many days of runtime files should be kept before cleanup.",
+        "more":  "In app/settings/app_settings.py, max_pending_tasks defaults to 100 and runtime_cleanup_days defaults to 7. Before raising max_pending_tasks, be clear that more pending work can mean more load. Before lowering runtime_cleanup_days, be clear that older runtime data may be cleaned sooner.",
+        "examples":  [
+                         "EXPLAIN TASK AND CLEANUP LIMITS"
+                     ],
+        "tags":  [
+                     "task limits",
+                     "cleanup",
+                     "change"
+                 ],
+        "aliases":  [
+                        "cleanup days",
+                        "pending tasks"
+                    ],
+        "related":  [
+                        "app_settings.py",
+                        "change app settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "task_and_cleanup_limits"
+                     }
+    },
+    {
+        "item_id":  "app_settings_py_help_010",
+        "space_id":  "help",
+        "title":  "Change Settings Panels",
+        "keyword":  "settings panels",
+        "short_answer":  "Settings panel flags control which UI panels are shown.",
+        "text":  "The show_*_panel fields decide whether settings, debug, LLM, memory, and history panels are visible. Use them to hide or show app UI sections.",
+        "more":  "In app/settings/app_settings.py, show_settings_panel, show_debug_panel, show_llm_panel, show_memory_panel, and show_history_panel all default to True. Before turning one off, be clear that you may hide useful troubleshooting information from the UI. These are visibility switches, not feature engine switches.",
+        "examples":  [
+                         "EXPLAIN SETTINGS PANELS"
+                     ],
+        "tags":  [
+                     "settings panels",
+                     "ui panels",
+                     "change"
+                 ],
+        "aliases":  [
+                        "setings panels",
+                        "show panels"
+                    ],
+        "related":  [
+                        "app_settings.py",
+                        "change app settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "settings_panels"
+                     }
+    }
+]

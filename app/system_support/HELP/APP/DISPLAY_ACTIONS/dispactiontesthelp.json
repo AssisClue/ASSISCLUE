@@ -1,0 +1,142 @@
+﻿[
+    {
+        "item_id":  "display_actions_help_001",
+        "space_id":  "help",
+        "title":  "Explain Display Actions",
+        "keyword":  "display actions",
+        "short_answer":  "Display actions run routed screen commands.",
+        "text":  "display_actions reads routed events from runtime/queues/router_dispatch/action_queue.jsonl when target_runner is display_actions. The service code is in app/display_actions/runners/display_action_router.py and it writes results, screenshots, and status under runtime/display_actions.",
+        "examples":  [
+                         "EXPLAIN DISPLAY ACTIONS"
+                     ],
+        "tags":  [
+                     "display actions",
+                     "screen actions",
+                     "runner"
+                 ],
+        "aliases":  [
+                        "display_actions"
+                    ],
+        "related":  [
+                        "action queue",
+                        "display action results"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "display_actions",
+                         "topic_key":  "display_actions"
+                     }
+    },
+    {
+        "item_id":  "display_actions_help_002",
+        "space_id":  "help",
+        "title":  "Explain Display Action Queue",
+        "keyword":  "display action queue",
+        "short_answer":  "The queue feeds work to display_actions.",
+        "text":  "Display action requests come from runtime/queues/router_dispatch/action_queue.jsonl and must include target_runner set to display_actions. display_action_router.py skips other events and remembers the last processed line in display_action_runner_status.json.",
+        "examples":  [
+                         "EXPLAIN DISPLAY ACTION QUEUE"
+                     ],
+        "tags":  [
+                     "display action queue",
+                     "action_queue",
+                     "router_dispatch"
+                 ],
+        "aliases":  [
+                        "action queue"
+                    ],
+        "related":  [
+                        "router dispatch",
+                        "display actions"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "display_actions",
+                         "topic_key":  "display_action_queue"
+                     }
+    },
+    {
+        "item_id":  "display_actions_help_003",
+        "space_id":  "help",
+        "title":  "Explain Screenshot Capture",
+        "keyword":  "screenshot capture",
+        "short_answer":  "Screenshot capture saves a PNG of the screen.",
+        "text":  "take_screenshot and take_full_screenshot are handled by app/display_actions/runners/screenshot_capture_runner.py. PNG files are saved in runtime/display_actions/screenshots, with standard captures cropped/resized and full captures using the full monitor mode.",
+        "examples":  [
+                         "EXPLAIN SCREENSHOT CAPTURE"
+                     ],
+        "tags":  [
+                     "screenshot capture",
+                     "take_screenshot",
+                     "take_full_screenshot"
+                 ],
+        "aliases":  [
+                        "take screenshot"
+                    ],
+        "related":  [
+                        "screenshots",
+                        "display action results"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "display_actions",
+                         "topic_key":  "screenshot_capture"
+                     }
+    },
+    {
+        "item_id":  "display_actions_help_004",
+        "space_id":  "help",
+        "title":  "Explain Screen Analysis",
+        "keyword":  "screen analysis",
+        "short_answer":  "Screen analysis asks the vision model about a screenshot.",
+        "text":  "analyze_screen and analyze_last_screenshot run through app/display_actions/runners/screenshot_analyze_runner.py and app/llm/vision_service.py. analyze_screen can reuse a recent screenshot, while analyze_last_screenshot fails with no_previous_screenshot if runtime/display_actions/screenshots has no PNG.",
+        "examples":  [
+                         "EXPLAIN SCREEN ANALYSIS"
+                     ],
+        "tags":  [
+                     "screen analysis",
+                     "analyze_screen",
+                     "analyze_last_screenshot"
+                 ],
+        "aliases":  [
+                        "analyze screen"
+                    ],
+        "related":  [
+                        "vision service",
+                        "screenshot capture"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "display_actions",
+                         "topic_key":  "screen_analysis"
+                     }
+    },
+    {
+        "item_id":  "display_actions_help_005",
+        "space_id":  "help",
+        "title":  "Explain Display Action Results",
+        "keyword":  "display action results",
+        "short_answer":  "Results and status show what display_actions did.",
+        "text":  "Display action results are appended to runtime/display_actions/results/display_action_results.jsonl with ok, action_name, speech_text, and metadata. Service health is in runtime/display_actions/status/display_action_runner_status.json and is also shown by the local library Display Actions area.",
+        "examples":  [
+                         "EXPLAIN DISPLAY ACTION RESULTS"
+                     ],
+        "tags":  [
+                     "display action results",
+                     "status",
+                     "jsonl"
+                 ],
+        "aliases":  [
+                        "display results"
+                    ],
+        "related":  [
+                        "display actions",
+                        "speech_text"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "display_actions",
+                         "topic_key":  "display_action_results"
+                     }
+    }
+]

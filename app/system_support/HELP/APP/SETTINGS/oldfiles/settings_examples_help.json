@@ -1,0 +1,282 @@
+﻿[
+    {
+        "item_id":  "settings_examples_help_001",
+        "space_id":  "help",
+        "title":  "Change UI Port",
+        "keyword":  "ui port",
+        "short_answer":  "UI Port controls where the local web app opens.",
+        "text":  "The UI host, port, and reload values live in app/settings/play_settings.py. Change ui_port there if another app is already using 8000.",
+        "examples":  [
+                         "EXPLAIN UI PORT"
+                     ],
+        "tags":  [
+                     "ui port",
+                     "play_settings",
+                     "local ui"
+                 ],
+        "aliases":  [
+                        "ui_port"
+                    ],
+        "related":  [
+                        "play_settings",
+                        "settings panel"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "ui_port"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_002",
+        "space_id":  "help",
+        "title":  "Change Wake Word",
+        "keyword":  "wake word",
+        "short_answer":  "Wake Word is the phrase the assistant listens for.",
+        "text":  "The wake word is set in app/settings/audio_settings.py as wake_word. Keep it short and clear so the live STT listener can match it reliably.",
+        "examples":  [
+                         "EXPLAIN WAKE WORD"
+                     ],
+        "tags":  [
+                     "wake word",
+                     "audio_settings",
+                     "stt"
+                 ],
+        "aliases":  [
+                        "wake_word"
+                    ],
+        "related":  [
+                        "audio_settings",
+                        "stt live"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "wake_word"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_003",
+        "space_id":  "help",
+        "title":  "Change Mic Device",
+        "keyword":  "mic device",
+        "short_answer":  "Mic Device chooses which microphone Windows should use.",
+        "text":  "On Windows, app/settings/audio_settings.py uses windows_mic_device_name to match a microphone by name. Use a stable short device substring like AudioPro X5 instead of a full changing device label.",
+        "examples":  [
+                         "EXPLAIN MIC DEVICE"
+                     ],
+        "tags":  [
+                     "mic device",
+                     "windows_mic_device_name",
+                     "audio"
+                 ],
+        "aliases":  [
+                        "microphone device"
+                    ],
+        "related":  [
+                        "audio_settings",
+                        "stt live"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "mic_device"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_004",
+        "space_id":  "help",
+        "title":  "Tune STT Live",
+        "keyword":  "stt live",
+        "short_answer":  "STT Live settings control live voice capture.",
+        "text":  "Live STT knobs are in app/settings/audio_settings.py under stt_live_* fields. Tune chunk seconds, overlap, queue size, and input gain when speech is delayed, clipped, or noisy.",
+        "examples":  [
+                         "EXPLAIN STT LIVE"
+                     ],
+        "tags":  [
+                     "stt live",
+                     "audio_settings",
+                     "voice capture"
+                 ],
+        "aliases":  [
+                        "live stt"
+                    ],
+        "related":  [
+                        "wake word",
+                        "mic device"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "stt_live"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_005",
+        "space_id":  "help",
+        "title":  "Tune STT Quality Gates",
+        "keyword":  "stt quality gates",
+        "short_answer":  "Quality gates filter bad transcript text.",
+        "text":  "STT quality gates live in app/settings/audio_settings.py as stt_live_min_confidence, stt_live_min_letters, and related voice peak fields. Raise them to block noise, lower them if real short phrases are being ignored.",
+        "examples":  [
+                         "EXPLAIN STT QUALITY GATES"
+                     ],
+        "tags":  [
+                     "stt quality gates",
+                     "confidence",
+                     "noise filter"
+                 ],
+        "aliases":  [
+                        "transcript gates"
+                    ],
+        "related":  [
+                        "stt live",
+                        "audio_settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "stt_quality_gates"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_006",
+        "space_id":  "help",
+        "title":  "Change TTS Voice",
+        "keyword":  "tts voice",
+        "short_answer":  "TTS Voice controls the generated speaking voice.",
+        "text":  "TTS voice is read from ASSISCLUE_KOKORO_VOICE in app/settings/tts_settings.py, with af_heart as the default. Audio playback device and gain are separate knobs in app/settings/audio_settings.py.",
+        "examples":  [
+                         "EXPLAIN TTS VOICE"
+                     ],
+        "tags":  [
+                     "tts voice",
+                     "kokoro",
+                     "tts_settings"
+                 ],
+        "aliases":  [
+                        "kokoro voice"
+                    ],
+        "related":  [
+                        "tts_settings",
+                        "audio_settings"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "tts_voice"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_007",
+        "space_id":  "help",
+        "title":  "Change TTS Output Device",
+        "keyword":  "tts output device",
+        "short_answer":  "TTS Output Device chooses where assistant audio plays.",
+        "text":  "The playback device is set in app/settings/audio_settings.py as tts_output_device_name. If voice plays from the wrong speaker, change this device name and check tts_playback_enabled.",
+        "examples":  [
+                         "EXPLAIN TTS OUTPUT DEVICE"
+                     ],
+        "tags":  [
+                     "tts output device",
+                     "speaker",
+                     "audio_settings"
+                 ],
+        "aliases":  [
+                        "speaker device"
+                    ],
+        "related":  [
+                        "tts voice",
+                        "speech_out"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "tts_output_device"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_008",
+        "space_id":  "help",
+        "title":  "Change Ollama URL",
+        "keyword":  "ollama url",
+        "short_answer":  "Ollama URL tells the app where the local model server is.",
+        "text":  "app/settings/llm_settings.py reads OLLAMA_BASE_URL first, then OLLAMA_HOST, then defaults to http://127.0.0.1:11434. Use this when Ollama runs on another host or port.",
+        "examples":  [
+                         "EXPLAIN OLLAMA URL"
+                     ],
+        "tags":  [
+                     "ollama url",
+                     "llm_settings",
+                     "base_url"
+                 ],
+        "aliases":  [
+                        "ollama host"
+                    ],
+        "related":  [
+                        "llm_settings",
+                        "model"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "ollama_url"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_009",
+        "space_id":  "help",
+        "title":  "Change Vision Model",
+        "keyword":  "vision model",
+        "short_answer":  "Vision Model is used for screenshot and image analysis.",
+        "text":  "app/settings/llm_settings.py reads LLM_VISION_MODEL and keeps it separate from LLM_TEXT_MODEL. If both are the same, the settings reset vision_model to gemma3n:e4b to avoid using a text-only model for images.",
+        "examples":  [
+                         "EXPLAIN VISION MODEL"
+                     ],
+        "tags":  [
+                     "vision model",
+                     "llm_settings",
+                     "screenshots"
+                 ],
+        "aliases":  [
+                        "LLM_VISION_MODEL"
+                    ],
+        "related":  [
+                        "llm_settings",
+                        "display actions"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "vision_model"
+                     }
+    },
+    {
+        "item_id":  "settings_examples_help_010",
+        "space_id":  "help",
+        "title":  "Check Settings Summary",
+        "keyword":  "settings summary",
+        "short_answer":  "Settings Summary shows the loaded config values.",
+        "text":  "app/services/settings_summary_service.py builds the settings summary shown by the local UI. Use it to check loaded values like persona, UI port, wake word, TTS voice, LLM model, memory, and screenshot settings.",
+        "examples":  [
+                         "EXPLAIN SETTINGS SUMMARY"
+                     ],
+        "tags":  [
+                     "settings summary",
+                     "ui",
+                     "loaded config"
+                 ],
+        "aliases":  [
+                        "settings panel summary"
+                    ],
+        "related":  [
+                        "settings panel",
+                        "appconfig"
+                    ],
+        "metadata":  {
+                         "kind":  "help_node",
+                         "domain":  "settings",
+                         "topic_key":  "settings_summary"
+                     }
+    }
+]

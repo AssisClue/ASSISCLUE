@@ -1,13 +1,14 @@
 [
   {
-    "item_id": "settings_help_001",
+    "item_id": "settings_help_011",
     "space_id": "help",
     "title": "Explain Settings",
     "keyword": "settings",
-    "short_answer": "Settings are the app's main configuration knobs.",
-    "text": "In this app, settings live in app/settings and are loaded into AppConfig. Use settings to control modes, loops, LLM, TTS, audio, UI, and defaults.",
+    "short_answer": "Settings are the app knobs that control how ASSISCLUE starts and behaves.",
+    "text": "Settings live in app/settings and hold defaults for audio, UI, persona, LLM, TTS, and app mode. Think of them like safe switches you can inspect before changing app behavior.",
+    "more": "The settings folder is app/settings. The final app config is built in app/config.py by AppConfig.build(...), which mirrors play defaults into system mode, persona, and UI config. If you change defaults, edit the specific settings file instead of changing random runtime files.",
     "examples": ["EXPLAIN SETTINGS"],
-    "tags": ["settings"],
+    "tags": ["settings", "config"],
     "aliases": ["settings"],
     "related": ["app_settings", "play_settings"],
     "metadata": {
@@ -17,15 +18,16 @@
     }
   },
   {
-    "item_id": "settings_help_002",
+    "item_id": "settings_help_012",
     "space_id": "help",
     "title": "Explain App Settings",
     "keyword": "app_settings",
     "short_answer": "app_settings.py stores general app switches.",
-    "text": "app_settings.py controls app name, offline mode, system mode, background capture, tools, web search, cleanup days, and UI debug panels.",
+    "text": "app_settings.py controls broad app behavior like offline mode, private mode, tools, web search, cleanup days, and which UI panels are visible. Use it for general app-wide defaults.",
+    "more": "The file is app/settings/app_settings.py and it defines the AppSettings dataclass. Important fields include system_mode, enable_background_capture, enable_tools, enable_web_search, runtime_cleanup_days, and show_*_panel flags. Be careful with web search and tool switches because they can change what the assistant is allowed to do.",
     "examples": ["EXPLAIN APP_SETTINGS"],
-    "tags": ["app_settings", "file"],
-    "aliases": ["app_settings"],
+    "tags": ["app_settings", "switches"],
+    "aliases": ["app settings"],
     "related": ["settings", "system mode"],
     "metadata": {
       "kind": "help_node",
@@ -34,16 +36,17 @@
     }
   },
   {
-    "item_id": "settings_help_003",
+    "item_id": "settings_help_013",
     "space_id": "help",
     "title": "Explain Play Settings",
     "keyword": "play_settings",
-    "short_answer": "play_settings.py controls what starts when the app runs.",
-    "text": "play_settings.py controls UI, assistant loop, STT loop, screenshot loop, default system mode, default persona, and play-loop behavior.",
+    "short_answer": "play_settings.py controls what main loops and defaults start with the app.",
+    "text": "play_settings.py decides if UI, assistant loop, STT loop, and screenshot loop start. It also stores default persona, default system mode, UI host, UI port, and loop timing.",
+    "more": "The file is app/settings/play_settings.py and it defines PlaySettings. AppConfig.build(...) copies default_system_mode, default_persona, ui_host, ui_port, and ui_reload from PlaySettings into the global AppConfig. Change this file when startup defaults are wrong, not when only one runtime session needs a temporary value.",
     "examples": ["EXPLAIN PLAY_SETTINGS"],
-    "tags": ["play_settings", "file"],
-    "aliases": ["play_settings"],
-    "related": ["settings", "start"],
+    "tags": ["play_settings", "startup"],
+    "aliases": ["play settings"],
+    "related": ["ui port", "default persona"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -51,16 +54,17 @@
     }
   },
   {
-    "item_id": "settings_help_004",
+    "item_id": "settings_help_014",
     "space_id": "help",
     "title": "Explain Audio Settings",
     "keyword": "audio_settings",
-    "short_answer": "audio_settings.py controls microphone, STT audio, and playback device settings.",
-    "text": "Use audio settings when changing input device, STT capture behavior, or output playback configuration. This is important for voice input and TTS output.",
+    "short_answer": "audio_settings.py controls microphone, live STT, wake word, and TTS playback.",
+    "text": "Audio settings are for voice input and speaker output. Use them when the app hears the wrong device, misses speech, catches too much noise, or speaks through the wrong output.",
+    "more": "The file is app/settings/audio_settings.py and it defines AudioSettings. It includes wake_word, stt_live_* capture tunables, Windows device names, tts_playback_enabled, tts_output_device_name, and tts_output_gain. Change device names carefully and prefer stable short substrings such as a known microphone name.",
     "examples": ["EXPLAIN AUDIO_SETTINGS"],
-    "tags": ["audio_settings", "file"],
-    "aliases": ["audio_settings"],
-    "related": ["settings", "stt", "tts"],
+    "tags": ["audio_settings", "stt", "tts"],
+    "aliases": ["audio settings"],
+    "related": ["wake word", "stt live"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -68,33 +72,17 @@
     }
   },
   {
-    "item_id": "settings_help_005",
-    "space_id": "help",
-    "title": "Explain TTS Settings",
-    "keyword": "tts_settings",
-    "short_answer": "tts_settings.py controls text-to-speech configuration.",
-    "text": "TTS settings define the speech backend, voice, language, sample rate, and other spoken-output defaults. Use it when changing how the assistant speaks.",
-    "examples": ["EXPLAIN TTS_SETTINGS"],
-    "tags": ["tts_settings", "file"],
-    "aliases": ["tts_settings"],
-    "related": ["tts", "speech_out"],
-    "metadata": {
-      "kind": "help_node",
-      "domain": "settings",
-      "topic_key": "tts_settings"
-    }
-  },
-  {
-    "item_id": "settings_help_006",
+    "item_id": "settings_help_015",
     "space_id": "help",
     "title": "Explain LLM Settings",
     "keyword": "llm_settings",
-    "short_answer": "llm_settings.py controls LLM provider and model behavior.",
-    "text": "LLM settings define provider, model names, timeouts, max tokens, and temperature. Use it when changing Ollama or model behavior.",
+    "short_answer": "llm_settings.py controls the LLM provider, models, limits, and timeouts.",
+    "text": "LLM settings tell the app which model server and model names to use. Use them when changing Ollama, text model, vision model, answer size, or timeout behavior.",
+    "more": "The file is app/settings/llm_settings.py and it defines LLMSettings. It reads ENV keys like LLM_PROVIDER, OLLAMA_BASE_URL, OLLAMA_HOST, LLM_TEXT_MODEL, LLM_VISION_MODEL, LLM_MAX_TOKENS, and LLM_TIMEOUT_SECONDS. The code keeps the vision model separate from the text model so image analysis does not accidentally use a text-only model.",
     "examples": ["EXPLAIN LLM_SETTINGS"],
-    "tags": ["llm_settings", "file"],
-    "aliases": ["llm_settings"],
-    "related": ["llm", "ollama"],
+    "tags": ["llm_settings", "ollama", "models"],
+    "aliases": ["llm settings"],
+    "related": ["ollama url", "env"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -102,16 +90,35 @@
     }
   },
   {
-    "item_id": "settings_help_007",
+    "item_id": "settings_help_016",
+    "space_id": "help",
+    "title": "Explain TTS Settings",
+    "keyword": "tts_settings",
+    "short_answer": "tts_settings.py controls the text-to-speech backend, voice, language, and sample rate.",
+    "text": "TTS settings are for generated assistant speech. Use them when changing Kokoro voice, TTS language code, backend, or audio sample rate.",
+    "more": "The file is app/settings/tts_settings.py and it defines TTSSettings. It reads ASSISCLUE_TTS_BACKEND, ASSISCLUE_KOKORO_LANG, ASSISCLUE_KOKORO_VOICE, and ASSISCLUE_TTS_SAMPLE_RATE from ENV, with Kokoro defaults. Speaker device and playback gain are in app/settings/audio_settings.py, not tts_settings.py.",
+    "examples": ["EXPLAIN TTS_SETTINGS"],
+    "tags": ["tts_settings", "kokoro"],
+    "aliases": ["tts settings"],
+    "related": ["tts voice", "tts output device"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "tts_settings"
+    }
+  },
+  {
+    "item_id": "settings_help_017",
     "space_id": "help",
     "title": "Explain AppConfig",
     "keyword": "appconfig",
-    "short_answer": "AppConfig is the built configuration object used by the app.",
-    "text": "AppConfig combines settings from app/settings into one usable config object. The app should read final configuration from AppConfig instead of scattering defaults everywhere.",
+    "short_answer": "AppConfig is the final config object the app builds from settings files.",
+    "text": "AppConfig gathers the settings into one place so the app can read clean final values. It also copies play defaults into active startup values.",
+    "more": "The file is app/config.py. AppConfig.build(project_root) creates PathsConfig, AppSettings, AudioSettings, PlaySettings, TTSSettings, PersonaConfig, ModelConfig, MemoryConfig, UIConfig, and ScreenshotConfig. It mirrors play.default_system_mode, play.default_persona, play.ui_host, play.ui_port, and play.ui_reload into the global config.",
     "examples": ["EXPLAIN APPCONFIG"],
-    "tags": ["appconfig"],
-    "aliases": ["appconfig"],
-    "related": ["settings", "bootstrap"],
+    "tags": ["appconfig", "config"],
+    "aliases": ["app config"],
+    "related": ["settings", "play_settings"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -119,16 +126,17 @@
     }
   },
   {
-    "item_id": "settings_help_008",
+    "item_id": "settings_help_018",
     "space_id": "help",
     "title": "Explain ENV",
     "keyword": "env",
-    "short_answer": "ENV values override or configure parts of the app without editing code.",
-    "text": "ENV is useful for model provider, Ollama URL, model names, TTS backend, TTS voice, and other environment-specific settings.",
+    "short_answer": "ENV values let you change some settings without editing Python files.",
+    "text": "ENV is useful for machine-specific choices like Ollama URL, model names, TTS backend, TTS voice, and TTS sample rate. Use ENV when different computers need different values.",
+    "more": "The README lists common ENV keys: LLM_PROVIDER, OLLAMA_BASE_URL, OLLAMA_HOST, LLM_TEXT_MODEL, LLM_VISION_MODEL, ASSISCLUE_TTS_BACKEND, ASSISCLUE_KOKORO_LANG, ASSISCLUE_KOKORO_VOICE, and ASSISCLUE_TTS_SAMPLE_RATE. These are read mainly in app/settings/llm_settings.py and app/settings/tts_settings.py. If no ENV is set, the dataclass defaults are used.",
     "examples": ["EXPLAIN ENV"],
-    "tags": ["env", "environment"],
-    "aliases": ["env"],
-    "related": ["settings", "llm_settings"],
+    "tags": ["env", "models", "tts"],
+    "aliases": ["environment"],
+    "related": ["llm_settings", "tts_settings"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -136,16 +144,17 @@
     }
   },
   {
-    "item_id": "settings_help_009",
+    "item_id": "settings_help_019",
     "space_id": "help",
     "title": "Explain System Mode",
     "keyword": "system mode",
     "short_answer": "System Mode describes how active the assistant should be.",
-    "text": "System modes include passive, listening_light, smart_background, and fully_active. In the current app, mode is stored and visible, but not every service fully obeys it yet.",
+    "text": "System mode is the app's activity level, such as passive or listening_light. It helps describe whether the assistant should stay quiet or be more active.",
+    "more": "app/settings/app_settings.py documents modes as passive, listening_light, smart_background, and fully_active. app/settings/play_settings.py sets default_system_mode to listening_light, and app/config.py copies that value into config.app.system_mode during AppConfig.build(...). Check code behavior before assuming every service fully obeys every mode.",
     "examples": ["EXPLAIN SYSTEM MODE"],
-    "tags": ["system mode"],
-    "aliases": ["system mode"],
-    "related": ["mode", "app_settings"],
+    "tags": ["system mode", "app_settings"],
+    "aliases": ["mode"],
+    "related": ["app_settings", "play_settings"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
@@ -153,20 +162,129 @@
     }
   },
   {
-    "item_id": "settings_help_010",
+    "item_id": "settings_help_020",
+    "space_id": "help",
+    "title": "Change UI Port",
+    "keyword": "ui port",
+    "short_answer": "UI Port controls where the local web app opens.",
+    "text": "Use UI Port when another app is already using the default local web port. The default port is 8000 on host 127.0.0.1.",
+    "more": "The UI host, port, and reload values live in app/settings/play_settings.py as ui_host, ui_port, and ui_reload. AppConfig.build(...) copies them into config.ui. Keep ui_host as 127.0.0.1 for local-only use unless you intentionally want network access.",
+    "examples": ["EXPLAIN UI PORT"],
+    "tags": ["ui port", "play_settings"],
+    "aliases": ["ui_port"],
+    "related": ["play_settings", "settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "ui_port"
+    }
+  },
+  {
+    "item_id": "settings_help_021",
+    "space_id": "help",
+    "title": "Change Wake Word",
+    "keyword": "wake word",
+    "short_answer": "Wake Word is the phrase the assistant listens for before reacting.",
+    "text": "The wake word helps the voice system know when a spoken phrase is meant for the assistant. Keep it short and clear so live STT can match it reliably.",
+    "more": "The wake word lives in app/settings/audio_settings.py as wake_word, currently defaulting to hey assistant. It works near the live STT and mic settings, so if triggering is unreliable, also inspect stt_live_* quality and silence settings. Avoid long or noisy phrases because speech recognition may miss them.",
+    "examples": ["EXPLAIN WAKE WORD"],
+    "tags": ["wake word", "audio_settings"],
+    "aliases": ["wake_word"],
+    "related": ["audio_settings", "stt live"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "wake_word"
+    }
+  },
+  {
+    "item_id": "settings_help_022",
     "space_id": "help",
     "title": "Explain Default Persona",
     "keyword": "default persona",
-    "short_answer": "Default Persona is the persona used when the app starts without another saved choice.",
-    "text": "The default persona is configured in play settings. It helps decide which profile loads on startup, unless runtime state already has another active persona.",
+    "short_answer": "Default Persona is the persona chosen when the app starts.",
+    "text": "Default persona controls which assistant personality starts first. In this app, the default is rick unless another runtime choice overrides it.",
+    "more": "The default lives in app/settings/play_settings.py as default_persona. app/config.py copies it into config.persona.active_persona during AppConfig.build(...). The persona profiles themselves live under app/personas/profiles, so change the default name only to a persona that actually exists.",
     "examples": ["EXPLAIN DEFAULT PERSONA"],
-    "tags": ["default persona"],
-    "aliases": ["default persona"],
+    "tags": ["default persona", "play_settings"],
+    "aliases": ["default_persona"],
     "related": ["play_settings", "persona"],
     "metadata": {
       "kind": "help_node",
       "domain": "settings",
       "topic_key": "default_persona"
+    }
+  },
+  {
+    "item_id": "settings_help_023",
+    "space_id": "help",
+    "title": "Tune STT Live",
+    "keyword": "stt live",
+    "short_answer": "STT Live settings control live speech-to-text capture.",
+    "text": "STT Live is the live listening part for voice input. Tune it when speech is too slow, clipped, too quiet, or polluted by background noise.",
+    "more": "Live STT knobs live in app/settings/audio_settings.py as stt_live_* fields. Useful fields include stt_live_chunk_seconds, stt_live_chunk_overlap_seconds, stt_live_input_gain, stt_live_min_confidence, and voice peak thresholds. Raise quality gates to block noise, or lower them carefully if real short phrases are ignored.",
+    "examples": ["EXPLAIN STT LIVE"],
+    "tags": ["stt live", "audio_settings"],
+    "aliases": ["live stt"],
+    "related": ["wake word", "audio_settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "stt_live"
+    }
+  },
+  {
+    "item_id": "settings_help_024",
+    "space_id": "help",
+    "title": "Change TTS Voice",
+    "keyword": "tts voice",
+    "short_answer": "TTS Voice controls the generated voice used for assistant speech.",
+    "text": "Use TTS Voice when you want the assistant to speak with a different generated voice. This changes the voice model choice, not the speaker device.",
+    "more": "The TTS voice is read in app/settings/tts_settings.py from ASSISCLUE_KOKORO_VOICE, defaulting to af_heart. The language code comes from ASSISCLUE_KOKORO_LANG and sample rate from ASSISCLUE_TTS_SAMPLE_RATE. If audio plays through the wrong speaker, check tts_output_device_name in app/settings/audio_settings.py instead.",
+    "examples": ["EXPLAIN TTS VOICE"],
+    "tags": ["tts voice", "tts_settings"],
+    "aliases": ["kokoro voice"],
+    "related": ["tts_settings", "tts output device"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "tts_voice"
+    }
+  },
+  {
+    "item_id": "settings_help_025",
+    "space_id": "help",
+    "title": "Change Ollama URL",
+    "keyword": "ollama url",
+    "short_answer": "Ollama URL tells the app where the local Ollama model server is.",
+    "text": "Use Ollama URL when Ollama is running on another host or port. By default, the app uses the local Ollama server at 127.0.0.1:11434.",
+    "more": "app/settings/llm_settings.py resolves the base URL from OLLAMA_BASE_URL first, then OLLAMA_HOST, then http://127.0.0.1:11434. The helper normalizes missing http:// and removes trailing slashes. If models do not respond, check this URL and then verify the model names in LLM_TEXT_MODEL and LLM_VISION_MODEL.",
+    "examples": ["EXPLAIN OLLAMA URL"],
+    "tags": ["ollama url", "llm_settings"],
+    "aliases": ["ollama host"],
+    "related": ["llm_settings", "env"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "ollama_url"
+    }
+  },
+  {
+    "item_id": "settings_help_026",
+    "space_id": "help",
+    "title": "Change Settings Defaults",
+    "keyword": "change settings defaults",
+    "short_answer": "Change settings defaults by editing the right .py file in app/settings.",
+    "text": "Use this when you want a default value to change without using ENV. Pick the settings file that owns the value, then change only that default.",
+    "more": "The README says the main config is built through AppConfig.build(...) and the settings files live in app/settings. For non-ENV defaults, edit the matching .py file: app_settings.py for general switches, audio_settings.py for mic/STT/playback, play_settings.py for startup loops and UI/persona defaults, tts_settings.py for TTS ENV defaults, and llm_settings.py for LLM ENV defaults. Do not change runtime files when you mean to change a startup default.",
+    "examples": ["EXPLAIN CHANGE SETTINGS DEFAULTS"],
+    "tags": ["change settings defaults", "settings"],
+    "aliases": ["change defaults"],
+    "related": ["settings", "env"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "settings",
+      "topic_key": "change_settings_defaults"
     }
   }
 ]

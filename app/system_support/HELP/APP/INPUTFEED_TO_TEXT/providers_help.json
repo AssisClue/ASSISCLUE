@@ -1,0 +1,110 @@
+[
+  {
+    "item_id": "inputfeed_providers_help_001",
+    "space_id": "help",
+    "title": "Explain Provider Backend",
+    "keyword": "provider backend",
+    "short_answer": "Provider backend is the selected STT engine for inputfeed_to_text.",
+    "text": "The provider backend decides which speech-to-text path runs. In this module, the practical choices are Moonshine or Whisper.",
+    "more": "The selected backend comes from INPUTFEED_STT_BACKEND in app/inputfeed_to_text/inputfeed_settings.py. app/inputfeed_to_text/inputfeed_to_text_service.py sends control to MoonshineSTTProvider when the value is moonshine; otherwise it runs the Whisper/faster-whisper path. Do not assume both paths use the same mic or streaming logic.",
+    "examples": ["EXPLAIN PROVIDER BACKEND"],
+    "tags": ["provider backend", "stt"],
+    "aliases": ["stt backend"],
+    "related": ["moonshine", "whisper"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "provider_backend"
+    }
+  },
+  {
+    "item_id": "inputfeed_providers_help_002",
+    "space_id": "help",
+    "title": "Explain Base STT Provider",
+    "keyword": "base stt provider",
+    "short_answer": "Base STT Provider defines the required provider methods.",
+    "text": "Base STT Provider is the small interface provider classes should follow. It requires run_forever and stop methods.",
+    "more": "The file is app/inputfeed_to_text/providers/base_stt_provider.py. BaseSTTProvider is an ABC with abstract run_forever() and stop() methods. MoonshineSTTProvider uses this shape; the direct Whisper path is currently implemented in inputfeed_to_text_service.py rather than as a separate provider class.",
+    "examples": ["EXPLAIN BASE STT PROVIDER"],
+    "tags": ["base stt provider", "providers"],
+    "aliases": ["base provider"],
+    "related": ["provider backend", "moonshine"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "base_stt_provider"
+    }
+  },
+  {
+    "item_id": "inputfeed_providers_help_003",
+    "space_id": "help",
+    "title": "Explain Moonshine",
+    "keyword": "moonshine",
+    "short_answer": "Moonshine is one STT backend used by inputfeed_to_text.",
+    "text": "Moonshine runs as the default STT backend when INPUTFEED_STT_BACKEND is moonshine. It produces transcript lines that get written into the same raw transcript runtime files.",
+    "more": "Moonshine code lives under app/inputfeed_to_text/providers/moonshine. MoonshineSTTProvider starts python -m moonshine_voice.mic_transcriber with --language from MOONSHINE_LANGUAGE, normalizes output lines, skips duplicate text using INPUTFEED_DEDUP_SECONDS, and writes raw transcript records through transcript_runtime.py. The README says old broke/ is old reference code and should not be the main source.",
+    "examples": ["EXPLAIN MOONSHINE"],
+    "tags": ["moonshine", "stt"],
+    "aliases": ["moon shine"],
+    "related": ["provider backend", "raw transcript"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "moonshine"
+    }
+  },
+  {
+    "item_id": "inputfeed_providers_help_004",
+    "space_id": "help",
+    "title": "Explain Whisper",
+    "keyword": "whisper",
+    "short_answer": "Whisper is the inputfeed_to_text STT path that uses faster-whisper.",
+    "text": "Whisper is used when the selected backend is not Moonshine. It can run with streaming, VAD, and transcript dedup logic in the main service.",
+    "more": "The README notes providers/whisper exists as a folder idea, but current code imports WhisperModel directly from faster_whisper in app/inputfeed_to_text/inputfeed_to_text_service.py. The Whisper path uses STT_MODEL, STT_LANGUAGE, STT_COMPUTE_TYPE, STT_BEAM_SIZE, STT_CHUNK_MS, STT_VAD_FILTER, streaming settings, and Silero/RMS gates before writing raw transcript records.",
+    "examples": ["EXPLAIN WHISPER"],
+    "tags": ["whisper", "stt"],
+    "aliases": ["whisper stt"],
+    "related": ["faster-whisper", "streaming whisper"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "whisper"
+    }
+  },
+  {
+    "item_id": "inputfeed_providers_help_005",
+    "space_id": "help",
+    "title": "Explain Faster Whisper",
+    "keyword": "faster-whisper",
+    "short_answer": "faster-whisper is the Python library used by the Whisper STT path.",
+    "text": "faster-whisper loads the WhisperModel used for transcription. It is the real library behind the current Whisper path.",
+    "more": "app/inputfeed_to_text/inputfeed_to_text_service.py imports WhisperModel from faster_whisper and creates it with STT_MODEL, CPU device, and STT_COMPUTE_TYPE. The streaming adapter in app/inputfeed_to_text/streaming/whisper_stream_adapter.py also uses a WhisperModel to transcribe buffered audio. If this path fails, check model name, compute type, and dependency installation.",
+    "examples": ["EXPLAIN FASTER-WHISPER"],
+    "tags": ["faster-whisper", "whisper"],
+    "aliases": ["faster whisper"],
+    "related": ["whisper", "provider backend"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "faster_whisper"
+    }
+  },
+  {
+    "item_id": "inputfeed_providers_help_006",
+    "space_id": "help",
+    "title": "Change STT Backend",
+    "keyword": "change stt backend",
+    "short_answer": "Change STT backend with INPUTFEED_STT_BACKEND.",
+    "text": "Use this when you want inputfeed_to_text to use Moonshine or Whisper. Pick one backend and then check that backend's needed settings.",
+    "more": "Set INPUTFEED_STT_BACKEND in the environment; app/inputfeed_to_text/inputfeed_settings.py defaults it to moonshine. Moonshine uses MOONSHINE_LANGUAGE and an external moonshine_voice.mic_transcriber process. Whisper uses faster-whisper settings such as STT_MODEL, STT_LANGUAGE, STT_COMPUTE_TYPE, STT_BEAM_SIZE, STT_CHUNK_MS, and STT_VAD_FILTER.",
+    "examples": ["EXPLAIN CHANGE STT BACKEND"],
+    "tags": ["change stt backend", "settings"],
+    "aliases": ["switch stt backend"],
+    "related": ["moonshine", "whisper"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "change_stt_backend"
+    }
+  }
+]

@@ -2,52 +2,155 @@
 
 ## Que es
 
-Este modulo convierte audio -> texto (transcript) en vivo.
+Este modulo convierte audio en texto vivo.
 
-Flujo:
-1) lee audio (ej: microfono Windows WASAPI)
-2) arma chunks
-3) STT (por backend): `moonshine` o `whisper` (faster-whisper)
-4) escribe runtime (history + latest) y status
-5) al cerrar: archiva y limpia los live files
+Piensa en este bloque como el "oido" del app:
 
-No hace wakeword, comandos, router, memoria, TTS, ni logica de negocio. Termina en "texto".
+1. abre el microfono
+2. lee audio en pedazos pequenos
+3. limpia o filtra ruido si esta activado
+4. manda el audio al STT
+5. escribe transcript en `runtime/sacred`
+6. escribe status en `runtime/status`
 
-## Archivos importantes
+No decide comandos, memoria, persona, router, HELP, ni TTS. Este modulo solo produce texto.
 
-- `inputfeed_to_text_service.py`: loop principal (lee audio, VAD/streaming, STT, escribe runtime/status)
-- `mic_audio_source.py`: fuente de audio + preprocesado RNNoise (opcional)
-- `vad/silero_vad_gate.py`: gate VAD Silero (opcional)
-- `streaming/whisper_stream_adapter.py`: modo streaming (opcional)
-- `transcript_runtime.py`: escribe/archiva `jsonl/json` del runtime
-- `inputfeed_settings.py`: variables ENV + paths de runtime
-- `providers/moonshine/moonshine_stt_provider.py`: backend "moonshine" (proceso externo)
+## Flujo real
 
-## Runtime que genera
+```txt
+microfono
+  -> mic_audio_source.py
+  -> RNNoise opcional
+  -> Silero VAD opcional
+  -> Moonshine o Whisper
+  -> transcript_runtime.py
+  -> runtime/sacred/*.jsonl y *.json
+  -> assembled_transcript_builder.py une frases cercanas
+```
 
-- `runtime/sacred/live_transcript_history.jsonl` (append-only)
-- `runtime/sacred/live_transcript_latest.json` (ultimo evento)
-- `runtime/status/inputfeed_to_text_status.json` (estado: running/error + metadata)
-- `runtime/stt_archive/YYYY/MM/DD/session_<session_id>__HH-MM-SS.jsonl` (archivo al cerrar)
+## Archivos principales
 
-## Variables ENV (las mas utiles)
+- `inputfeed_to_text_service.py`: servicio principal de STT vivo.
+- `assembled_transcript_builder.py`: une pedazos cortos de transcript en frases mas utiles.
+- `mic_audio_source.py`: abre microfono por `windows_wasapi_mic` o `sounddevice_mic`.
+- `inputfeed_settings.py`: ENV, paths de runtime y tunables.
+- `source_config.py`: exporta settings ya resueltos para el servicio.
+- `transcript_runtime.py`: crea carpetas, escribe transcript/status y archiva sesiones.
+- `audio_settings.py`: snapshot simple de audio para esta parte.
 
-- `INPUTFEED_STT_BACKEND`: `moonshine` (default) o `whisper`
-- `INPUTFEED_USE_STREAMING`: `true/false`
-- `INPUTFEED_ENABLE_SILERO_VAD`: `true/false`
-- `INPUTFEED_ENABLE_RNNOISE`: `1/0`
-- `STT_MODEL`, `STT_LANGUAGE`, `STT_COMPUTE_TYPE`, `STT_BEAM_SIZE`, `STT_VAD_FILTER`
-- `TRANSCRIPT_SESSION_ID`, `TRANSCRIPT_SOURCE_NAME`, `TRANSCRIPT_SOURCE_TYPE`
-- `WINDOWS_MIC_DEVICE_NAME`, `INPUTFEED_SOURCE_BACKEND`
+## Carpetas importantes
 
-## Schema (cada linea del history .jsonl)
+- `providers/`: backends STT.
+- `providers/moonshine/`: backend Moonshine real.
+- `providers/whisper/`: carpeta existe, pero Whisper se usa directo desde `faster_whisper`.
+- `streaming/`: buffer y adaptador streaming para Whisper.
+- `vad/`: gate de Silero VAD.
+- `preprocess/`: RNNoise opcional.
+
+## Runtime que escribe
+
+- `runtime/sacred/live_transcript_raw.jsonl`
+- `runtime/sacred/live_transcript_raw_latest.json`
+- `runtime/sacred/live_transcript_history.jsonl`
+- `runtime/sacred/live_transcript_latest.json`
+- `runtime/sacred/live_transcript_assembled.jsonl`
+- `runtime/sacred/live_transcript_assembled_latest.json`
+- `runtime/status/inputfeed_to_text_status.json`
+- `runtime/status/assembled_transcript_builder_status.json`
+- `runtime/stt_archive/YYYY/MM/DD/session_<id>__raw__HH-MM-SS.jsonl`
+- `runtime/stt_archive/YYYY/MM/DD/session_<id>__assembled__HH-MM-SS.jsonl`
+
+## ENV mas utiles
+
+Audio:
+
+- `INPUTFEED_SOURCE_BACKEND`: `windows_wasapi_mic` en Windows, `sounddevice_mic` en Linux.
+- `WINDOWS_MIC_DEVICE_NAME`: nombre o parte del nombre del microfono.
+- `INPUTFEED_SAMPLE_RATE`
+- `INPUTFEED_CHANNELS`
+- `INPUTFEED_FRAMES_PER_BUFFER`
+- `INPUTFEED_INPUT_GAIN`
+
+STT:
+
+- `INPUTFEED_STT_BACKEND`: `moonshine` o `whisper`.
+- `MOONSHINE_LANGUAGE`: idioma para Moonshine.
+- `STT_MODEL`
+- `STT_LANGUAGE`
+- `STT_COMPUTE_TYPE`
+- `STT_BEAM_SIZE`
+- `STT_CHUNK_MS`
+- `STT_VAD_FILTER`
+
+Filtro y streaming:
+
+- `INPUTFEED_ENABLE_RNNOISE`
+- `INPUTFEED_ENABLE_SILERO_VAD`
+- `INPUTFEED_MIN_RMS`
+- `INPUTFEED_SILERO_THRESHOLD`
+- `INPUTFEED_USE_STREAMING`
+- `INPUTFEED_STREAM_STEP_SECONDS`
+- `INPUTFEED_STREAM_OVERLAP_SECONDS`
+- `INPUTFEED_STREAM_MAX_BUFFER_SECONDS`
+
+Assembler:
+
+- `ASSEMBLER_MERGE_WINDOW_SECONDS`
+- `ASSEMBLER_FLUSH_IDLE_SECONDS`
+- `ASSEMBLER_MAX_BUFFER_PARTS`
+
+Transcript:
+
+- `TRANSCRIPT_SESSION_ID`
+- `TRANSCRIPT_SOURCE_NAME`
+- `TRANSCRIPT_SOURCE_TYPE`
+
+## Schema basico
+
+Raw transcript:
 
 ```json
-{"event_id":"evt_...","ts":1712345678.901,"session_id":"session_...","source":"audio_input","text":"hello","language":"en","metadata":{"stt_backend":"whisper","model_name":"medium","chunk_seconds":1.2}}
+{
+  "event_id": "evt_...",
+  "ts": 1712345678.901,
+  "session_id": "session_...",
+  "source": "audio_input",
+  "text": "hello",
+  "language": "en",
+  "metadata": {
+    "stt_backend": "whisper",
+    "model_name": "medium"
+  }
+}
+```
+
+Assembled transcript:
+
+```json
+{
+  "event_id": "asmb_...",
+  "source": "assembled_transcript_builder",
+  "text": "hello how are you",
+  "source_event_ids": ["evt_1", "evt_2"],
+  "part_count": 2
+}
+```
+
+## Como correrlo
+
+Normalmente lo arranca `scripts/start_main_stack.py`.
+
+Para probar solo este modulo:
+
+```powershell
+python -m app.inputfeed_to_text.inputfeed_to_text_service
+python -m app.inputfeed_to_text.assembled_transcript_builder
 ```
 
 ## Notas rapidas
 
-- En Windows no importa el nombre de carpeta. En Linux SI: `inputfeed_to_Text` y `inputfeed_to_text` son distintos.
-- `providers/whisper/` hoy esta vacio: whisper se usa directo con `faster_whisper` en el servicio/stream adapter.
-- Existe `inputfeed_to_text_service copy.py`: parece archivo viejo/copia; no lo uses como fuente de verdad.
+- En Windows, el backend default es `windows_wasapi_mic`.
+- En Linux, el backend default es `sounddevice_mic`.
+- `old broke/` es codigo viejo de referencia. No usar como fuente principal.
+- Si no escucha, revisar primero `WINDOWS_MIC_DEVICE_NAME`, `INPUTFEED_SOURCE_BACKEND`, y `runtime/status/inputfeed_to_text_status.json`.
+- Si escucha palabras cortadas, revisar streaming, VAD, `STT_CHUNK_MS`, y el assembler.

@@ -1,0 +1,110 @@
+[
+  {
+    "item_id": "inputfeed_audio_pipeline_help_001",
+    "space_id": "help",
+    "title": "Explain Audio Pipeline",
+    "keyword": "audio pipeline",
+    "short_answer": "Audio pipeline is the mic-to-STT path used before transcript text is written.",
+    "text": "The audio pipeline opens the mic, reads chunks, adjusts audio, filters noise or silence if enabled, and passes speech to STT. It is the live sound path before text exists.",
+    "more": "The main audio path uses app/inputfeed_to_text/mic_audio_source.py, optional RNNoise in preprocess/rnnoise_preprocessor.py, optional Silero VAD in vad/silero_vad_gate.py, and optional streaming in streaming/whisper_stream_adapter.py. If words are cut off, tune streaming, VAD, STT_CHUNK_MS, and assembler values.",
+    "examples": ["EXPLAIN AUDIO PIPELINE"],
+    "tags": ["audio pipeline", "mic", "vad"],
+    "aliases": ["inputfeed audio"],
+    "related": ["mic audio source", "rnnoise"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "audio_pipeline"
+    }
+  },
+  {
+    "item_id": "inputfeed_audio_pipeline_help_002",
+    "space_id": "help",
+    "title": "Explain Mic Audio Source",
+    "keyword": "mic audio source",
+    "short_answer": "Mic Audio Source opens the microphone and returns PCM audio chunks.",
+    "text": "Mic Audio Source is the part that talks to the microphone. It chooses the Windows WASAPI path or the sounddevice path based on settings.",
+    "more": "The file is app/inputfeed_to_text/mic_audio_source.py. create_mic_audio_source(...) returns WasapiMicAudioSource when source_backend is windows_wasapi_mic, otherwise SoundDeviceMicAudioSource. It can match WINDOWS_MIC_DEVICE_NAME, resample audio, convert stereo to mono, apply input gain, and attach metadata such as device_name and source_backend.",
+    "examples": ["EXPLAIN MIC AUDIO SOURCE"],
+    "tags": ["mic audio source", "microphone"],
+    "aliases": ["microphone source"],
+    "related": ["source backend", "inputfeed settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "mic_audio_source"
+    }
+  },
+  {
+    "item_id": "inputfeed_audio_pipeline_help_003",
+    "space_id": "help",
+    "title": "Change Source Backend",
+    "keyword": "source backend",
+    "short_answer": "Source backend chooses the microphone capture implementation.",
+    "text": "Source backend decides how inputfeed_to_text reads microphone audio. Windows defaults to windows_wasapi_mic, and Linux defaults to sounddevice_mic.",
+    "more": "INPUTFEED_SOURCE_BACKEND is defined in app/inputfeed_to_text/inputfeed_settings.py. mic_audio_source.py uses windows_wasapi_mic for WasapiMicAudioSource and anything else for SoundDeviceMicAudioSource. If the app hears no mic, check INPUTFEED_SOURCE_BACKEND and WINDOWS_MIC_DEVICE_NAME before tuning STT.",
+    "examples": ["EXPLAIN SOURCE BACKEND"],
+    "tags": ["source backend", "mic"],
+    "aliases": ["input source backend"],
+    "related": ["mic audio source", "inputfeed env"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "source_backend"
+    }
+  },
+  {
+    "item_id": "inputfeed_audio_pipeline_help_004",
+    "space_id": "help",
+    "title": "Explain RNNoise",
+    "keyword": "rnnoise",
+    "short_answer": "RNNoise is an optional noise reduction step before STT.",
+    "text": "RNNoise tries to clean microphone audio before it reaches speech recognition. If unavailable or unsupported, the code falls back to raw audio.",
+    "more": "The implementation is app/inputfeed_to_text/preprocess/rnnoise_preprocessor.py and it is enabled by INPUTFEED_ENABLE_RNNOISE. mic_audio_source.py creates RNNoisePreprocessor and records metadata such as rnnoise_enabled, rnnoise_available, rnnoise_active, rnnoise_backend, rnnoise_error, rnnoise_raw_rms, and rnnoise_denoised_rms. Do not assume RNNoise is active just because it is enabled; check status metadata.",
+    "examples": ["EXPLAIN RNNOISE"],
+    "tags": ["rnnoise", "noise"],
+    "aliases": ["noise reduction"],
+    "related": ["audio pipeline", "inputfeed status"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "rnnoise"
+    }
+  },
+  {
+    "item_id": "inputfeed_audio_pipeline_help_005",
+    "space_id": "help",
+    "title": "Explain Silero VAD",
+    "keyword": "silero vad",
+    "short_answer": "Silero VAD is an optional speech gate that decides if audio should be transcribed.",
+    "text": "Silero VAD helps block silence and noise before STT. It checks RMS, speech segments, and speech duration.",
+    "more": "The file is app/inputfeed_to_text/vad/silero_vad_gate.py. It is controlled by INPUTFEED_ENABLE_SILERO_VAD plus values like INPUTFEED_MIN_RMS, INPUTFEED_SILERO_THRESHOLD, INPUTFEED_SILERO_MIN_SPEECH_MS, INPUTFEED_SILERO_MIN_SILENCE_MS, INPUTFEED_SILERO_SPEECH_PAD_MS, and INPUTFEED_SILERO_MIN_SEGMENTS. If Silero is unavailable or errors, the code can fall back to rms_only allowing behavior.",
+    "examples": ["EXPLAIN SILERO VAD"],
+    "tags": ["silero vad", "voice gate"],
+    "aliases": ["vad"],
+    "related": ["rnnoise", "audio pipeline"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "silero_vad"
+    }
+  },
+  {
+    "item_id": "inputfeed_audio_pipeline_help_006",
+    "space_id": "help",
+    "title": "Explain Streaming Whisper",
+    "keyword": "streaming whisper",
+    "short_answer": "Streaming Whisper buffers recent audio and only emits stable transcript text.",
+    "text": "Streaming Whisper helps avoid writing unstable partial text too quickly. It waits for candidate text to stay stable before emitting it.",
+    "more": "The streaming code lives in app/inputfeed_to_text/streaming, mainly whisper_stream_adapter.py and streaming_config.py. Settings include INPUTFEED_USE_STREAMING, INPUTFEED_STREAM_STEP_SECONDS, INPUTFEED_STREAM_OVERLAP_SECONDS, INPUTFEED_STREAM_MAX_BUFFER_SECONDS, INPUTFEED_STREAM_COMMIT_STABLE_PASSES, and INPUTFEED_STREAM_RECENT_SEGMENT_COUNT. If text feels delayed or chopped, check these with VAD and STT_CHUNK_MS.",
+    "examples": ["EXPLAIN STREAMING WHISPER"],
+    "tags": ["streaming whisper", "whisper"],
+    "aliases": ["whisper streaming"],
+    "related": ["whisper", "silero vad"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "streaming_whisper"
+    }
+  }
+]

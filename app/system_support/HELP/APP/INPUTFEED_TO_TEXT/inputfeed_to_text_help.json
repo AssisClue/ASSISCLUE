@@ -1,0 +1,182 @@
+[
+  {
+    "item_id": "inputfeed_to_text_help_001",
+    "space_id": "help",
+    "title": "Explain Inputfeed To Text",
+    "keyword": "inputfeed_to_text",
+    "short_answer": "inputfeed_to_text is the app block that turns live audio into text.",
+    "text": "inputfeed_to_text is like the app's ear. It listens to audio, sends speech through STT, and writes transcript files for other app parts to read.",
+    "more": "The module lives in app/inputfeed_to_text. The main service is app/inputfeed_to_text/inputfeed_to_text_service.py, and it writes through transcript_runtime.py into runtime/sacred and runtime/status. This block does not decide commands, memory, persona, HELP, router, or TTS; it only produces text.",
+    "examples": ["EXPLAIN INPUTFEED_TO_TEXT"],
+    "tags": ["inputfeed_to_text", "audio to text"],
+    "aliases": ["input feed to text"],
+    "related": ["audio to text", "transcript runtime"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "inputfeed_to_text"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_002",
+    "space_id": "help",
+    "title": "Explain Audio To Text",
+    "keyword": "audio to text",
+    "short_answer": "Audio to text is the flow that captures microphone audio and turns it into transcript records.",
+    "text": "Audio to text starts with the mic, reads audio in small chunks, filters it if enabled, and sends it to STT. The result is written as transcript text.",
+    "more": "The README flow is microphone -> mic_audio_source.py -> optional RNNoise -> optional Silero VAD -> Moonshine or Whisper -> transcript_runtime.py -> runtime/sacred files. If the app hears nothing, check WINDOWS_MIC_DEVICE_NAME, INPUTFEED_SOURCE_BACKEND, and runtime/status/inputfeed_to_text_status.json first.",
+    "examples": ["EXPLAIN AUDIO TO TEXT"],
+    "tags": ["audio to text", "mic", "stt"],
+    "aliases": ["audio transcription"],
+    "related": ["mic audio source", "stt providers"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "audio_to_text"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_003",
+    "space_id": "help",
+    "title": "Explain Live Transcript",
+    "keyword": "live transcript",
+    "short_answer": "Live transcript is the current speech text written by inputfeed_to_text.",
+    "text": "Live transcript files are the text output from the listener. Other app parts can read them instead of talking directly to the microphone.",
+    "more": "Raw live transcript files are runtime/sacred/live_transcript_raw.jsonl and runtime/sacred/live_transcript_raw_latest.json. Compatibility names also exist as runtime/sacred/live_transcript_history.jsonl and runtime/sacred/live_transcript_latest.json. These are written by transcript_runtime.py.",
+    "examples": ["EXPLAIN LIVE TRANSCRIPT"],
+    "tags": ["live transcript", "runtime"],
+    "aliases": ["live transcripts"],
+    "related": ["raw transcript", "assembled transcript"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "live_transcript"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_004",
+    "space_id": "help",
+    "title": "Explain Raw Transcript",
+    "keyword": "raw transcript",
+    "short_answer": "Raw transcript is each direct STT text event before phrase assembly.",
+    "text": "Raw transcript keeps the short pieces that come straight from STT. Use it when you need to see exactly what the listener wrote first.",
+    "more": "Raw records are appended by append_raw_transcript_line(...) in app/inputfeed_to_text/transcript_runtime.py. They include event_id, ts, session_id, source, text, language, and metadata such as stt_backend and model_name. Check runtime/sacred/live_transcript_raw.jsonl for the full stream.",
+    "examples": ["EXPLAIN RAW TRANSCRIPT"],
+    "tags": ["raw transcript", "jsonl"],
+    "aliases": ["raw stt"],
+    "related": ["live transcript", "assembled transcript"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "raw_transcript"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_005",
+    "space_id": "help",
+    "title": "Explain Assembled Transcript",
+    "keyword": "assembled transcript",
+    "short_answer": "Assembled transcript joins nearby raw transcript pieces into more useful phrases.",
+    "text": "Assembled transcript is cleaner reading text made from small raw transcript parts. It helps turn chopped speech into fuller phrases.",
+    "more": "The builder lives in app/inputfeed_to_text/assembled_transcript_builder.py. It reads runtime/sacred/live_transcript_raw.jsonl, merges nearby records using ASSEMBLER_MERGE_WINDOW_SECONDS, flushes after ASSEMBLER_FLUSH_IDLE_SECONDS, and writes runtime/sacred/live_transcript_assembled.jsonl plus live_transcript_assembled_latest.json.",
+    "examples": ["EXPLAIN ASSEMBLED TRANSCRIPT"],
+    "tags": ["assembled transcript", "builder"],
+    "aliases": ["assembled text"],
+    "related": ["raw transcript", "assembler settings"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "assembled_transcript"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_006",
+    "space_id": "help",
+    "title": "Explain Transcript Runtime",
+    "keyword": "transcript runtime",
+    "short_answer": "Transcript runtime creates folders and writes transcript, status, and archive files.",
+    "text": "Transcript runtime is the file-writing layer for inputfeed_to_text. It keeps live transcript files, latest JSON files, status files, and session archives organized.",
+    "more": "The owner file is app/inputfeed_to_text/transcript_runtime.py. It ensures runtime/sacred, runtime/status, and runtime/stt_archive exist; writes raw and assembled transcript records; writes inputfeed and assembler status; and archives sessions under runtime/stt_archive/YYYY/MM/DD when services stop.",
+    "examples": ["EXPLAIN TRANSCRIPT RUNTIME"],
+    "tags": ["transcript runtime", "runtime"],
+    "aliases": ["runtime transcript"],
+    "related": ["inputfeed status", "live transcript"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "transcript_runtime"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_007",
+    "space_id": "help",
+    "title": "Explain Inputfeed Settings",
+    "keyword": "inputfeed settings",
+    "short_answer": "Inputfeed settings are ENV-backed values for audio capture, STT, filtering, streaming, and assembly.",
+    "text": "Inputfeed settings control how the listener captures audio and writes text. Use them when tuning mic behavior, STT backend, VAD, streaming, or transcript assembly.",
+    "more": "The main settings file is app/inputfeed_to_text/inputfeed_settings.py. It defines runtime paths, source backend, sample rate, input gain, STT backend, model, language, VAD settings, RNNoise switch, streaming settings, assembler settings, and transcript source/session fields. source_config.py exports resolved values for the service.",
+    "examples": ["EXPLAIN INPUTFEED SETTINGS"],
+    "tags": ["inputfeed settings", "env"],
+    "aliases": ["input feed settings"],
+    "related": ["inputfeed env", "audio pipeline"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "inputfeed_settings"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_008",
+    "space_id": "help",
+    "title": "Explain Inputfeed ENV",
+    "keyword": "inputfeed env",
+    "short_answer": "Inputfeed ENV values change listener behavior without editing code.",
+    "text": "Inputfeed ENV is how you tune this listener from outside the Python files. Use it for mic backend, STT backend, model, language, VAD, streaming, and assembler values.",
+    "more": "Important ENV names are defined in app/inputfeed_to_text/inputfeed_settings.py and listed in the README. Examples include INPUTFEED_SOURCE_BACKEND, WINDOWS_MIC_DEVICE_NAME, INPUTFEED_STT_BACKEND, MOONSHINE_LANGUAGE, STT_MODEL, STT_LANGUAGE, INPUTFEED_ENABLE_RNNOISE, INPUTFEED_ENABLE_SILERO_VAD, INPUTFEED_USE_STREAMING, and ASSEMBLER_MERGE_WINDOW_SECONDS. Only change values you understand because they affect live listening quality.",
+    "examples": ["EXPLAIN INPUTFEED ENV"],
+    "tags": ["inputfeed env", "settings"],
+    "aliases": ["input feed env"],
+    "related": ["inputfeed settings", "stt providers"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "inputfeed_env"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_009",
+    "space_id": "help",
+    "title": "Explain Inputfeed Status",
+    "keyword": "inputfeed status",
+    "short_answer": "Inputfeed status shows whether the listener or assembler is starting, running, stopped, or errored.",
+    "text": "Status files are the first place to check when listening is broken. They show the current state and useful last-event details.",
+    "more": "The listener writes runtime/status/inputfeed_to_text_status.json through write_inputfeed_status(...). The assembler writes runtime/status/assembled_transcript_builder_status.json through write_assembled_status(...). If words are missing or cut off, inspect status fields like last_event, stt_backend, last_text, last_rms, gate_backend, and streaming_enabled.",
+    "examples": ["EXPLAIN INPUTFEED STATUS"],
+    "tags": ["inputfeed status", "status"],
+    "aliases": ["listener status"],
+    "related": ["transcript runtime", "audio pipeline"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "inputfeed_status"
+    }
+  },
+  {
+    "item_id": "inputfeed_to_text_help_010",
+    "space_id": "help",
+    "title": "Explain STT Providers",
+    "keyword": "stt providers",
+    "short_answer": "STT providers are the backends that turn audio into text.",
+    "text": "The main inputfeed overview can point you to STT providers, but backend details live in providers_help.json. Moonshine and Whisper are provider topics.",
+    "more": "Provider selection is controlled by INPUTFEED_STT_BACKEND in app/inputfeed_to_text/inputfeed_settings.py. The service branches to Moonshine when the backend is moonshine, otherwise it uses faster-whisper through the Whisper path. See providers_help.json in app/system_support/HELP/APP/INPUTFEED_TO_TEXT for Moonshine, Whisper, faster-whisper, provider backend, and base provider details.",
+    "examples": ["EXPLAIN STT PROVIDERS"],
+    "tags": ["stt providers", "backend"],
+    "aliases": ["providers"],
+    "related": ["moonshine", "whisper"],
+    "metadata": {
+      "kind": "help_node",
+      "domain": "inputfeed_to_text",
+      "topic_key": "stt_providers"
+    }
+  }
+]
